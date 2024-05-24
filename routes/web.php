@@ -202,6 +202,7 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::post('/modules/to/students', 'modulesToStudents')->name('modules.to.students');
     Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
     Route::post('/modules/to/lecturers', 'ModulesToLecturers')->name('modules.to.lecturers');
+    Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
     
 });
 

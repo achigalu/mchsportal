@@ -261,4 +261,7 @@ class coursesController extends Controller
 // Display the matched data
         return view('admin.courses.assign_subjects_to_lecturers', ['data' => $data]);
     }
+
+    
+    
 }

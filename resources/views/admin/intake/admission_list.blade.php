@@ -148,7 +148,7 @@
                                                 <div class="col-sm-6 col-md-4 col-xl-3">                
                                                 <!-- sample modal content -->
                                                 <div id="myModal{{$admissions->id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
+                                                <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header" style="background-color:#f0f0f0;">
                                                                 <h5 class="modal-title" id="myModalLabel" style="color: #EC9684;">Delete selection list upload</h5>
@@ -163,7 +163,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Cancel</button>
-                                                               <a href="{{route('delete.upload.list',$admissions->id)}}"> <button type="button" class="btn btn-danger waves-effect waves-light">Delete</button></a>
+                                                               <a href="{{route('delete.upload.list',$admissions->id)}}"> <button type="button" class="btn btn-warning waves-effect waves-light">Delete</button></a>
                                                             </div>
                                                         </div><!-- /.modal-content -->
                                                     </div><!-- /.modal-dialog -->

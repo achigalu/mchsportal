@@ -125,61 +125,19 @@ class studentRegistrationController extends Controller
   public function ModulesToLecturers(Request $request)
   {
     //dd($request->all());
+   // $data['myclassSubjects'] = Myclasssubject::where('programclass_id', $request->class_id)->where('semester', $request->semester)->get();
     if(!empty($request->class_id) && !empty($request->semester))
     {
-      
-      $class = Myclasssubject::where('programclass_id', $request->class_id)->where('semester', $request->semester)->first();
-     if(!empty($class))
-     {
-      
-     if(!empty($class))
-     {  
-               $myCampus = Campus::find($class->campus_id)->campus;
-              $user = User::where('programclass', $class->classcode)
-              ->where('semester', $request->semester)
-              ->where('campus', $myCampus)->first();
-
-              if(!empty($user))
-                      {
-                        $result = Studentsubject::where('registration_no', $user->reg_num)
-                      ->where('semester', $user->semester)
-                      ->where('campus_id', $class->campus_id)->get();
-                      
-                      
-                            if(!empty($result))
-                            {
-                            
-                              return redirect()->route('subjects.to.lecturers')->with('result', $result);
-                              
-                            }
-                            else
-                            {
-                              return redirect()->back()->with('invalid', 'No subjects found yet');
-                            }
-                      }
-                      else{
-                          return redirect()->back()->with('invalid', 'No students found in this class and campus');
-                      }
-
-                
-      
-     }
-     else
-     {
-       return redirect()->back()->with('invalid', 'No subjects found in this class and semester');
-     }
-     }else{
-
-      return redirect(route('subjects.to.lecturers'))->with(
-        'invalid', 'This class is not completely defined, like no students or subjects added'
-         );
-     }
-
-    }else
-    {
-      return redirect()->back()->with('invalid', 'Please choose options first');
+      $data['myclassSubjects'] = Myclasssubject::where('programclass_id', $request->class_id)->where('semester', $request->semester)->get();
+      return view('admin.courses.assign_subjects_to_lecturers', $data);
     }
-
+    else{
+      return view('admin.courses.assign_subjects_to_lecturers')->with('status', 'No Subjects found for this class and semester');
+    }
   }
 
+  public function AllocateModulesToLecturers(Request $request)
+    {
+        dd($request->lecturer_id);
+    }
 }

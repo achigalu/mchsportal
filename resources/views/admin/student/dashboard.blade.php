@@ -74,7 +74,9 @@ $campus = App\Models\Campus::all()
             </div>
         </div>
         <!-- end page title -->
-
+       @php 
+       $stuCourses = App\Models\Studentsubject::where('registration_no', $student->reg_num)->get()
+       @endphp
         </div>
 
 
@@ -190,31 +192,18 @@ $campus = App\Models\Campus::all()
                                                         <th>Mid-Sem</th>
                                                         <th>Exam</th>
                                                         <th style="width: 120px;">Final Grade</th>
+                                                        <th style="width: 120px;">Remark</th>
                                                     </tr>
                                                 </thead><!-- end thead -->
                                                 <tbody>
                                       
 
-                                                 @php 
-                                                 $sclass = App\Models\Programclass::where('classcode', $student->programclass)->first()
-                                                 @endphp  
 
-                                                 @if(!empty($sclass))
-                                                @php
-                                                 $Myclass = $sclass->id;
-                                                 @endphp
-                                                 @endif
-
-                                                @php
-                                                 $studentSubjects = App\Models\Studentsubject::where('registration_no', $student->reg_num)
-                                                 ->where('semester', $student->semester)->where('programclass_id', $Myclass)->get();
-                                                @endphp
-
-                                            @if(!empty($studentSubjects))
+                                            @if(!empty($stuCourses))
                                             @php 
                                             $i = 0
                                             @endphp
-                                                    @foreach($studentSubjects as $subject)
+                                                    @foreach($stuCourses as $subject)
                                                     <tr>
                                                         <td style="width: 10px;"><h6 class="mb-0">{{++$i}}</h6></td>
                                                         <td>{{$subject->course_code}}</td>
@@ -222,20 +211,33 @@ $campus = App\Models\Campus::all()
                                                             @php 
                                                             $course = App\Models\Course::where('code', $subject->course_code)->first()
                                                             @endphp
+                                                        @if(!empty($course))
                                                         {{$course->name}}
+                                                        @endif
                                                         </td>
                                                         <td>
+                                                        @if(!empty($subject->assessment1))
                                                         {{$subject->assessment1}}
+                                                        @endif
                                                         </td>
                                                         <td>
+                                                        @if(!empty($subject->assessment2))
                                                         {{$subject->assessment2}}
+                                                        @endif
                                                         </td>
                                                         <td>
+                                                        @if(!empty($subject->exam_grade))     
                                                         {{$subject->exam_grade}}
+                                                        @endif
                                                         </td>
                                                         <td>
+                                                        @if(!empty($subject->final_grade))
                                                         {{$subject->final_grade}}
+                                                        @endif
                                                         </td>
+                                                        <td>
+                                                         <b>Pass</b>
+                                                        </tr>
                                                        
                                                         
                                                     </tr>

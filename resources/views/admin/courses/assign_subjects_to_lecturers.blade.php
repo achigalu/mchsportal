@@ -73,6 +73,34 @@
             <div class="page-content">
             <div class="container-fluid">
 
+              <!-- start page title -->
+              <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                                    <h4 class="mb-sm-0"></h4>
+
+                                    <div class="page-title-right">
+<div class="btn-group">
+<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
+aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+</button>&nbsp;&nbsp;
+<div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Exel</a>
+    <a class="dropdown-item" href="#">PDF</a>
+   
+</div>
+                                        <ul class="breadcrumb m-0">
+                                        <a href="{{route('subjects.to.lecturers')}}">
+                                        <li class="btn btn-secondary"><i class="fas fa-long-arrow-alt-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </a>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
 <!-- start page title -->
 
 
@@ -98,8 +126,8 @@
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif 
-<br>
 
+@if(!empty($data))
 
                       @php
                       $campus = App\Models\Campus::all()
@@ -117,13 +145,13 @@
                     <div class="card-body" >
                     <select class="form-control select2" name="class_id" aria-label="Default select example" required>
                     <option value="" selected="">-- select --</option>
-                    @if(!empty($data))
+                    
                     @foreach($data as $myclass)
                   
                     <option value="{{$myclass->programclass_id}}">{{$myclass->classcode}} - @if($myclass->campus_id==1) LL @endif @if($myclass->campus_id==2) BT  @endif @if($myclass->campus_id==3) ZA  @endif</option>
 
                     @endforeach
-                    @endif
+                   
                     </select>
                     </div>
 
@@ -148,6 +176,8 @@
                     </div>
                     </div>
 
+                    
+
 
                     <div class="form-group col-md-4">
                     <label for="" ></label>
@@ -171,10 +201,12 @@
 </div>
 </div>
 <!-- end select2 -->
-
+@endif
 </div>
-    
+
+@if(!empty($myclassSubjects))
 <div class="row">
+
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
@@ -186,33 +218,51 @@
                                                 <th>Subject Code</th>
                                                 <th>Subject Name</th>
                                                 <th>Semester</th>
-                                                <th>Enrolled Students</th>
+                                                <th>Assign Lecturers</th>
                                                 
                                             </tr>
                                             </thead>
                                            
                                              <tbody>         
-                                        @if(session('result'))
+                                        
                                         @php $id = 0 @endphp <!-- Move the initialization outside of the loop -->
-                                        @foreach(session('result') as $subject)
+                                        @foreach($myclassSubjects as $subject)
                                         <tr>
 
                                             <td>{{ ++$id }}</td>
-                                            <td>{{$subject->programclass_id}}</td>
-                                            <td>{{$subject->course_code}}</td>
+                                            <td>
+                                            {{$subject->classcode}} - @if($subject->campus_id==1)LL @endif
+                                            @if($subject->campus_id==2)BT @endif
+                                            @if($subject->campus_id==3)ZA @endif
+                                            </td>
+                                            <td>
                                             @php
-                                            $course = App\Models\Course::where('code', $subject->course_code)->first();
+                                            $coursecode = App\Models\Course::find($subject->course_id) 
                                             @endphp
-                                            <td>{{$course->name}}</td>
+                                            {{$coursecode->code}}
+                                            </td>
+                                            
+                                            <td>{{$coursecode->name}}</td>
 
                                             <td>{{$subject->semester}}</td>
 
-                                            <td><span class="badge rounded-pill bg-success">0</span></td>
+                                                <td>
+                                                   
+                                                    <div class="row">
+                                                        <div class="col">
+                                                        Mike Phiri
+                                                            
+                                                            <span class="badge rounded-pill bg-danger" data-bs-toggle="modal" data-bs-target=".bs-example-modal-center"><i class="fas fa-user-times"></i></span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="badge rounded-pill bg-success me-1" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable"><i class="fas fa-user-plus"></i></span>
+                                                </td>
+
 
                                         </tr>
 
                                         @endforeach
-                                        @endif
+                                      
                                             </tbody>
                                         </table>
                                       
@@ -222,7 +272,7 @@
                             </div> <!-- end col -->
                         </div> <!-- end row -->
 
-
+@endif
 </div>
 </div>
 </div>
@@ -239,7 +289,73 @@
 
 <!-- end row -->
 
+                                        <div class="col-sm-6 col-md-4 col-xl-3">
+                                                <div class="my-4 text-center">
+                                                    
+                                                
+                                                    <!-- Small modal -->
+                                                   
+                                                </div>
+        
+                                                <div class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Are you sure to delete</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>Cras mattis consectetur purus sit amet fermentum.
+                                                                    Cras justo odio, dapibus ac facilisis in,
+                                                                   </p>
+                                                               
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-warning waves-effect waves-light">Delete</button>
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
+                                            </div>
 
+
+
+                                            <div class="col-sm-6 col-md-4 col-xl-3">
+                                                <div class="my-4 text-center">
+                                                   
+                                                </div>
+        
+                                                <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalScrollableTitle">Allocate lecturer</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                               <form action="{{route('allocate.modules.to.lecturers')}}" method="post">
+                                                                @csrf
+                                                              <select name="lecturer_id" class="form-control" id="" required>
+                                                                <option value="">-- Select lecturer --</option>
+                                                                @php 
+                                                                $lecturers = App\Models\User::where('role', 'lecturer')->get();
+                                                                @endphp
+                                                                @foreach ($lecturers as $lecturer)
+                                                                <option value="{{$lecturer->id}}">{{$lecturer->fname}} {{$lecturer->lname}}</option>
+                                                                
+                                                                @endforeach
+                                                              </select>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-secondary waves-effect waves-light">Submit</button>
+                                                                </form> 
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
+                                            </div>
 
 
 

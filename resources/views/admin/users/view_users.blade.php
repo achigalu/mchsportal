@@ -121,8 +121,8 @@
                                                 <td>Admin</td>
                                                 <td>Active</td>
                                                 <td>
-                                                <a href="{{route('edit.program')}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('view.program.class')}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
@@ -134,8 +134,8 @@
                                                 <td>Admin</td>
                                                 <td>Active</td>
                                                 <td>
-                                                <a href="{{route('edit.program')}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('view.program.class')}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
@@ -147,8 +147,8 @@
                                                 <td>Admin</td>
                                                 <td>Active</td>
                                                 <td>
-                                                <a href="{{route('edit.program')}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('view.program.class')}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
@@ -162,8 +162,8 @@
                                                 <td>Admin</td>
                                                 <td>Active</td>
                                                 <td>
-                                                <a href="{{route('edit.program')}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('view.program.class')}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
@@ -176,8 +176,8 @@
                                                 <td>Admin</td>
                                                 <td>Active</td>
                                                 <td>
-                                                <a href="{{route('edit.program')}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('view.program.class')}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
