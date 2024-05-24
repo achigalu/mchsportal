@@ -252,10 +252,10 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                         <div class="col">
                                                         Mike Phiri
                                                             
-                                                            <span class="badge rounded-pill bg-danger" data-bs-toggle="modal" data-bs-target=".bs-example-modal-center"><i class="fas fa-user-times"></i></span>
+                                                            <span class="badge rounded-pill bg-danger" data-bs-toggle="modal" data-bs-target="#deleteLecturer{{$subject->name}}"><i class="fas fa-user-times"></i></span>
                                                         </div>
                                                     </div>
-                                                    <span class="badge rounded-pill bg-success me-1" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable"><i class="fas fa-user-plus"></i></span>
+                                                    <span class="badge rounded-pill bg-success me-1" data-bs-toggle="modal" data-bs-target="#addLecturer"><i class="fas fa-user-plus"></i></span>
                                                 </td>
 
 
@@ -296,8 +296,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                     <!-- Small modal -->
                                                    
                                                 </div>
-        
-                                                <div class="modal fade bs-example-modal-center" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                            @if(!empty($subject))
+                                                <div class="modal fade" id="deleteLecturer{{$subject->name}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -312,13 +312,13 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
-                                                                <button type="button" class="btn btn-warning waves-effect waves-light">Delete</button>
+                                                                <a href="{{route('delete.upload.list', $coursecode->name)}}"><button type="button" class="btn btn-warning waves-effect waves-light">Delete</button></a>
                                                             </div>
                                                         </div><!-- /.modal-content -->
                                                     </div><!-- /.modal-dialog -->
                                                 </div><!-- /.modal -->
                                             </div>
-
+                                        @endif
 
 
                                             <div class="col-sm-6 col-md-4 col-xl-3">
@@ -326,7 +326,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                    
                                                 </div>
         
-                                                <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                                <div class="modal fade" id="addLecturer" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -336,6 +336,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                             <div class="modal-body">
                                                                <form action="{{route('allocate.modules.to.lecturers')}}" method="post">
                                                                 @csrf
+                                                                @if(!empty($class_id))
+                                                                <input type="hidden" value="{{$class_id}}" name="class_id">
+                                                                <input type="hidden" value="{{$semester}}" name="semester">
+                                                                <input type="hidden" value="{{$subject->course_id}}" name="course_id">
+                                                                <input type="hidden" value="{{$subject->campus_id}}" name="campus_id">
+                                                                @endif
                                                               <select name="lecturer_id" class="form-control" id="" required>
                                                                 <option value="">-- Select lecturer --</option>
                                                                 @php 

@@ -128,7 +128,11 @@ class studentRegistrationController extends Controller
    // $data['myclassSubjects'] = Myclasssubject::where('programclass_id', $request->class_id)->where('semester', $request->semester)->get();
     if(!empty($request->class_id) && !empty($request->semester))
     {
-      $data['myclassSubjects'] = Myclasssubject::where('programclass_id', $request->class_id)->where('semester', $request->semester)->get();
+      $myClassSubjects = Myclasssubject::ClassSubject($request->class_id, $request->semester);
+      
+      $data['myclassSubjects'] = $myClassSubjects;
+      $data['class_id'] = $request->class_id;
+      $data['semester'] = $request->semester;
       return view('admin.courses.assign_subjects_to_lecturers', $data);
     }
     else{
@@ -138,6 +142,11 @@ class studentRegistrationController extends Controller
 
   public function AllocateModulesToLecturers(Request $request)
     {
-        dd($request->lecturer_id);
+      $myClassSubjects = Myclasssubject::ClassSubject($request->class_id, $request->semester);
+      
+      $data['myclassSubjects'] = $myClassSubjects;
+      $data['class_id'] = $request->class_id;
+      $data['semester'] = $request->semester;
+      return view('admin.courses.assign_subjects_to_lecturers', $data);
     }
 }
