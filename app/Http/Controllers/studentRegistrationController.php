@@ -6,6 +6,7 @@ use App\Models\Myclasssubject;
 use App\Models\Programclass;
 use App\Models\User;
 use App\Models\Campus;
+use App\Models\lecturerSubjects;
 use App\Models\Studentsubject;
 use Illuminate\Http\Request;
 
@@ -141,12 +142,56 @@ class studentRegistrationController extends Controller
   }
 
   public function AllocateModulesToLecturers(Request $request)
+    
+    {
+      //dd($request->all());
+      $myClassSubjects = Myclasssubject::ClassSubject($request->class_id, $request->semester);
+      
+      $data['myclassSubjects'] = $myClassSubjects;
+      $data['class_id'] = $request->class_id;
+      $data['semester'] = $request->semester;
+      if(!empty($request->class_id) && !empty($request->semester))
+      {
+        $lecturerSubject = lecturerSubjects::firstOrCreate(
+          [
+          'classid' => $request->class_id,
+          'semester' => $request->semester,
+          'campus_id' => $request->campus_id,
+          'userid' => $request->lecturer_id,
+          'courseid' => $request->course_id,
+          
+          ],
+          [
+            'coordinator' =>0
+          ]
+        );
+      }
+      return view('admin.courses.assign_subjects_to_lecturers', $data);
+    }
+
+    public function deleteModuleLecturer(Request $request, $userID)
     {
       $myClassSubjects = Myclasssubject::ClassSubject($request->class_id, $request->semester);
       
       $data['myclassSubjects'] = $myClassSubjects;
       $data['class_id'] = $request->class_id;
       $data['semester'] = $request->semester;
-      return view('admin.courses.assign_subjects_to_lecturers', $data);
+      if(!empty($userID))
+      {
+        $delete = lecturerSubjects::where('userid', $userID)
+        ->where('classid', $request->class_id)
+        ->where('courseid', $request->course_id)
+        ->where('semester', $request->semester)
+        ->where('campus_id', $request->campus_id)->delete();
+      }
+      if($delete)
+      {
+       
+  
+      return view('admin.courses.assign_subjects_to_lecturers', $data)->with('status', 'Lecturer detached successfully');
+      }
+      else{
+        return view('admin.courses.assign_subjects_to_lecturers', $data)->with('status', 'Module not deleted');
+      }
     }
 }

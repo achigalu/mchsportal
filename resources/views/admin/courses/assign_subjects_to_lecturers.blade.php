@@ -184,7 +184,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                         <div class="card bg-light text-dark">
                         
                     <div class="card-body">
-                    <button class="btn btn-info" type="submit" style="margin-top: 8px;">Allocate lecturers to Subjects</button>
+                    <button class="btn btn-info" type="submit" style="margin-top: 8px;">Allocate Subjects to lecturers</button>
                     </div>
                     </div>
                     </div>
@@ -239,7 +239,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             @php
                                             $coursecode = App\Models\Course::find($subject->course_id) 
                                             @endphp
-                                            {{$coursecode->code}}
+                                            {{$coursecode->code}} 
                                             </td>
                                             
                                             <td>{{$coursecode->name}}</td>
@@ -250,16 +250,120 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                    
                                                     <div class="row">
                                                         <div class="col">
-                                                        Mike Phiri
+                                                        @php 
+                                                        $lecturers = App\Models\lecturerSubjects::where('courseid',$subject->course_id)->get()
+                                                        @endphp
+
+                                                        @if(!empty($lecturers))
+
+                                                        @foreach($lecturers as $lecturer)
+                                                        
+                                                        @php
+                                                        $user = App\Models\User::find($lecturer->userid)
+                                                        @endphp
+
+                                                        {{$user->fname}} {{$user->lname}} 
+                                                        <span class="badge rounded-pill bg-warning" data-bs-toggle="modal" data-bs-target="#deleteLecturer{{$user->lname}}"><i class="fas fa-user-times"></i></span>
+
+                                                        <div class="col-sm-6 col-md-4 col-xl-3">
+                                                <div class="my-1 text-center">
+                                                    
+                                                
+                                                    <!-- Small modal -->
+                                                   
+                                                </div>
+                                            @if(!empty($subject))
+                                                <div class="modal fade" id="deleteLecturer{{$user->lname}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Are you sure to delete</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                            Are you sure to delete lecturer <span style="color:red;">{{$user->fname}} {{$user->lname}}</span>
+                                                             from <br>{{$coursecode->code}} | {{$coursecode->name}} -  @if($subject->campus_id==1)LL @endif
+                                                            @if($subject->campus_id==2)BT @endif
+                                                            @if($subject->campus_id==3)ZA @endif ?
+                                                               
+                                                            </div>
+                                                           
+                                                            <form action="{{route('delete.moduleLecturer', $user->id)}}" method="post">
+                                                                @csrf
+                                                                @if(!empty($class_id))
+                                                                <input type="hidden" value="{{$class_id}}" name="class_id">
+                                                                <input type="hidden" value="{{$semester}}" name="semester">
+                                                                <input type="hidden" value="{{$coursecode->id}}" name="course_id">
+                                                                <input type="hidden" value="{{$subject->campus_id}}" name="campus_id">
+                                                                @endif
+                                                           
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">No</button>
+                                                            <button type="submit" class="btn btn-warning waves-effect waves-light">Yes</button>
+                                                            </form>
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
+                                            </div>
+                                        @endif
+
+                                                      
+                                    @endforeach
+                                    @endif
                                                             
-                                                            <span class="badge rounded-pill bg-danger" data-bs-toggle="modal" data-bs-target="#deleteLecturer{{$subject->name}}"><i class="fas fa-user-times"></i></span>
+                                                            
                                                         </div>
                                                     </div>
-                                                    <span class="badge rounded-pill bg-success me-1" data-bs-toggle="modal" data-bs-target="#addLecturer"><i class="fas fa-user-plus"></i></span>
+                                                    <span class="badge rounded-pill bg-success me-1" data-bs-toggle="modal" data-bs-target="#addLecturer{{$subject->course_id}}"><i class="fas fa-user-plus"></i></span>
                                                 </td>
 
 
                                         </tr>
+
+                                        <div class="col-sm-6 col-md-4 col-xl-3">
+                                                <div class="my-4 text-center">
+                                                   
+                                                </div>
+        
+                                                <div class="modal fade" id="addLecturer{{$subject->course_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalScrollableTitle">Allocate lecturer to subject</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                               <form action="{{route('allocate.modules.to.lecturers')}}" method="post">
+                                                                @csrf
+                                                                @if(!empty($class_id))
+                                                                <input type="hidden" value="{{$class_id}}" name="class_id">
+                                                                <input type="hidden" value="{{$semester}}" name="semester">
+                                                                <input type="hidden" value="{{$subject->course_id}}" name="course_id">
+                                                                <input type="hidden" value="{{$subject->campus_id}}" name="campus_id">
+                                                                @endif
+                                                              <select name="lecturer_id" class="form-control" id="" required>
+                                                                <option value="">-- Select lecturer --</option>
+                                                                @php 
+                                                                $lecturers = App\Models\User::where('role', 'lecturer')->get();
+                                                                @endphp
+                                                                @foreach ($lecturers as $lecturer)
+                                                                <option value="{{$lecturer->id}}">{{$lecturer->fname}} {{$lecturer->lname}}</option>
+                                                                
+                                                                @endforeach
+                                                              </select>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-secondary waves-effect waves-light">Assign</button>
+                                                                </form> 
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
+                                            </div>
+
 
                                         @endforeach
                                       
@@ -289,80 +393,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
 <!-- end row -->
 
-                                        <div class="col-sm-6 col-md-4 col-xl-3">
-                                                <div class="my-4 text-center">
-                                                    
-                                                
-                                                    <!-- Small modal -->
-                                                   
-                                                </div>
-                                            @if(!empty($subject))
-                                                <div class="modal fade" id="deleteLecturer{{$subject->name}}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Are you sure to delete</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>Cras mattis consectetur purus sit amet fermentum.
-                                                                    Cras justo odio, dapibus ac facilisis in,
-                                                                   </p>
-                                                               
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
-                                                                <a href="{{route('delete.upload.list', $coursecode->name)}}"><button type="button" class="btn btn-warning waves-effect waves-light">Delete</button></a>
-                                                            </div>
-                                                        </div><!-- /.modal-content -->
-                                                    </div><!-- /.modal-dialog -->
-                                                </div><!-- /.modal -->
-                                            </div>
-                                        @endif
+                                       
 
-
-                                            <div class="col-sm-6 col-md-4 col-xl-3">
-                                                <div class="my-4 text-center">
-                                                   
-                                                </div>
-        
-                                                <div class="modal fade" id="addLecturer" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="exampleModalScrollableTitle">Allocate lecturer</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                               <form action="{{route('allocate.modules.to.lecturers')}}" method="post">
-                                                                @csrf
-                                                                @if(!empty($class_id))
-                                                                <input type="hidden" value="{{$class_id}}" name="class_id">
-                                                                <input type="hidden" value="{{$semester}}" name="semester">
-                                                                <input type="hidden" value="{{$subject->course_id}}" name="course_id">
-                                                                <input type="hidden" value="{{$subject->campus_id}}" name="campus_id">
-                                                                @endif
-                                                              <select name="lecturer_id" class="form-control" id="" required>
-                                                                <option value="">-- Select lecturer --</option>
-                                                                @php 
-                                                                $lecturers = App\Models\User::where('role', 'lecturer')->get();
-                                                                @endphp
-                                                                @foreach ($lecturers as $lecturer)
-                                                                <option value="{{$lecturer->id}}">{{$lecturer->fname}} {{$lecturer->lname}}</option>
-                                                                
-                                                                @endforeach
-                                                              </select>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-secondary waves-effect waves-light">Submit</button>
-                                                                </form> 
-                                                            </div>
-                                                        </div><!-- /.modal-content -->
-                                                    </div><!-- /.modal-dialog -->
-                                                </div><!-- /.modal -->
-                                            </div>
-
+                                           
 
 
 
