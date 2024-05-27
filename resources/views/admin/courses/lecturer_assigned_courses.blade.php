@@ -74,7 +74,7 @@
                                     <div class="page-title-right">
                                     <div class="btn-group">
                                     <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
-aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;</button>
 </button>&nbsp;&nbsp;
 <div class="dropdown-menu">
     <a class="dropdown-item" href="#">Exel</a>
@@ -82,8 +82,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
    
 </div>
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('add.fee.categories')}}">
-                                        <li class="btn btn-outline-info"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Tuition Fee Category</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="{{route('myhome')}}">
+                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>

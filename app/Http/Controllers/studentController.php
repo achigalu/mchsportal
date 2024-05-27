@@ -194,7 +194,7 @@ class studentController extends Controller
                               
                                 $uploadlist_id = $month->id;
                                 
-                                $reg_number = $program_code.'/'. $campus_code.'/'.$intake_year.'/'.$intake_month.'/';
+                                $reg_number = $program_code.'/'. $campus_code.'/'.$intake_year.'/0'.$intake_month.'/';
                                
                                 $counter=00;
                                 $email='@mchs.mw';

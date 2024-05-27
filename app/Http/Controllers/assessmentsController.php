@@ -13,10 +13,16 @@ class assessmentsController extends Controller
         return view('admin.grades.assessment_list', $data);
     }
 
-    public function studentsGrading($id)
+    public function studentsGrading($id, $assessment)
     {
         $data['title'] = 'Students grading';
         $data['id'] = $id;
+        $data['assessment'] = $assessment;
         return view('admin.grades.student_grading', $data);
+    }
+
+    public function studentsGraded1(Request $request)
+    {
+        dd($request->all());
     }
 }

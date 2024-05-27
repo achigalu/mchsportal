@@ -211,7 +211,8 @@ Route::controller(studentRegistrationController::class)->group(function(){
 
 Route::controller(assessmentsController::class)->group(function(){
     Route::get('/list/assessments/{id}', 'listAssessments')->name('list.assessments');
-    Route::get('/students/grading/{id}', 'studentsGrading')->name('students.grading');
+    Route::get('/students/grading/{id}/{assessment}', 'studentsGrading')->name('students.grading');
+    Route::post('/students/graded','studentsGraded1')->name('students.graded1');
 });
 
 Route::controller(dashboard::class)->group(function(){

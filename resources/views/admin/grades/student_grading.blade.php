@@ -97,8 +97,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
    
 </div>
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('add.fee.categories')}}">
-                                        <li class="btn btn-outline-info"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Tuition Fee Category</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="{{route('list.assessments',$id)}}">
+                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -107,12 +107,17 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                             </div>
                         </div>
                         <!-- end page title -->
-                        
+                        <p>
+                                    <b style="color:#F57152;">Course {{$assessment}} grades.</b>
+                                    </p>
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
-                                    <div class="card-body">
 
+                                <form action="{{route('students.graded1')}}" method="post"> 
+                                    @csrf
+                                    <div class="card-body">
+                                    
                                                @php
                                                $courseID =App\Models\Course::find($course->courseid) 
                                                @endphp
@@ -123,18 +128,24 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                ->where('campus_id', $course->campus_id)
                                                ->where('course_code', $courseID->code)->get()
                                                 @endphp
+
+                                                
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                            <thead>
+                                       
+                                      
+                                        <thead>
+                                        
                                             <tr style="background-color: #f0f0f0;">
                                                 <th style="width: 10px;">#</th>
                                                 <th style="width: 100px;">Student Name</th>
                                                 <th style="width: 50px;">Registration #</th>
                                                 <th>Grade</th>
+                                                <th></th>
 
                                                
                                             </tr>
                                             </thead>
-                                        
+                                            
                                             <tbody>
                                             @php 
                                             $a=0
@@ -152,20 +163,44 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 
                                                 <td>{{$student->registration_no}}
+                                                    <input type="text" name="regstration[]" value="{{$student->registration_no}}" hidden>
                                                 
                                                 </td>
                                                 <td>
-                                                        <input class="form-data" type="number" min="0" max="100" style="width: 100px;">
-
+                                                        <input class="form-control" name="assessment[]" type="number" min="0" max="100" style="width: 100px;" required>
 
                                                 </td>
+                                                <td></td>
                                             </tr>
+                                            
                                             @endforeach
                                             @endif
+                                           
+                                          
+                                           
+                                           
+                                            
                                             </tbody>
+                                            
                                         </table>
-        
+                                        <table>
+                                            
+                                        </table>
+                                      <table>
+                                        <tr>
+                                            <td style="width: 300px;">
+                                            
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                        <button type="submit" class="btn btn-outline-info btn-lg" style="float: right; width: 200px"><i class="fas fa-save"></i>&nbsp;&nbsp; Save grades</button>
+
+                                            </td>
+                                        </tr>
+                                      </table>
                                     </div>
+                                    </form>
                                 </div>
                             </div> <!-- end col -->
                         </div> <!-- end row -->
