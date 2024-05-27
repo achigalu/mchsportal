@@ -346,7 +346,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                               <select name="lecturer_id" class="form-control" id="" required>
                                                                 <option value="">-- Select lecturer --</option>
                                                                 @php 
-                                                                $lecturers = App\Models\User::where('role', 'lecturer')->get();
+                                                                $lecturers = App\Models\User::where('role', 'admin')->get();
                                                                 @endphp
                                                                 @foreach ($lecturers as $lecturer)
                                                                 <option value="{{$lecturer->id}}">{{$lecturer->fname}} {{$lecturer->lname}}</option>

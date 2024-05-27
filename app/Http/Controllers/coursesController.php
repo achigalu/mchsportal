@@ -12,6 +12,7 @@ use App\Models\Programclass;
 use App\Models\User;
 use App\Models\Campus;
 use Illuminate\Support\Facades\Session;
+use App\Models\lecturerSubjects;
 
 class coursesController extends Controller
 {
@@ -57,7 +58,7 @@ class coursesController extends Controller
         }
            
 
-            return redirect()->back()->with('message', 'Course: '.$request->code. " "  .$request->name. ' created successfully');
+            return redirect()->back()->with('status', 'Course: '.$request->code. " "  .$request->name. ' created successfully');
         
 
     } 
@@ -262,6 +263,11 @@ class coursesController extends Controller
         return view('admin.courses.assign_subjects_to_lecturers', ['data' => $data]);
     }
 
-    
+    public function lecturerCourses($id)
+    {   
+        $data['lecturerCourses'] = lecturerSubjects::where('userid', $id)->get();
+        $data['title'] = 'Lecturer courses';
+        return view('admin.courses.lecturer_assigned_courses', $data);
+    }
     
 }

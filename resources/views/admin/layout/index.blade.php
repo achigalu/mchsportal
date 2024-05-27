@@ -170,7 +170,37 @@ $campus = App\Models\Campus::all()
                             </div><!-- end col -->
                         
 
+                                                @php 
+                                                $lecturer = Auth::user()->id
+                                                @endphp
+                                <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">My</p>
+                                               <h4 class="mb-2">Courses</h4></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
 
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            
 
 
 

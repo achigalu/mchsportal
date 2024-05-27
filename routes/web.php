@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\academicDepartments;
+use App\Http\Controllers\assessmentsController;
 use App\Http\Controllers\campusController;
 use App\Http\Controllers\cohortCategoryController;
 use App\Http\Controllers\ProfileController;
@@ -186,6 +187,7 @@ Route::controller(coursesController::class)->group(function(){
     Route::get('/add/subject/to/students', 'addSubjectToStudent')->name('add.subject.to.students');
     Route::post('/add/class/subjects', 'addClassSubjects')->name('add.class.subjects');
     Route::get('/add/subjects/to/lecturers', 'addSubjectsToLecturers')->name('subjects.to.lecturers');
+    Route::get('/view/lecturer/courses/{id}', 'lecturerCourses')->name('lecturer.courses');
 
 });
 
@@ -205,6 +207,11 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
     Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer');
     
+});
+
+Route::controller(assessmentsController::class)->group(function(){
+    Route::get('/list/assessments/{id}', 'listAssessments')->name('list.assessments');
+    Route::get('/students/grading/{id}', 'studentsGrading')->name('students.grading');
 });
 
 Route::controller(dashboard::class)->group(function(){

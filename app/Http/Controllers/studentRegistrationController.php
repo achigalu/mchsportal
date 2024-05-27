@@ -115,7 +115,7 @@ class studentRegistrationController extends Controller
 
         else{
           return redirect(route('add.subject.to.students'))->with([
-           'status' => 'No Students found in this class and campus',
+           'invalid' => 'No Students found in this class and campus',
             'class_id' => $class,
             'campus' => $myCampus,
            'semester' => $semester
@@ -137,7 +137,7 @@ class studentRegistrationController extends Controller
       return view('admin.courses.assign_subjects_to_lecturers', $data);
     }
     else{
-      return view('admin.courses.assign_subjects_to_lecturers')->with('status', 'No Subjects found for this class and semester');
+      return view('admin.courses.assign_subjects_to_lecturers')->with('invalid', 'No Subjects found for this class and semester');
     }
   }
 
@@ -191,7 +191,7 @@ class studentRegistrationController extends Controller
       return view('admin.courses.assign_subjects_to_lecturers', $data)->with('status', 'Lecturer detached successfully');
       }
       else{
-        return view('admin.courses.assign_subjects_to_lecturers', $data)->with('status', 'Module not deleted');
+        return view('admin.courses.assign_subjects_to_lecturers', $data)->with('invalid', 'Module not deleted');
       }
     }
 }
