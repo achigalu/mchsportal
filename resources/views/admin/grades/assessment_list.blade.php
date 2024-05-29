@@ -123,13 +123,14 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                         $lecturerModule = App\Models\lecturerSubjects::find($id)
                                         @endphp
                                         @endif
+
+                                        @php 
+                                        $assessmentlist1 = App\Models\Assessmentlist::find(1)
+                                        @endphp
                                             <tbody>
                                             <tr>
                                                 <td>1</td>
-                                                <td>Assignment
-                                                    @php 
-                                                    $assessment = 'Assessment'
-                                                    @endphp
+                                                <td>{{$assessmentlist1->assessment_name}}
                                                 </td>
                                                 <td>
                                                 @php 
@@ -156,7 +157,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 <td>
                                                 @if($students>0)
-                                                    <a href="{{route('students.grading', ['id' => $id, $assessment])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+
+                                                    <a href="{{route('students.grading', ['id' => $id, $assessmentlist1->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
                                                 @endif
@@ -164,10 +166,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             </tr>
                                             <tr>
                                                 <td>2</td>
-                                                <td>Mid-Semester
-                                                @php 
-                                                    $assessment = 'Mid-Semester'
-                                                    @endphp
+                                                <td> @php 
+                                                $assessmentlist2 = App\Models\Assessmentlist::find(2)
+                                                @endphp
+
+                                                {{$assessmentlist2->assessment_name}}
                                                 </td>
                                                 <td>{{$students}}</td>
                                                 <td>
@@ -178,7 +181,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 <td>
                                                 @if($students>0)
-                                                    <a href="{{route('students.grading', ['id' => $id, $assessment])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                    <a href="{{route('students.grading', ['id' => $id, $assessmentlist2->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
                                                 @endif
@@ -187,10 +190,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                                             <tr>
                                                 <td>3</td>
-                                                <td>End-of-semester Exam
-                                                        @php
-                                                        $assessment = 'End-of-Semester'
-                                                        @endphp
+                                                <td>@php 
+                                                $assessmentlist3 = App\Models\Assessmentlist::find(3)
+                                                @endphp
+
+                                                {{$assessmentlist3->assessment_name}}
                                                 </td>
                                                 <td>{{$students}}</td>
                                                 <td>
@@ -202,7 +206,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                               
                                                 <td>
                                                 @if($students>0)
-                                                        <a href="{{route('students.grading', ['id' => $id, $assessment])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                        <a href="{{route('students.grading', ['id' => $id, $assessmentlist3->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
 
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>

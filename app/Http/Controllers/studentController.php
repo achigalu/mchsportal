@@ -200,7 +200,12 @@ class studentController extends Controller
                                 $email='@mchs.mw';
                                 $campus = $request->campus[0];
                               
-                                $already = User::where('academicyear_id', $request->acy[0])->where('campus',  $request->campus[0])->where('uploadlist_id',  $id)->first(); 
+                                // need to use firstOrCreate method
+                                $already = User::where('academicyear_id', $request->acy[0])
+                                ->where('campus',  $request->campus[0])
+                                ->where('uploadlist_id',  $id)
+                                ->first(); 
+                                
                                 if(!empty($already))
                                 {
                                    return redirect()->back()->with('invalid' , 'This class list was already uploaded');

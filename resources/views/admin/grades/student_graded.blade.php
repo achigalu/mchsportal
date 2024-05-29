@@ -105,27 +105,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                                                 
                                     <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.</h5>
-                              
-     
-
+                                    
                         <div class="row">
                             <div class="col-12">
-
-                            @if(session()->has('status'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-<i class="mdi mdi-check-all me-2"></i>
-{{session()->get('status')}}
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
-@if(session()->has('invalid'))
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-<i class="mdi mdi-check-all me-2"></i>
-{{session()->get('invalid')}}
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif   
                                 <div class="card">
 
 
@@ -173,18 +155,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 
                                                 </td>
                                                 <td>
-                                                    @if($assessment==1)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment1 ?? ''}}" style="width: 100px;">
-                                                    @endif
+                                                            <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ old('assessment.0') }}" style="width: 100px;">
 
-                                                    @if($assessment==2)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment2 ?? ''}}" style="width: 100px;">
-                                                    @endif
 
-                                                    @if($assessment==3)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->exam_grade ?? ''}}" style="width: 100px;">
-                                                    @endif
-                                                            
 
                                                 </td>
                                                 <td></td>

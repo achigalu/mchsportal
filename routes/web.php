@@ -205,14 +205,15 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
     Route::post('/modules/to/lecturers', 'ModulesToLecturers')->name('modules.to.lecturers');
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
-    Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer');
-    
+    Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer');  
 });
 
 Route::controller(assessmentsController::class)->group(function(){
     Route::get('/list/assessments/{id}', 'listAssessments')->name('list.assessments');
     Route::get('/students/grading/{id}/{assessment}', 'studentsGrading')->name('students.grading');
-    Route::post('/students/graded','studentsGraded1')->name('students.graded1');
+    Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1');
+    Route::get('/students/graded/{id}/{assessment}','studentsGraded2')->name('students.graded2');
+
 });
 
 Route::controller(dashboard::class)->group(function(){
