@@ -66,6 +66,16 @@
                     <div class="container-fluid">
 
                         <!-- start page title -->
+                        @if(!empty($id))
+                        @php
+                        $lecturerModule = App\Models\lecturerSubjects::find($id)
+                        @endphp
+                        @endif
+
+                        @php 
+                        $class = App\Models\Programclass::where('id', $lecturerModule->classid)->first()
+                        @endphp
+
                         @php 
                         $course = App\Models\lecturerSubjects::find($id)
                         @endphp
@@ -75,7 +85,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Assessment list: ( {{$coursename->code}} - {{$coursename->name}})</h4>
+                                    <h4 class="mb-sm-0">Assessment list: ( {{$coursename->code}} - {{$coursename->name}}) | {{$class->classcode}} - 
+                                    
+                                    @if($class->campus_id==1) LL @endif
+                                    @if($class->campus_id==2) BT @endif 
+                                    @if($class->campus_id==3) ZA @endif - Semester  {{$lecturerModule->semester}} 
+                                    </h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -118,11 +133,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 
                                             </tr>
                                             </thead>
-                                        @if(!empty($id))
-                                        @php
-                                        $lecturerModule = App\Models\lecturerSubjects::find($id)
-                                        @endphp
-                                        @endif
+                                       
 
                                         @php 
                                         $assessmentlist1 = App\Models\Assessmentlist::find(1)
@@ -146,14 +157,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 {{$students}}
                                                 </td>
                                                 <td>
-                                                    @php 
-                                                    $class = App\Models\Programclass::where('id', $lecturerModule->classid)->first()
-                                                    @endphp
+                                                    
 
                                                     {{$class->classcode}} - 
                                                     @if($class->campus_id==1) LL @endif
                                                     @if($class->campus_id==2) BT @endif 
-                                                    @if($class->campus_id==3) ZA @endif - Sem | {{$lecturerModule->semester}}
+                                                    @if($class->campus_id==3) ZA @endif - Sem | {{$lecturerModule->semester}} 
                                                 </td>
                                                 <td>
                                                 @if($students>0)

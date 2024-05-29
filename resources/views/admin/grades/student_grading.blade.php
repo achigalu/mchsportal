@@ -70,12 +70,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Assessment list: ( {{$courseID->code}} - {{$courseID->name}} | {{$courseID->classcode}} - 
-                                     @if( $courseID->campus_id==1) LL @endif
-                                     @if( $courseID->campus_id==2) BT @endif
-                                     @if( $courseID->campus_id==3) ZA @endif
+                                    <h4 class="mb-sm-0">Assessment list: ( {{$courseID->code}} - {{$courseID->name}} {{$mycoursename->classcode}}  {{$courseID->classcode}} - 
+                                     @if( $lectSub->campus_id==1) LL @endif
+                                     @if( $lectSub->campus_id==2) BT @endif
+                                     @if( $lectSub->campus_id==3) ZA @endif |
                                         
-                                    Semester {{$lectSub->semester}})</h4>
+                                    Semester {{$lectSub->semester}} )</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
