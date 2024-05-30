@@ -35,8 +35,9 @@ class Course extends Model
 
     static public function alreadyCourseName($name)
     {
-       return self::where('name' , $name)->first(); 
+        return self::where('name', $name)->first();
     }
+
 
     static public function getAllCourses()
     {

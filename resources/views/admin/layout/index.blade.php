@@ -19,6 +19,7 @@
 <div class="btn-group">
 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"><i class="fas fa-bars"></i> &nbsp;&nbsp;Active Academic Years&nbsp;&nbsp; <i class="mdi mdi-chevron-down"></i></button>
 </button>&nbsp;&nbsp;
+
 <div class="dropdown-menu">
 @foreach($ay as $academic) 
 <a class="dropdown-item" href="{{route('view.cohorts')}}">{{$academic->ayear}} - {{$academic->month}} - {{$academic->description}}</a>

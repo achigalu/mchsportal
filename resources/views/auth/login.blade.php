@@ -89,7 +89,7 @@
  
                                 <div class="form-group mb-3 text-center row mt-3 pt-1">
                                     <div class="col-12">
-                                        <button class="btn btn-info w-100 waves-effect waves-light" style="background-color:#7196be;" type="submit">Log In</button>
+                                        <button class="btn btn-warning w-100 waves-effect waves-light" style="background-color:#7196be;" type="submit">Log In</button>
                                     </div>
                                 </div>
     

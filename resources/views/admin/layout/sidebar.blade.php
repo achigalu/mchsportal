@@ -1,7 +1,39 @@
 <div id="sidebar-menu" style="background-color:#fff;">
                         <!-- Left Menu Start -->
                         <ul class="metismenu list-unstyled" id="side-menu">
-                            
+                         
+                        @if(Auth::user()->role == 'student')
+                        <a href="{{route('myhome')}}">
+                            <li class="menu-title"><h4 style="color:#7196be;"><h4>DASHBOARD</h4></li>
+                            </a>
+                     
+                       
+                        
+                        <li>
+                                <a href="javascript: void(0);">
+                                <i class="fas fa-user"></i>
+                                    <span style="color:#7196be; font-size:14px"><b> Profile</b></span>
+                                </a>
+                               
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">
+                                <i class="fas fa-dollar-sign"></i>
+                                    <span style="color:#7196be; font-size:14px"><b> Financial Statement</b></span>
+                                </a>
+                               
+                            </li>
+
+                            <li>
+                                <a href="javascript: void(0);">
+                                <i class="fas fa-stream"></i>
+                                    <span style="color:#7196be; font-size:14px"><b> Exam Results</b></span>
+                                </a>
+                               
+                            </li>
+                        
+                        @else
+
                         @if(Auth::user()->role == 'applicant')
                         <a href="{{route('myhome')}}">
                             <li class="menu-title"><h4 style="color:#7196be;"><h4>ACCOUNT CREATION</h4></li>
@@ -11,8 +43,8 @@
                             <a href="{{route('myhome')}}">
                             <li class="menu-title"><h4 style="color:#7196be;"><h4>DASHBOARD</h4></li>
                             </a>
-                        @if(Auth::user()->role != 'student')
-                            
+                     
+                       
                         
                         <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -70,7 +102,7 @@
                             </li>
 
 
-                            @endif
+                           
                     <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class=" fas fa-user-plus" style="font-size:15px;color:gray"></i>
@@ -142,5 +174,6 @@
 
 
                         </ul>
+                        @endif
                         @endif
                     </div>
