@@ -19,8 +19,12 @@ class programClassController extends Controller
         return view('admin.programs.viewProgramClasses', $data);
     }
 
-    public function editProgramClass(){
-        return view('admin.programs.editProgramClass');
+    public function editProgramClass($id){
+        $data['title'] = 'Edit Program Class';
+        $data['pclass'] = Programclass::where('id',$id)->first();
+
+        //dd($data['pclass']);
+        return view('admin.programs.editProgramClass', $data);
     }
 
     public function addProgramClass($pclass, $pcampus){
@@ -66,5 +70,26 @@ class programClassController extends Controller
             return redirect()->back()->with('status','Class for ' .$request->classname. ' created successfully');
         }
         return redirect()->back()->with('invalid','Something went wrong'); 
+    }
+
+    public function updateProgramClass(Request $request, $id)
+    {
+        dd($request->all());
+        $updateProgramClass = Programclass::find($id);
+
+        // if basic=yes=1 : select coordinator of classes
+        // if basic=no=0 : select coordinator of program
+        if(!empty($updateProgramClass))
+        {
+            $updateProgramClass->update([
+                'classcode' => request('classcode'),
+                'classcode' => request('classcode'),
+                'classcode' => request('classcode'),
+                'classcode' => request('classcode'),
+                'classname' => request('classname'),
+                'classyear' => request('classyear'),
+                'coordinator' => request('class_coordinator'),
+                'feecategory_id']);
+        }
     }
 }

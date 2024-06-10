@@ -123,6 +123,7 @@
                                             </thead>
                                             @foreach($admissions as $admission)
                                             <tr>
+                                            
                                             <input type="text" name="acy[]" value="{{$admission->academicyear}}" hidden>
                                             <input type="text" name="fname[]" value="{{$admission->fname}}" hidden>
                                             <input type="text" name="gender[]" value="{{$admission->gender}}" hidden>

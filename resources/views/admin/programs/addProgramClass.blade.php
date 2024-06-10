@@ -140,13 +140,15 @@ $ccampus = App\Models\Campus::find($pcampus)
                         <input class="form-control" name="classyear" type="number" value="1" id="example-text-input">
                     </div>
             </div>
-
+            @php 
+            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD'])->get();
+            @endphp
             <div class="mb-3">
                 <label class="form-label">Class coordinator</label><br>
                 @error('class_coordinator') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-control select2" name="class_coordinator">
                 <option value="" selected>-- Select --</option>
-                    @foreach($class_coordinator as $coordinator)
+                    @foreach($lecturers as $coordinator)
                         <option value="{{$coordinator->id}}">{{$coordinator->fname}} {{$coordinator->lname}}
                         </option>
                     @endforeach
@@ -166,24 +168,9 @@ $ccampus = App\Models\Campus::find($pcampus)
                     </div>
 
                 </div>
+            <input type="text" name="campus" value="{{$pcampus}}" hidden>
 
-                <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Offered in What campus</label>
-                    <div class="col-sm-12">
-                    @error('campus') <span class="text-danger">{{$message}}</span> @enderror
-                        <select class="form-select" name="campus" aria-label="Default select example">
-                            <option value="" selected="">-- select --</option>
-                            
-                            <option value="1">Lilongwe</option>
-                            <option value="2">Blantyre</option>
-                            <option value="3">Zomba</option>
-
-                         
-                          
-                            </select>
-                    </div>
-
-                </div>
+               
 
             <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Fee Category</label>

@@ -7,14 +7,25 @@
     <div class="container-fluid">
         
         <!-- start page title -->
-                               <!-- start page title -->
+        <!-- start page title -->
+
+@php 
+$user = Auth::user()
+@endphp
+
+@php 
+$lecturer = $user->id
+@endphp
+
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
 <h4 class="mb-sm-0"></h4>
 @php 
-    $ay = App\Models\Academicyear::where('status', 1)->get()
+$ay = App\Models\Academicyear::where('status', 1)->get()
 @endphp
+
+
 <div class="page-title-right">
 <div class="btn-group">
 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"><i class="fas fa-bars"></i> &nbsp;&nbsp;Active Academic Years&nbsp;&nbsp; <i class="mdi mdi-chevron-down"></i></button>
@@ -63,7 +74,7 @@ $campus = App\Models\Campus::all()
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 col-md-6" style="color: gray;">MY ACCOUNT: ADMIN</h4> 
+                <h4 class="mb-sm-0 col-md-6" style="color: gray;">MY ACCOUNT: ADMIN </h4> 
 
                     <div class="page-title-right">
                        
@@ -150,13 +161,15 @@ $campus = App\Models\Campus::all()
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
                             </div>
+        </div>
+                            
                                 <div class="row">
                                 <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
-                                                <p class="text-truncate font-size-14 mb-2">Students</p>
+                                                <p class="text-truncate font-size-14 mb-2">Current Students</p>
                                                 <h4 class="mb-2">3409</h4>
                                                 
                                             </div>
@@ -169,19 +182,19 @@ $campus = App\Models\Campus::all()
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
-                        
+                                </div>
+                           
 
-                                                @php 
-                                                $lecturer = Auth::user()->id
-                                                @endphp
+                            @if($user->role=='lecturer' || $user->role=='Principal' || $user->role=='Dean' || $user->role=='HOD' || $user->role == 'admin' )
+                            <div class="row">
                                 <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
                                             <a href="{{route('lecturer.courses', $lecturer)}}"> 
-                                                <p class="text-truncate font-size-14 mb-2">My</p>
-                                               <h4 class="mb-2">Courses</h4></a>
+                                                <p class="text-truncate font-size-14 mb-2">Lecturer</p>
+                                               <h5 class="mb-2">Course Grades</h5></a>
                                                 
                                             </div>
                                             <div class="avatar-sm">
@@ -201,12 +214,235 @@ $campus = App\Models\Campus::all()
                                         </div>                                              
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
-                            
-
-
-
                             </div><!-- end col -->
+                        @endif
+                        @if($user->role=='HOD' || $user->role == 'admin' )
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">HOD</p>
+                                               <h5 class="mb-2">Review Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
+                        @if($user->role=='Dean' || $user->role == 'admin')
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">Dean</p>
+                                               <h5 class="mb-2">Review Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
+                       
+
+                        
+                        @if($user->role=='Campus Regitrar' || $user->role == 'admin')
+                        <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">Campus Registrar</p>
+                                               <h5 class="mb-2">Review Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
                         </div>
+                        <!-- end row -->
+
+                        <div class="row">
+
+                        @if($user->role=='Principal' || $user->role == 'admin')
+                        <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">Principal</p>
+                                               <h5 class="mb-2">Review Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
+
+
+                        @if($user->role=='DCR' || $user->role == 'admin')
+                        <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">DCR</p>
+                                               <h5 class="mb-2">Review Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
+                        <!-- end row -->
+                        
+                            
+                       
+                        @if($user->role=='College Registrar' || $user->role == 'admin')
+                        <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">College Registrar</p>
+                                               <h5 class="mb-2"> Review Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
+                         
+                        @if($user->role=='Executive Director' || $user->role == 'admin')
+                                <div class="col-xl-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-grow-1">
+                                            <a href="{{route('lecturer.courses', $lecturer)}}"> 
+                                                <p class="text-truncate font-size-14 mb-2">ED</p>
+                                               <h5 class="mb-2">Approve Course Grades</h5></a>
+                                                
+                                            </div>
+                                            <div class="avatar-sm">
+                                                
+
+                                                @if($lecturer)
+                                                @php 
+                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                                                @endphp
+                                                <a href="{{route('lecturer.courses', $lecturer)}}">
+                                                <span class="avatar-title bg-light text-success rounded-3">
+                                                {{$lecturerCourses}}
+                                                </span>
+                                                </a>
+                                                @endif
+                                            </div>
+                                        </div>                                              
+                                    </div><!-- end cardbody -->
+                                </div><!-- end card -->
+                            </div><!-- end col -->
+                        @endif
+
+                        </div> <!-- end row -->
 
 
         <div class="row">

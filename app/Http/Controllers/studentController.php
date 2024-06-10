@@ -37,7 +37,7 @@ class studentController extends Controller
         ]);
        // dd($request->all());
       $intake_month = Academicyear::find($request->academic_yr_id);
-      $mymonth = Academicyear::findmonth($intake_month->intake_name);
+      //$mymonth = Academicyear::findmonth($intake_month->intake_name);
       $fomartdate = Carbon::parse($intake_month->month)->month;
       $formatedmonth = str_pad($fomartdate, 2, '0', STR_PAD_LEFT);
       $already = Uploadlist::where('academic_yr_id', $request->academic_yr_id)->where('intake_month',$formatedmonth)->where('campus',$request->campus)->where('upload_name',$request->intake_name)->first();
@@ -124,17 +124,17 @@ class studentController extends Controller
                 $data['title'] = 'Uploaded Class List';
                 $data['uploadedStudents'] = User::where('uploadlist_id' , $id)->get();
                 $data['stu'] = User::where('programclass',$class_students->class)->where('academicyear_id', $class_students->academicyear)->first();
-                 $data['academicyear'] = Academicyear::find($data['stu']->academicyear_id);
+                $data['academicyear'] = Academicyear::find($data['stu']->academicyear_id);
                 return view('admin.intake.allAdmittedClassList', $data);
             }
             else
             {
-                $ayear_id = $admissions->academic_yr_id;
+                $data['ayear_id'] = $admissions->academic_yr_id;
                 $upload_id = $id;
                 $data['upload_id'] = $upload_id;
                 $data['title'] = 'Uploaded Class List';
                 $data['upload_name'] = $admissions->upload_name;
-                $data['admissions'] = Admission::where('academicyear', $ayear_id)->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();
+                $data['admissions'] = Admission::where('academicyear', $data['ayear_id'])->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();
                 $data['myclass'] = Programclass::all();
                 $data['program'] = Program::all();
                // $data['single'] = Admission::where('uploadlist_id', $upload_id)->first();
@@ -194,7 +194,7 @@ class studentController extends Controller
                               
                                 $uploadlist_id = $month->id;
                                 
-                                $reg_number = $program_code.'/'. $campus_code.'/'.$intake_year.'/0'.$intake_month.'/';
+                                $reg_number = $program_code.'/'. $campus_code.'/'.$intake_year.'/'.$intake_month.'/';
                                
                                 $counter=00;
                                 $email='@mchs.mw';
@@ -264,16 +264,19 @@ User::create([
     public function savedConfirmedStudents($id){
 
        
-         // save data in bd and retrieve it for final confirmation
-         $academic_yr = Academicyear::all();
-         $prog_class = Programclass::all();  
-         $class_students = Admission::where('uploadlist_id', $id)->first(); // we have student class, program, academiyear ..
+         // save data in db and retrieve it for final confirmation
+         //$academic_yr = Academicyear::all();
+         //$prog_class = Programclass::all();  
+         $class_students = Admission::where('uploadlist_id', $id)->first(); // we have students list, student class, program, academiyear ..
          
-         $data['students'] = User::where('programclass',$class_students->class)->where('academicyear_id', $class_students->academicyear)->where('campus', $class_students->campus)->get();
+         $data['students'] = User::where('programclass',$class_students->class)
+         ->where('academicyear_id', $class_students->academicyear)
+         ->where('campus', $class_students->campus)->get();
          //$data['confirmedstudents'] = Student::where('academicyear_id', $request->acy[0])->where('programclass', $request->class[0])->get();
          //dd($data['students']);
          //dd($data['confirmedstudents']);
-         $data['stu'] = User::where('programclass',$class_students->class)->where('academicyear_id', $class_students->academicyear)->first();
+         $data['stu'] = User::where('programclass',$class_students->class)
+         ->where('academicyear_id', $class_students->academicyear)->first();
          $data['academicyear'] = Academicyear::find($data['stu']->academicyear_id);
          $data['title'] = 'Confirmed Students List';
          $data['upload_status'] = $id;

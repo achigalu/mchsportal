@@ -41,15 +41,15 @@
                         @else
 
                             <a href="{{route('myhome')}}">
-                            <li class="menu-title"><h4 style="color:#7196be;"><h4>DASHBOARD</h4></li>
+                            <li class="menu-title"><h4 style="color:gray;"><h4>DASHBOARD</h4></li>
                             </a>
                      
                        
                         
                         <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-cogs" style="font-size:25px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> College Setup</b></span>
+                                    <i class="fas fa-cogs" style="font-size:25px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> College Setup</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     
@@ -64,8 +64,8 @@
                         
                         <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="fas fa-users-cog" style="font-size:25px;color:gray"></i>
-                                    <span style="color:#7196be;;"><b> System Users</b></span>
+                                <i class="fas fa-users-cog" style="font-size:25px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> System Users</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('list.users')}}">- All Users</a></li>
@@ -77,8 +77,8 @@
 
                         <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-cog" style="font-size:25px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Academic Setup</b></span>
+                                    <i class="fas fa-cog" style="font-size:25px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Academic Setup</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     
@@ -96,8 +96,8 @@
 
                             <li>
                                 <a href="{{route('admission.student')}}" class=" waves-effect">
-                                    <i class="fas fa-user-plus" style="font-size:15px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Add Intake</b></span>
+                                    <i class="fas fa-user-plus" style="font-size:15px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Add Students</b></span>
                                 </a>
                             </li>
 
@@ -105,8 +105,8 @@
                            
                     <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class=" fas fa-user-plus" style="font-size:15px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Subjects Setup</b></span>
+                                    <i class=" fas fa-user-plus" style="font-size:15px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Subjects Setup</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('add.course')}}">- Add Subjects</a></li>
@@ -122,8 +122,8 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-users" style="font-size:15px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Students</b></span>
+                                    <i class="fas fa-users" style="font-size:15px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Students List</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('class.list')}}">- Class list</a></li> 
@@ -135,8 +135,8 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-book-open" style="font-size:15px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Examinations</b></span>
+                                    <i class="fas fa-book-open" style="font-size:15px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Examinations</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="#">- Management</a></li>
@@ -149,8 +149,8 @@
 
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class=" fas fa-bullhorn" style="font-size:15px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Announcements</b></span>
+                                    <i class=" fas fa-bullhorn" style="font-size:15px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Announcements</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="#">- Notices</a></li>
@@ -161,8 +161,8 @@
                     <hr>
                             <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <i class="fas fa-house-user" style="font-size:15px;color:gray"></i>
-                                    <span style="color:#7196be;"><b> Accommodation</b></span>
+                                    <i class="fas fa-house-user" style="font-size:15px;color:#7196be"></i>
+                                    <span style="color:gray;"><b> Accommodation</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="#">- Allocations</a></li>

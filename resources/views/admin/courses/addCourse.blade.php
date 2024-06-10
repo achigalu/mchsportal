@@ -91,10 +91,10 @@
 <h4 class="card-title">Add Subject</h4>
 <p class="card-title-desc">A subject belongs to a department.</p>
 
-@if(session()->has('message'))
+@if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
 <i class="mdi mdi-check-all me-2"></i>
-{{session()->get('message')}}
+{{session()->get('status')}}
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif

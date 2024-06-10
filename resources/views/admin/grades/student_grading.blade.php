@@ -75,7 +75,7 @@
                                      @if( $lectSub->campus_id==2) BT @endif
                                      @if( $lectSub->campus_id==3) ZA @endif |
                                         
-                                    Semester {{$lectSub->semester}} )</h4>
+                                    Semester {{$lectSub->semester}} )  {{$mycoursename->coordinator}}</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -89,7 +89,13 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 </div>
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('list.assessments',$id)}}">
-                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        </a>
+                                        </ul>
+
+                                        <ul class="breadcrumb m-0">
+                                        <a href="{{route('submit.hod',$id)}}">
+                                        <li class="btn btn-outline-warning"><i class="fas fa-arrow-circle-left"></i>&nbsp; Submit to HOD</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -164,12 +170,15 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 @php 
                                                 $myname = App\Models\User::where('reg_num', $student->registration_no)->first()
                                                 @endphp
+
+                                                @if(!empty($myname))
                                                 {{$myname->fname}} {{$myname->lname}}
                                                 </td>
                                                 
                                                 <td>{{$student->registration_no}}
                                                     <input type="text" name="registration[]" value="{{$student->registration_no}}" hidden>
                                                     <input type="text" name="assessment_id" value="{{$assessment}}" hidden>
+                                                    <input type="text" name="coursecode" value="{{$courseID->code}}" hidden>
                                                 
                                                 </td>
                                                 <td>
@@ -189,7 +198,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 <td></td>
                                             </tr>
-                                            
+                                            @endif
                                             @endforeach
                                             @endif
                                            

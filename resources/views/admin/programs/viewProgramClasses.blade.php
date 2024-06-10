@@ -112,7 +112,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                 
                                     <div class="card-body">
                                    
-                                    <h3 class="card-title mb-4">Classes for: {{$class_program->program_name}} - {{$campus->campus}}</h3>
+                                    <h3 class="card-title mb-4">Classes for: {{$class_program->program_name}} -<b> {{$campus->campus}}</b></h3>
               
                                         <div class="table-responsive">
                                             <table class="table table-centered mb-0 align-middle table-hover table-nowrap">
@@ -144,7 +144,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                         <td>{{$list->feecategory->local_fee}}</td>
                                                         <td>{{$list->feecategory->foreign_fee}}</td>
                                                         <td>
-                                                        <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                            <a href="{{route('edit.program.class', ['pclassid' => $list->id])}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+
+
                                                         
                                                         <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                         </td>

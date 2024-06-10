@@ -251,7 +251,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                     <div class="row">
                                                         <div class="col">
                                                         @php 
-                                                        $lecturers = App\Models\lecturerSubjects::where('courseid',$subject->course_id)->get()
+                                                        $lecturers = App\Models\lecturerSubjects::where('courseid',$subject->course_id)
+                                                        ->where('campus_id', $subject->campus_id)->get()
                                                         @endphp
 
                                                         @if(!empty($lecturers))
@@ -346,7 +347,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                               <select name="lecturer_id" class="form-control" id="" required>
                                                                 <option value="">-- Select lecturer --</option>
                                                                 @php 
-                                                                $lecturers = App\Models\User::where('role', 'admin')->get();
+                                                                $lecturers = App\Models\User::where('role', 'Principal')
+                                                                ->orWhere('role', 'lecturer')
+                                                                ->orWhere('role', 'HOD')
+                                                                ->orWhere('role', 'Dean')
+                                                                ->get();
                                                                 @endphp
                                                                 @foreach ($lecturers as $lecturer)
                                                                 <option value="{{$lecturer->id}}">{{$lecturer->fname}} {{$lecturer->lname}}</option>

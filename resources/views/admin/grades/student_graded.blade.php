@@ -70,12 +70,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Assessment list: ( {{$courseID->code}} - {{$courseID->name}} | {{$courseID->classcode}} - 
-                                     @if( $courseID->campus_id==1) LL @endif
-                                     @if( $courseID->campus_id==2) BT @endif
-                                     @if( $courseID->campus_id==3) ZA @endif
+                                    <h4 class="mb-sm-0">Assessment list: ( {{$courseID->code}} - {{$courseID->name}} {{$mycoursename->classcode}}  {{$courseID->classcode}} - 
+                                     @if( $lectSub->campus_id==1) LL @endif
+                                     @if( $lectSub->campus_id==2) BT @endif
+                                     @if( $lectSub->campus_id==3) ZA @endif |
                                         
-                                    Semester {{$lectSub->semester}})</h4>
+                                    Semester {{$lectSub->semester}} )</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -103,11 +103,36 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 $assess = App\Models\Assessmentlist::find($assessment)
                                                 @endphp
 
-                                                
-                                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.</h5>
-                                    
+                          @if($assess->assessment_name=='End-of-semester Exam')  
+                          <div class="row">
+                            <div class="col-12">
+                          Currently Grades are with: <b style="color:orange">{{$a_level}}</b> <p>
+                            </div>
+                          </div>
+                          @endif  
+                                           
+                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.</h5>
+                              
+     
+
                         <div class="row">
                             <div class="col-12">
+
+                            @if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session()->has('invalid'))
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif   
                                 <div class="card">
 
 
@@ -146,6 +171,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 @php 
                                                 $myname = App\Models\User::where('reg_num', $student->registration_no)->first()
                                                 @endphp
+
+                                                @if(!empty($myname))
                                                 {{$myname->fname}} {{$myname->lname}}
                                                 </td>
                                                 
@@ -155,14 +182,23 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 
                                                 </td>
                                                 <td>
-                                                            <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ old('assessment.0') }}" style="width: 100px;">
+                                                    @if($assessment==1)
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment1 ?? ''}}" style="width: 100px;" disabled>
+                                                    @endif
 
+                                                    @if($assessment==2)
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment2 ?? ''}}" style="width: 100px;" disabled>
+                                                    @endif
 
+                                                    @if($assessment==3)
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->exam_grade ?? ''}}" style="width: 100px;" disabled>
+                                                    @endif
+                                                            
 
                                                 </td>
                                                 <td></td>
                                             </tr>
-                                            
+                                            @endif
                                             @endforeach
                                             @endif
                                            

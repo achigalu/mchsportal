@@ -145,9 +145,10 @@ Route::controller(programsController::class)->group(function(){
 
 Route::controller(programClassController::class)->group(function(){
     Route::get('/view/program/classes/{programid}/{campusid}', 'viewProgramClasses')->name('view.program.class'); 
-    Route::get('/edit/program/class', 'editProgramClass')->name('edit.program.class'); 
+    Route::get('/edit/program/class/{pclassid}', 'editProgramClass')->name('edit.program.class'); 
     Route::get('/add/program/class/{pclass}/{pcampus}', 'addProgramClass')->name('add.program.class');
-    Route::post('/create/program/class/{id}', 'createProgramClass')->name('create.programclass');  
+    Route::post('/create/program/class/{id}', 'createProgramClass')->name('create.programclass'); 
+    Route::post('/update/program/class/{id}', 'updateProgramClass')->name('store.edited.program.class');
     
 });
 
@@ -213,6 +214,7 @@ Route::controller(assessmentsController::class)->group(function(){
     Route::get('/students/grading/{id}/{assessment}', 'studentsGrading')->name('students.grading');
     Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1');
     Route::get('/students/graded/{id}/{assessment}','studentsGraded2')->name('students.graded2');
+    Route::get('/submit/hod/{id}', 'submitHod')->name('submit.hod');
 
 });
 

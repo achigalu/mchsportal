@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Edit Program</title>
+        <title>MCHS Portal | Edit Program Class</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -87,19 +87,25 @@
 <div class="col-lg-12">
 <div class="card">
 <div class="card-body">
+<h4 class="card-title">Edit Program Class: {{$pclass->classcode}} - {{$pclass->classname}} | 
+<b> @if($pclass->campus_id==1) Lilongwe @endif
+@if($pclass->campus_id==2) Blantyre @endif
+@if($pclass->campus_id==3) Zomba @endif </b>
+</h4>
 
-<h4 class="card-title">Edit Program Class: Certificate in Clinical Medicine 2</h4>
-<p class="card-title-desc">Fill in the spaces provided below</p>
 
-<form>
+<form action="{{route('store.edited.program.class', $pclass->id)}}" method="post">
+    {{csrf_field()}}
     <div class="row">
         <div class="col-lg-12">
 
         <div class="row mb-3">
             <label class="form-label">Code/Short Name</label>
+            <input type="text" name="program_id" value="{{$pclass->program_id}}" hidden>
+            <input type="text" name="campus_id" value="{{$pclass->campus_id}}" hidden>
                     
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" placeholder="CCM 1" id="example-text-input">
+                        <input class="form-control" name="scode" type="text" value="{{$pclass->classcode}}" id="example-text-input">
                     </div>
             </div>
 
@@ -107,7 +113,7 @@
             <label class="form-label">Class Name</label>
                     
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" placeholder="Certificate in Clinical Medicine 1" id="example-text-input">
+                        <input class="form-control" name="cname" type="text" value="{{$pclass->classname}}" id="example-text-input">
                     </div>
             </div>
 
@@ -115,63 +121,51 @@
             <label class="form-label">Year of Study</label>
                     
                     <div class="col-sm-12">
-                        <input class="form-control" type="number" value="1" id="example-text-input">
+                        <input class="form-control" name="cyear" type="number" value="{{$pclass->classyear}}" id="example-text-input">
                     </div>
             </div>
 
+           
+            @php 
+            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD'])->get();
+            @endphp
+            <div class="mb-3">
+                <label class="form-label">Coordinator</label>
+                <select class="form-control select2" name="coordinator">
+                    
+                        @foreach($lecturers as $lecturer)
+                        <option {{($lecturer->id==$pclass->coordinator)? 'selected' : ""}} value="{{$lecturer->id}}">{{$lecturer->fname}} {{$lecturer->lname}}</option>
+                       
+                        @endforeach
+                </select>
+            </div>
+
             <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Is Clinical</label>
+                    <label class="col-sm-4 col-form-label">Under Basic Department?</label>
                     <div class="col-sm-12">
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected="">-- select --</option>
-                            <option value="1">Yes</option>
-                            <option value="2">No</option>
+                    @error('basic') <span class="text-danger">{{$message}}</span> @enderror
+                        <select class="form-select" name="basic" aria-label="Default select example">
+                            <option value="" selected="">-- select --</option>
+                            <option {{($pclass->under_basic==0)? "selected" : ""}} value="0">No</option>
+                            <option {{($pclass->under_basic==1)? "selected" : ""}} value="1">Yes</option>
                             </select>
                     </div>
 
                 </div>
 
-            <div class="mb-3">
-                <label class="form-label">Coordinator</label>
-                <select class="form-control select2">
-                    <option>-- select --</option>
-                   
-                        <option value="AK">Jane Chalera</option>
-                        <option value="HI">Odala Banda</option>
-                 
-                        <option value="CA">Sylvester Chawala</option>
-                        <option value="NV">Thomas Muha</option>
-                        <option value="OR">Grace Misanjo</option>
-                        <option value="WA">Charles Valeta</option>
-                   
-                </select>
-            </div>
-
-            <div class="row mb-3">
-            <label class="form-label">Local Fees</label>
-                    
-                    <div class="col-sm-12">
-                        <input class="form-control" type="number" value="1" id="example-text-input">
-                    </div>
-            </div>
-
-
-            <div class="row mb-3">
-            <label class="form-label">Foreign Fees</label>
-                    
-                    <div class="col-sm-12">
-                        <input class="form-control" type="number" value="0" id="example-text-input">
-                    </div>
-            </div>
+        @php 
+        $cfees = App\Models\Feecategory::all()
+        @endphp
 
             <div class="row mb-3">
                     <label class="col-sm-4 col-form-label">Fee Category</label>
                     <div class="col-sm-12">
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected="">-- select --</option>
-                            <option value="1">Basic</option>
-                            <option value="2">Post Basic</option>
-                            <option value="2">ODL</option>
+                        <select class="form-select" name="fcategory" aria-label="Default select example">
+                           
+                            @foreach($cfees as $cfee)
+                            <option {{($cfee->id==$pclass->feeecategory_id)? 'selected' : ""}} value="{{$cfee->id}}">{{$cfee->feecode}} | {{$cfee->feename}}</option>
+
+                            @endforeach
                             </select>
                     </div>
 
@@ -185,7 +179,12 @@
         
     </div>
 
-</form>
+
+
+
+
+
+
 
 </div>
 </div>
@@ -200,6 +199,9 @@
 <!-- end row -->
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Submit</button> &nbsp;&nbsp;
+    </form>
+<a href="{{route('view.program')}}"><button class="btn btn-outline-secondary" type="button">Cancel</button></a><br><br>
 
 
 
@@ -208,8 +210,7 @@
 
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Submit</button> &nbsp;&nbsp;
-<a href="{{route('view.program.class')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
+
 
 <!-- end row -->
 

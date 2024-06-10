@@ -55,7 +55,7 @@ class RegisteredUserController extends Controller
 
         if($user){
            Mail::to($user->email)->send(new RegisterMail($user));
-            return redirect()->route('login')->with('status', 'Go to your email and click button verify');
+            return redirect()->route('login')->with('status', 'Go to your email and verify your account');
         }
     }
 

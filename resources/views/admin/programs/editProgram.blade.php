@@ -75,7 +75,9 @@
 <div class="card">
 <div class="card-body">
 
-<h4 class="card-title">Edit program: {{$program->short_name}} {{$program->program_name}}</h4>
+<h4 class="card-title">Edit program: {{$program->short_name}} {{$program->program_name}} | <b>@if($program->campus->id==1) Lilongwe @endif
+@if($program->campus->id==2) Blantyre @endif
+@if($program->campus->id==3) Zomba @endif</b></h4>
 
 
 
@@ -99,14 +101,6 @@
     <div class="row">
         <div class="col-lg-12">
 
-        <div class="row mb-3">
-            <label class="form-label">Short Name</label>
-                    
-                    <div class="col-sm-12">
-                    @error('short_name') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="short_name" value="{{$program->short_name}}" type="text"  id="example-text-input">
-                    </div>
-        </div>
 
         <div class="row mb-3">
             <label class="form-label">Program Code</label>
@@ -223,17 +217,17 @@
 <!-- end row -->
 
 
-
-
-
-
-
-
-
-
 &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Update</button> &nbsp;&nbsp;
 </form>
 <a href="{{route('view.program')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
+
+
+
+
+
+
+
+
 
 <!-- end row -->
 

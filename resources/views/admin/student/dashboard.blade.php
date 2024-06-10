@@ -91,7 +91,7 @@
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
                                                 <p class="text-truncate font-size-14 mb-2">Time Table for:</p>
-                                                <h4 class="mb-2">DCA1-Sem 1</h4>
+                                                <h5 class="mb-2">{{$student->programclass}} | Semester: {{$student->semester}}</h5>
                                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>View more details</span></p>
                                             </div>
                                             <div class="avatar-sm">
@@ -110,7 +110,8 @@
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
                                                 <p class="text-truncate font-size-14 mb-2">Registration</p>
-                                                <h4 class="mb-2">DCA1-Sem 2</h4>
+                               
+                                                <h5 class="mb-2">{{$student->programclass}} | Semester: {{$student->semester}}</h5>
                                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>View more details</span></p>
                                             </div>
                                             <div class="avatar-sm">
@@ -184,27 +185,30 @@
                                                         @endif
                                                         </td>
                                                         <td>
+                                                            
                                                         @if(!empty($subject->assessment1))
                                                         {{$subject->assessment1}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->assessment2))
+                                                        @if(!empty($subject->access_level==1))
                                                         {{$subject->assessment2}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->exam_grade))     
+                                                        @if(!empty($subject->access_level==1))     
                                                         {{$subject->exam_grade}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->final_grade))
+                                                        @if(!empty($subject->access_level==1))
                                                         {{$subject->final_grade}}
                                                         @endif
                                                         </td>
                                                         <td>
+                                                        @if(!empty($subject->access_level==1))
                                                          <b>Pass</b>
+                                                         @endif
                                                         </tr>
                                                        
                                                         
