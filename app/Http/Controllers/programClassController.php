@@ -74,7 +74,7 @@ class programClassController extends Controller
 
     public function updateProgramClass(Request $request, $id)
     {
-        dd($request->all());
+        //dd($request->all());
         $updateProgramClass = Programclass::find($id);
 
         // if basic=yes=1 : select coordinator of classes
@@ -82,14 +82,15 @@ class programClassController extends Controller
         if(!empty($updateProgramClass))
         {
             $updateProgramClass->update([
-                'classcode' => request('classcode'),
-                'classcode' => request('classcode'),
-                'classcode' => request('classcode'),
-                'classcode' => request('classcode'),
-                'classname' => request('classname'),
-                'classyear' => request('classyear'),
-                'coordinator' => request('class_coordinator'),
-                'feecategory_id']);
+                'classcode' => request('scode'),
+                'classname' => request('cname'),
+                'classyear' => request('cyear'),
+                'feecategory_id' => request('fcategory'),
+                'program_id' => request('program_id'),
+                'coordinator' => request('coordinator'),
+                'campus_id' => request('campus_id'),
+                'under_basic' => request('basic')]);
         }
+        return redirect()->back()->with('status','Class for ' .$request->cname. ' updated successfully');
     }
 }

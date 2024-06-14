@@ -85,21 +85,11 @@ class programsController extends Controller
 
     public function updateProgram(Request $request, $id)
     {
-        $validated = $request->validate([
-            'short_name' => 'required|max:20',
-            'program_code' => 'required|max:20',
-            'program_name' => 'required|max:50',
-            'duration' => 'required',
-            'entry_level' => 'required|max:50',
-            'coordinator' => 'required|max:50',
-            'department' => 'required|max:50',
-            'award' => 'required|max:20',
-            'campus_offered' => 'required|max:20'
-        ]);
 
-        if($validated)
-        {
+        
+    
            $myProgram = Program::getProgram($id);
+          
            $myProgram->update([
                     'short_name' => $request->short_name,
                     'program_code' => $request->program_code,
@@ -112,7 +102,8 @@ class programsController extends Controller
                     'award' => $request->award,
            ]);
            return redirect()->back()->with('status', 'Program' ." ".$request->program_name. " ".'updated successfully');
-        }
+        
+        return redirect()->back()->with('status', 'something went wrong');
     }
 
 }

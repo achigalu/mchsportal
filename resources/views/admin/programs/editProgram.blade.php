@@ -146,11 +146,14 @@
 
 
             <div class="mb-3">
+            @php 
+            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD', 'HOD BASIC BT', 'HOD BASIC LL'])->get();
+            @endphp
                 <label class="form-label">Program Coordinator</label><br>
                 @error('coordinator') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-control select2" name="coordinator">
                     
-                    @foreach($users as $user)
+                    @foreach($lecturers as $user)
                         <option {{($program->user->id==$user->id)? 'selected' : ""}} value="{{$user->id}}">{{$user->fname}} {{$user->lname}}</option>
                     @endforeach
                     </select>
@@ -217,7 +220,7 @@
 <!-- end row -->
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Update</button> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-secondary">Update</button> &nbsp;&nbsp;
 </form>
 <a href="{{route('view.program')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
 

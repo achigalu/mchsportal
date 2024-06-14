@@ -93,7 +93,21 @@
 @if($pclass->campus_id==3) Zomba @endif </b>
 </h4>
 
+@if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 
+@if(session()->has('invalid'))
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 <form action="{{route('store.edited.program.class', $pclass->id)}}" method="post">
     {{csrf_field()}}
     <div class="row">
@@ -127,7 +141,7 @@
 
            
             @php 
-            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD'])->get();
+            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD', 'HOD BASIC BT', 'HOD BASIC LL'])->get();
             @endphp
             <div class="mb-3">
                 <label class="form-label">Coordinator</label>

@@ -117,6 +117,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                         <div class="row">
                             <div class="col-12">
+                            @php 
+                            $role = App\Models\User::find($lectSub->access_level);
+                            @endphp
+                            
+                            Grades are now with: {{$role->role}};
 
                             @if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -75,7 +75,7 @@
                                      @if( $lectSub->campus_id==2) BT @endif
                                      @if( $lectSub->campus_id==3) ZA @endif |
                                         
-                                    Semester {{$lectSub->semester}} )  {{$mycoursename->coordinator}}</h4>
+                                    Semester {{$lectSub->semester}} ) </h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -110,7 +110,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 @endphp
 
                                                 
-                                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.</h5>
+                                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.<br><h5>ClassCoordinator: {{$mycoursename->coordinator}}</h5></h5>
                               
      
 
@@ -132,6 +132,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif   
+
+
                                 <div class="card">
 
 

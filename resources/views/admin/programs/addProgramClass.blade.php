@@ -141,7 +141,7 @@ $ccampus = App\Models\Campus::find($pcampus)
                     </div>
             </div>
             @php 
-            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD'])->get();
+            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD', , 'HOD BASIC BT', 'HOD BASIC LL'])->get();
             @endphp
             <div class="mb-3">
                 <label class="form-label">Class coordinator</label><br>

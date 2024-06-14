@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Studentsubject;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Department;
 use App\Models\Programclass;
 use App\Models\lecturerSubjects;
 use App\Models\Myclasssubject;
@@ -140,29 +141,66 @@ class assessmentsController extends Controller
     {
         $submitted = lecturerSubjects::find($id); // id of a subject in LecturerSubjects table
        // $submitted->classid;
-        $pclass = Programclass::find($submitted->classid);
+       $lecturerSubjBasic = $submitted->basic;
+        
        // dd($pclass->classcode, $pclass->classname, $pclass->under_basic);
-        if($pclass->under_basic==1)
+        if($lecturerSubjBasic==1)
         {
-            //dd($pclass->under_basic);
-            $class = Program::where('id', $pclass->program_id)
-            ->where('campus_id', $pclass->campus_id)->first();
-
-            if(!empty($class))
+            $pclass = Programclass::where('id',$submitted->classid)->where('campus_id', $submitted->campus_id)->first();
+            $classCoordinator = $pclass->coordinator;
+            $campus = $pclass->campus_id;
+            if($campus==1){$campus = 'Lilongwe';};
+            if($campus==2){$campus = 'Blantyre';};
+            if($campus==3){$campus = 'Zomba';};
+            //dd($classCoordinator);
+            if(!empty($pclass))
             {   
                // if($pclass->classcode=='DCM1' || $pclass->classcode=='DCM1')
                // { COMPARE WITH CAMPUS AS WELL
                     $submitted->update([
 
-                        'access_level' => $class->user_id,
+                        'access_level' => $classCoordinator,
+                    ]);
+               // }
+               return redirect()->back()->with('status', 'Assessment submitted to HOD basic' .$campus.'.');
+               
+            }
+           
+        } 
+        elseif($lecturerSubjBasic==0)
+        {
+            $pclass = Programclass::where('id', $submitted->classid)->where('campus_id', $submitted->campus_id)->first();
+            //dd($pclass->under_basic);
+            if($pclass->campus_id==1){$campus = 'Lilongwe';};
+            if($pclass->campus_id==2){$campus = 'Blantyre';};
+            if($pclass->campus_id==3){$campus = 'Zomba';};
+
+            $classProgramId = $pclass->program_id;
+            //dd($classCoordinator);
+
+            $programId = Program::find($classProgramId);
+            
+            $departmentID = Department::find($programId->department_id);
+
+            $departmentHOD = $departmentID->user_id;
+
+            //dd($departmentHOD);
+
+            if(!empty($pclass))
+            {   
+               // if($pclass->classcode=='DCM1' || $pclass->classcode=='DCM1')
+               // { COMPARE WITH CAMPUS AS WELL
+                    $submitted->update([
+
+                      'access_level' => $departmentHOD,
                     ]);
                // }
                
             }
-           
+            return redirect()->back()->with('status', 'Assessment submitted to Head, ' .$departmentID->department_name.' '. $campus. '.');
         }
        
 
-        return back();
+       // return back();
     }
 }
