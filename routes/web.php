@@ -76,6 +76,10 @@ Route::controller(UsersController::class)->group(function(){
     Route::get('/create/user/', 'createUsers')->name('create.users');
     Route::post('/new/user/', 'storeUsers')->name('store.users');
     Route::get('/user/logout', 'Logout')->name('user.logout');
+    Route::get('/disable/user/{id}', 'disableUser')->name('disable.user');
+    Route::get('/enable/user/{id}', 'enableUser')->name('enable.user');
+    Route::get('/edit/user/{id}', 'editUser')->name('edit.user');
+    Route::post('/update/user/{id}', 'updateUser')->name('update.user');
 })->middleware(['auth', 'verified'])->name('myhome');;
 
 Route::controller(studentController::class)->group(function(){
@@ -94,6 +98,8 @@ Route::controller(studentController::class)->group(function(){
     Route::get('/final/admission', 'finalAdmission')->name('final.admission');
     Route::get('/students/admission/details/{id}', 'studentsAdmissionDetails')->name('students.admission.details');
     Route::get('/save/admission/student', 'saveAdmissionStudent')->name('save.admission.student');
+    Route::get('/student/profile', 'studentProfile')->name('student.profile');
+    Route::post('/student/profile', 'storeStudentProfile')->name('store.student.profile');
     
     route::get('/list', 'list');
 });

@@ -85,7 +85,18 @@ class programsController extends Controller
 
     public function updateProgram(Request $request, $id)
     {
+            $validated = $request->validate([
+                'short_name' => 'required',
+                'program_code' => 'required',
+                'program_name' => 'required',
+                'duration' => 'required|numeric',
+                'entry_level' => 'required',
+                'coordinator' => 'required',
+                'campus_offered' => 'required',
+                'department_id' => 'required',
+                'award' => 'required',
 
+            ]);
         
     
            $myProgram = Program::getProgram($id);

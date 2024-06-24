@@ -162,7 +162,7 @@ class assessmentsController extends Controller
                         'access_level' => $classCoordinator,
                     ]);
                // }
-               return redirect()->back()->with('status', 'Assessment submitted to HOD basic' .$campus.'.');
+               return redirect()->back()->with('status', 'Assessment submitted to HOD basic'.' ' .$campus.'.');
                
             }
            

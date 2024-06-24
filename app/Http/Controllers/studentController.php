@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Studentprofile;
 
 class studentController extends Controller
 {
@@ -316,6 +318,68 @@ User::create([
     public function saveAdmissionStudent()
     {
         return redirect(route('admission.student'))->with('status', 'Students admitted successfully');
+    }
+
+    public function studentProfile()
+    {
+        return view('admin.student.student_profile');
+    }
+
+    public function storeStudentProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'title' =>'required',
+            'initials' => '',
+            'dbirth' => 'required|date',
+            'gender' =>'required',
+            'marital' =>'required',
+            'country' =>'required',
+            'religion' =>'required',
+            'district' =>'required',
+            'traditional' =>'required',
+            'village' =>'required',
+            'student_phone1' =>'required',
+            'student_phone2' =>'required',
+            'student_email' =>'required|email',
+            'student_address' =>'required',
+            'kin_fullname' =>'required',
+            'relationship' =>'required',
+            'kin_phone' =>'required',
+            'kin_email' =>'required|email',
+            'kin_address' =>'required',
+        ]);
+
+        if(!empty($validated))
+        {
+            $studentprofile = Studentprofile::create([
+                'title' => $request->title,
+                'initials' => $request->initials,
+                'dbirth' => $request->dbirth,
+                'gender' => $request->gender,
+                'marital' => $request->marital,
+                'country' =>$request->country,
+                'religion' =>$request->religion,
+                'district' =>$request->district,
+                'traditional' =>$request->traditional,
+                'village' =>$request->village,
+                'student_phone1' =>$request->student_phone1,
+                'student_phone2' =>$request->student_phone2,
+                'student_email' =>$request->student_email,
+                'student_address' =>$request->student_address,
+                'kin_fullname' =>$request->kin_fullname,
+                'relationship' =>$request->relationship,
+                'kin_phone' =>$request->kin_phone,
+                'kin_email' =>$request->kin_email,
+                'kin_address' =>$request->kin_address,
+                'user_id' => Auth::user()->id,
+            ]);
+
+             if($studentprofile)  
+             {
+                return redirect()->back()->with('status', 'Profile updated successfully');
+             }
+        };
+
     }
 
    

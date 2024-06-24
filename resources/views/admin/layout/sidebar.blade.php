@@ -10,7 +10,7 @@
                        
                         
                         <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{route('student.profile')}}">
                                 <i class="fas fa-user"></i>
                                     <span style="color:#7196be; font-size:14px"><b> Profile</b></span>
                                 </a>

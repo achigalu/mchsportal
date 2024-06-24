@@ -42,7 +42,7 @@ class studentRegistrationController extends Controller
     $stuCampus=$campus;
     $myCampus = $campus;
 
-    $classSubjects = Myclasssubject::where('programclass_id', $class)->where('semester', $semester)->where('campus_id', $campus)->get();
+    $classSubjects = Myclasssubject::where('programclass_id', $class)->where('semester', $semester)->get();
     $singleSubject = $classSubjects->first();
    
     $classID = Programclass::where('id', $class)->first();

@@ -226,7 +226,7 @@ class coursesController extends Controller
             $data['mystudents'] = User::where('programclass',$classCode)->where('semester',$data['semester'])->where('campus',$myclass->campus->campus)->count();
     
     
-            $data['classSubjects'] = Myclasssubject::where('programclass_id', $data['class_id'])->where('semester', $data['semester'])->where('campus_id', $data['campus'])->get(); 
+            $data['classSubjects'] = Myclasssubject::where('programclass_id', $data['class_id'])->where('semester', $data['semester'])->get(); 
            
             return view('admin.intake.add_subject_to_student', $data);
             

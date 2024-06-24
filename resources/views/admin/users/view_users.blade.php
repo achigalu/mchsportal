@@ -93,7 +93,21 @@
                             </div>
                         </div>
                         <!-- end page title -->
-                        
+                        @if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session()->has('invalid'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+<i class="mdi mdi-block-helper me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
                         <div class="row">
                             <div class="col-12">
                                 <div class="card">
@@ -104,83 +118,87 @@
                                             <thead>
                                             <tr>
                                                 <th>Full Name</th>
-                                                <th>Email Address</th>
                                                 <th>Gender</th>
-                                                <th>Roles</th>
+                                                <th>Role</th>
+                                                <th>Campus</th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
-        
-        
-                                            <tbody>
+        @php 
+        $users = App\Models\User::whereIn('role', ['admin', 'lecturer', 
+        'HOD', 'Principal', 'DCR', 'Campus Regitrar', 'HOD BASIC BT', 'College Registrar', 'Executive Director', 'HOD BASIC LL'])->get()
+        @endphp
+                                    <tbody>
+                                      @foreach($users as $user)
                                             <tr>
-                                                <td>Maria Jerer</td>
-                                                <td>aphiri@gmail.com</td>
-                                                <td>M</td>
-                                                <td>Admin</td>
-                                                <td>Active</td>
+                                            <td>{{$user->fname}} {{$user->lname}}</td>
+                                                <td>{{$user->gender}}</td>
+                                                <td>{{$user->role}}</td>
+                                                <td>{{$user->campus}}</td>
                                                 <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
-                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                           
-                                            <tr>
-                                            <td>Cynthia Banda</td>
-                                                <td>aphiri@gmail.com</td>
-                                                <td>M</td>
-                                                <td>Admin</td>
-                                                <td>Active</td>
-                                                <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
-                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                           
-                                            <tr>
-                                            <td>Alinane Gama</td>
-                                                <td>aphiri@gmail.com</td>
-                                                <td>M</td>
-                                                <td>Admin</td>
-                                                <td>Active</td>
-                                                <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
-                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>
-                                           
+                                                        @if($user->status==1) <span style="color:green;">Active</span> @endif
+                                                        @if($user->status==0) <span style="color:orange;">Disabled</span> @endif
 
-
-                                            <tr>
-                                            <td>Chiyanjano Banda</td>
-                                                <td>aphiri@gmail.com</td>
-                                                <td>M</td>
-                                                <td>Admin</td>
-                                                <td>Active</td>
+                                               
+                                                </td>
                                                 <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
-                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
+                                                <a href="{{route('edit.user',$user->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>
+                                                @if($user->status==0)  
+                                                 <a href="{{route('enable.user', $user->id)}}" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#enable{{$user->id}}">
+                                                    <i class="fas fa-check-circle">&nbsp;</i></a>
+                                                 @else
+                                                 <a href="{{route('disable.user', $user->id)}}" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#delete{{$user->id}}">
+                                                    <i class="fas fa-minus-circle"> &nbsp;</i></a>
+                                                 @endif
                                                 </td>
                                             </tr>
 
+                                            <!-- MODAL STARTING
+                                            sample modal content -->
+                                            <div id="delete{{$user->id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background-color:#f0f0f0;">
+                                                                <h5 class="modal-title" id="myModalLabel" style="color: #EC9684;">Disable User: {{$user->fname}} {{$user->lname}}</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <h5>Are you sure you want to disable</h5>
+                                                                <p>{{$user->fname}} {{$user->lname}}       
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Cancel</button>
+                                                               <a href="{{route('disable.user', $user->id)}}"> <button type="button" class="btn btn-warning waves-effect waves-light">Disable</button></a>
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal 
+                                                MODAL ENDED-->
 
-                                            <tr>
-                                            <td>Tiya Mwale</td>
-                                                <td>aphiri@gmail.com</td>
-                                                <td>M</td>
-                                                <td>Admin</td>
-                                                <td>Active</td>
-                                                <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
-                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>
+                                                 <!-- MODAL STARTING
+                                            sample modal content -->
+                                            <div id="enable{{$user->id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background-color:#f0f0f0;">
+                                                                <h5 class="modal-title" id="myModalLabel" style="color: #EC9684;">Enable User: {{$user->fname}} {{$user->lname}}</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <h5>Are you sure you want to enable</h5>
+                                                                <p>{{$user->fname}} {{$user->lname}}       
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Cancel</button>
+                                                               <a href="{{route('enable.user', $user->id)}}"> <button type="button" class="btn btn-warning waves-effect waves-light">Enable</button></a>
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal 
+                                                MODAL ENDED-->
+                                       @endforeach
                                           
                                        
 

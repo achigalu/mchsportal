@@ -93,7 +93,6 @@ $mystudents = App\Models\User::where('programclass',$myclass->classcode)->where(
 
 @php
        $classsubjects = App\Models\Myclasssubject::where('programclass_id', $myclass->id)
-      ->where('campus_id', $myclass->campus_id)
       ->where('semester', $semester)->get();
 @endphp
 

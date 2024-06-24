@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Add User</title>
+        <title>MCHS Portal | Update User</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -70,7 +70,7 @@
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-<h4 class="mb-sm-0">Create New User</h4>
+<h4 class="mb-sm-0">Update User</h4>
 
 <div class="page-title-right">
 
@@ -103,15 +103,20 @@
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-<form action="{{route('store.users')}}" method="POST" class="custom-validation">
+<form action="{{route('update.user', $user->id)}}" method="POST" class="custom-validation">
     @csrf
     <div class="row">
+
+
+                @php 
+                $department = App\Models\Department::all()
+                @endphp
 
     <div class="col-lg-6">
             <div class="mb-3">
                 <label class="form-label">First Name</label>
                
-                <input class="form-control" name="fname" type="text" placeholder="Firstname" id="validationCustom01">
+                <input class="form-control" name="fname" type="text" value="{{$user->fname}}" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
                 
 
@@ -123,7 +128,7 @@
             <div class="mb-2">
                 <label class="form-label">Surname</label>
                 
-                <input class="form-control" name="lname" type="text" placeholder="Surname" id="example-text-input">
+                <input class="form-control" name="lname" type="text" value="{{$user->lname}}" id="example-text-input">
                 @error('lname') <span class="text-danger">{{$message}}</span> @enderror
 
             </div>
@@ -136,11 +141,11 @@
                 <label class="form-label">Gender</label>
                 @error('gender') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-select" name="gender" aria-label="Default select example">
-                            <option selected=""  value="">-- select --</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
+                <option value="M" {{ $user->gender == 'M' ? 'selected' : '' }}>Male</option>
+                <option value="F" {{ $user->gender == 'F' ? 'selected' : '' }}>Female</option>
                             
                             </select>
+
 
             </div>
             
@@ -150,7 +155,7 @@
             <div class="mb-4">
                 <label class="form-label">Email</label>
                 @error('email') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" name="email" type="email" placeholder="Email" id="example-text-input">
+                <input class="form-control" name="email" type="email" value="{{$user->email}}" id="example-text-input">
             </div>
             
         </div>
@@ -161,7 +166,7 @@
                 <label class="form-label">Roles</label> 
                 @error('role') <span class="text-danger">{{$message}}</span> @enderror 
                 <select class="form-control select2" name="role">
-                    <option value="">-- select --</option>
+                    <option value="{{$user->role}}"> {{$user->role}} </option>
                         <option value="admin">Admin</option>
                         <option value="lecturer">Lecturer</option>
                         <option value="hod">HOD</option>
@@ -172,18 +177,34 @@
         <div class="col-lg-6">
             <div class="mb-3">
                 <label class="form-label">Department</label>
+              
                 @php 
                 $department = App\Models\Department::all()
                 @endphp
                 @error('department') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-control select2" name="department">
-                    <option value="0">-- None --</option>
+                    @php
+                    $mydepartment = App\Models\Department::find($user->department_id)
+                    @endphp
+                    @if(!empty($mydepartment))
+                    <option value="{{$user->department_id}}">{{$mydepartment->department_name}} - 
+                        @if($mydepartment->campus_id==1) LL @endif
+                        @if($mydepartment->campus_id==2) BT @endif
+                        @if($mydepartment->campus_id==3) ZA @endif
+                       
+                    </option>
+                    
+                    @else
+                    <option value="">-- Select --</option>
+                    @endif
+                    @if(!empty($department))
                     @foreach($department as $depart)
                         <option value="{{$depart->id}}">{{$depart->department_name}} - 
                         @if($depart->campus_id==1) LL @endif
                         @if($depart->campus_id==2) BT @endif
                         @if($depart->campus_id==3) ZA @endif
                     @endforeach  
+                    @endif
                 </select>
 
             </div>
@@ -196,7 +217,7 @@
                 <label class="form-label">Campus(es)</label>
                 @error('campus_id') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-control select2" name="campus_id">
-                    <option value="">-- select --</option>
+                    <option value="{{$user->campus}}">{{$user->campus}}</option>
                         <option value="Lilongwe">Lilongwe</option>
                         <option value="Blantyre">Blantyre</option>
                         <option value="Zomba">Zomba</option>
@@ -231,12 +252,17 @@
             
         </div>
     </div>
-  <div class="form-group">
-&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Submit</button> &nbsp;&nbsp;
-</form>
-<a href="{{route('list.users')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
-</div>  
+<div class="form_group">
 
+   
+&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update</button> &nbsp;&nbsp;
+
+
+</form>
+
+<a href="{{route('list.users')}}">
+<button class="btn btn-outline-secondary" type="button">Cancel</button></a><br><br>
+</div> 
 
 </div>
 </div>
