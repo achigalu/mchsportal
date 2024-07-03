@@ -54,7 +54,7 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     
                                     <li><a href="#">- College Details</a></li>
-                                    <li><a href="{{route('all.campuses')}}">- College Campuses</a></li>
+                                    <li><a href="{{route('all.campuses')}}">- Campuses</a></li>
                                     
                                 </ul>
                             </li>
@@ -65,12 +65,12 @@
                         <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="fas fa-users-cog" style="font-size:25px;color:#7196be"></i>
-                                    <span style="color:gray;"><b> System Users</b></span>
+                                    <span style="color:gray;"><b> Users</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('list.users')}}">- All Users</a></li>
-                                    <li><a href="#">- Roles</a></li>
-                                    <li><a href="#">- Permissions</a></li>
+                                    <li><a href="{{route('list.roles')}}">- Roles</a></li>
+                                    <li><a href="{{route('list.permissions')}}">- Permissions</a></li>
                                     <li><a href="#">- Logs</a></li>
                                 </ul>
                             </li>
@@ -78,7 +78,7 @@
                         <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="fas fa-cog" style="font-size:25px;color:#7196be"></i>
-                                    <span style="color:gray;"><b> Academic Setup</b></span>
+                                    <span style="color:gray;"><b> Academic </b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     
@@ -97,7 +97,7 @@
                             <li>
                                 <a href="{{route('admission.student')}}" class=" waves-effect">
                                     <i class="fas fa-user-plus" style="font-size:15px;color:#7196be"></i>
-                                    <span style="color:gray;"><b> Add Students</b></span>
+                                    <span style="color:gray;"><b> Students</b></span>
                                 </a>
                             </li>
 
@@ -106,7 +106,7 @@
                     <li>
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class=" fas fa-user-plus" style="font-size:15px;color:#7196be"></i>
-                                    <span style="color:gray;"><b> Subjects Setup</b></span>
+                                    <span style="color:gray;"><b> Subjects </b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('add.course')}}">- Add Subjects</a></li>

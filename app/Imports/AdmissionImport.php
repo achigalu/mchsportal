@@ -21,6 +21,18 @@ class AdmissionImport implements ToModel
     */
     public function model(array $row)
     {
+     // Assuming 'reference_no' is a unique identifier for validation
+    $referenceNo = $row[8];
+     // Fetch the record from the database based on 'reference_no'
+    $existingAdmission = Admission::where('reference_code', $referenceNo)->first();
+        // Perform your validation logic
+        if ($existingAdmission) {
+            // If the record exists, return null to skip the import
+          //  return redirect()->route('confirm.students.lists', $this->id)->with('invalid', 'Reference numbers already exist in the system.');
+            return null;
+        }
+    
+        // If no validation errors, proceed to create or update the admission record
         
             return new Admission([
                 'academicyear' => $this->academic_yr_id,
@@ -32,7 +44,11 @@ class AdmissionImport implements ToModel
                 'campus'    => $row[3], 
                 'email'    => $row[4], 
                 'entry_level'    => $row[5], 
-                'gender'    => $row[6], 
+                'gender'    => $row[6],
+                'semester'  => $row[7],
+                'reference_code'    => $row[8],  
+                'reg_num'    => $row[9] ?? null,
+
             ]);
         
       

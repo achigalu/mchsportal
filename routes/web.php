@@ -20,7 +20,10 @@ use App\Http\Controllers\studentRegistrationController;
 use App\Http\Controllers\tuitionFeeCategoryController;
 use App\Http\Controllers\tuitionFeeStructureController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\permissionController;
 use Illuminate\Auth\Events\Registered;
+use App\Http\Controllers\roleController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +103,8 @@ Route::controller(studentController::class)->group(function(){
     Route::get('/save/admission/student', 'saveAdmissionStudent')->name('save.admission.student');
     Route::get('/student/profile', 'studentProfile')->name('student.profile');
     Route::post('/student/profile', 'storeStudentProfile')->name('store.student.profile');
+    Route::get('/student/edit/password', 'editPassword')->name('admin.student.resetStudentPassword');
+    Route::post('/update/student/password', 'updatePassword')->name('update.student.password');
     
     route::get('/list', 'list');
 });
@@ -222,6 +227,18 @@ Route::controller(assessmentsController::class)->group(function(){
     Route::get('/students/graded/{id}/{assessment}','studentsGraded2')->name('students.graded2');
     Route::get('/submit/hod/{id}', 'submitHod')->name('submit.hod');
 
+});
+
+Route::controller(roleController::class)->group(function(){
+    Route::get('/list/roles', 'listRoles')->name('list.roles');
+    Route::get('/add/role', 'addRole')->name('add.role');
+   
+});
+
+Route::controller(permissionController::class)->group(function(){
+    Route::get('/list/permissions', 'listPermissions')->name('list.permissions');
+    Route::get('/add/permission', 'addPermission')->name('add.permission');
+    Route::get('/assign/permissions', 'assignPermissions')->name('assign.permissions');
 });
 
 Route::controller(dashboard::class)->group(function(){

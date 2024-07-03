@@ -77,7 +77,15 @@ class studentController extends Controller
                     $import = new AdmissionImport($request->academic_yr_id, $id,);
                     Excel::import($import, request()->file('students_upload'));
         
-                    return redirect(route('confirm.students.lists', $id));
+                    $checkedReferenceCode = Admission::where('academicyear', $request->academic_yr_id)->where('uploadlist_id', $id)->first();
+                    if(!empty($checkedReferenceCode))
+                    {
+                        return redirect(route('confirm.students.lists', $id));
+                        
+                    }else{
+                        return redirect(route('confirm.students.lists', $id))->with('invalid', 'Reference numbers already exist in the system.');
+                    }
+                   
             }
           
            }
@@ -165,99 +173,192 @@ class studentController extends Controller
                     case 'back':
                         return redirect()->route('admission.student');
                         break;
+
                             case 'savelist':
                                
-                                $class = Programclass::where('classcode' , $request->class[0])->first();
-                                // program code like CCM
-                                $program_code = $class->program->program_code;
-                                // campus like LL, BT or ZA
-                                $campus = $request->campus[0];
-                                if($campus== 'Lilongwe')
-                                    {
-                                        $campus_code = 'LL';
-                                    }
-                                else if($campus== 'Blantyre')
-                                    {
-                                        $campus_code = 'BT';
-                                    }
-                                else 
-                                    {
-                                        $campus_code = 'ZA';
-                                    }
-                                
-                                    // year like 2024, 2020
-                                $academic_yr = Academicyear::where('id', $request->acy[0])->first();
-                                $intake_year = $academic_yr->ayear;
-                                
-                                    // Intake month like January = 01
-                                $month = Uploadlist::where('academic_yr_id', $request->acy[0])->first();
-                                $intake_month = $month->intake_month;
-                                
-                              
-                                $uploadlist_id = $month->id;
-                                
-                                $reg_number = $program_code.'/'. $campus_code.'/'.$intake_year.'/'.$intake_month.'/';
-                               
-                                $counter=00;
-                                $email='@mchs.mw';
-                                $campus = $request->campus[0];
-                              
-                                // need to use firstOrCreate method
-                                $already = User::where('academicyear_id', $request->acy[0])
-                                ->where('campus',  $request->campus[0])
-                                ->where('uploadlist_id',  $id)
-                                ->first(); 
-                                
-                                if(!empty($already))
-                                {
-                                   return redirect()->back()->with('invalid' , 'This class list was already uploaded');
-                                }
-                                else
-                                {
-
-foreach ($request->lname as $key => $lname) {
-$counter++; // Increment counter within the loop
-$formatted_counter = str_pad($counter, 2, '0', STR_PAD_LEFT); // Format counter with leading zeros
-
-$email = strtolower($program_code . $campus_code . $intake_year . $intake_month . $formatted_counter . '@mchs.mw');
-$checked_email = User::where('email', $email)->first();
-if (!empty($checked_email)) {
-return redirect()->back()->with('invalid', 'This students list was already uploaded');
-}
-
-User::create([
-'academicyear_id' => $request->acy[$key],
-'programclass' => $request->class[$key],
-'uploadlist_id' => $id,
-'reg_num' => $reg_number . $formatted_counter,
-'fname' => $request->fname[$key],
-'lname' => $request->lname[$key],
-'entry_level' => $request->entry_type[$key],
-'email' => $email, // Convert email to lowercase
-'campus' => $campus,
-'password' => Hash::make('password'),
-'role' => 'student',
-'semester' => 1,
-'gender' => $request->gender[$key],
-]);
-}
-
-                                }
-
-               
-                               $process = Uploadlist::find($id);
-                               if(!empty($process))
-                               {
-                               
-                                $process->update([
-                                    'processed' => '1',
-                                ]);
-                               }
-                                return redirect(route('saved.confirmed.students', $id));
-                                //return view('admin.intake.confirmedStudents', $data);
+                                // check if some students are already uploaded - count to add extra
+                                // check if 
+                         $class = Programclass::where('classcode' , $request->class[0])->first();
                             
-                     
-                                break;
+                         if (!$class)
+                                {
+                                    return redirect()->route('confirm.students.lists', $id)->with('invalid', 'This'.' '.$request->class[0].' '.' class not defined.');
+                                }
+                              
+                         else{ 
+                                // more logic for validating reg numbers...    
+                               // $data['reference_code'] = Admission::where('reference_code', )->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();   
+                               // program code like CCM
+
+                                $oldStudents = Admission::where('academicyear', $request->acy[0])->where('uploadlist_id', $id)
+                                ->where('campus',  $request->campus[0])->get();
+                                // Check if any of the old students have a non-empty reg_num
+                                                $hasRegNum = $oldStudents->pluck('reg_num')->filter()->isNotEmpty();
+
+                                                if ($hasRegNum) {
+                                                // There are students with non-empty reg_num values
+                                                foreach ($request->lname as $key => $lname) {
+                                                   
+                                                    $email = $request->reg_num[$key].'@mchs.mw';
+                                                    $checkOldRegNum = User::where('reg_num', $request->reg_num[$key])->first();
+                                                    if ($checkOldRegNum) {
+                                                    return redirect()->back()->with('invalid', 'This students list already uploaded in this system');
+                                                    }
+                                                    
+                                                    User::create([
+                                                    'academicyear_id' => $request->acy[$key],
+                                                    'programclass' => $request->class[$key],
+                                                    'uploadlist_id' => $id,
+                                                    'reg_num' => $request->reg_num[$key],
+                                                    'fname' => $request->fname[$key],
+                                                    'lname' => $request->lname[$key],
+                                                    'entry_level' => $request->entry_type[$key],
+                                                    'email' => $email, // Convert email to lowercase
+                                                    'campus' => $request->campus[$key],
+                                                    'password' => Hash::make('password'),
+                                                    'role' => 'student',
+                                                    'semester' => $request->semester[$key],
+                                                    'gender' => $request->gender[$key],
+                                                    ]);
+                                                    
+                                                    }
+
+                                                    $process = Uploadlist::find($id);
+                                                    if(!empty($process))
+                                                    {
+                                                    
+                                                     $process->update([
+                                                         'processed' => '1',
+                                                     ]);
+                                                    }
+                                                     return redirect(route('saved.confirmed.students', $id));
+                                                     //return view('admin.intake.confirmedStudents', $data);
+
+                                                } else
+                                                {
+                                                // if no reg_nums proceed.
+
+                                                $program_code = $class->program->program_code;
+                                                // campus like LL, BT or ZA
+                                                $campus = $request->campus[0];
+                                                if($campus== 'Lilongwe')
+                                                    {
+                                                        $campus_code = 'LL';
+                                                    }
+                                                else if($campus== 'Blantyre')
+                                                    {
+                                                        $campus_code = 'BT';
+                                                    }
+                                                else 
+                                                    {
+                                                        $campus_code = 'ZA';
+                                                    }
+                                                
+                                                    // year like 2024, 2020
+                                                $academic_yr = Academicyear::where('id', $request->acy[0])->first();
+                                                $intake_year = $academic_yr->ayear;
+                                                
+                                                    // Intake month like January = 01
+                                                $month = Uploadlist::where('academic_yr_id', $request->acy[0])->first();
+                                                $intake_month = $month->intake_month;
+                                                
+                                              
+                                                $uploadlist_id = $month->id;
+                                                
+                                                $reg_number = $program_code.'/'. $campus_code.'/'.$intake_year.'/'.$intake_month.'/';
+                                               
+                                                $counter=00;
+                                                $email='@mchs.mw';
+                                                $campus = $request->campus[0];
+                                              
+                                                // need to use firstOrCreate method
+                                                $already = User::where('academicyear_id', $request->acy[0])
+                                                ->where('campus',  $request->campus[0])
+                                                ->where('programclass',  $request->class[0])
+                                                ->where('semester',  $request->semester[0])
+                                                ->get();
+                                                $alreadyUploadedStudents = $already->count(); 
+                                                
+                                                if($already->isNotEmpty())
+                                                {
+                                                    foreach ($request->lname as $key => $lname) {
+                                                        $alreadyUploadedStudents++; // Increment counter within the loop
+                                                        $formatted_counter = str_pad($alreadyUploadedStudents, 2, '0', STR_PAD_LEFT); // Format counter with leading zeros
+                                                        
+                                                        $email = strtolower($program_code . $campus_code . $intake_year . $intake_month . $formatted_counter . '@mchs.mw');
+                                                        $checked_email = User::where('email', $email)->first();
+                                                        if (!empty($checked_email)) {
+                                                        return redirect()->back()->with('invalid', 'This students list was already uploaded1');
+                                                        }
+                                                        
+                                                        User::create([
+                                                        'academicyear_id' => $request->acy[$key],
+                                                        'programclass' => $request->class[$key],
+                                                        'uploadlist_id' => $id,
+                                                        'reg_num' => $reg_number . $formatted_counter,
+                                                        'fname' => $request->fname[$key],
+                                                        'lname' => $request->lname[$key],
+                                                        'entry_level' => $request->entry_type[$key],
+                                                        'email' => $email, // Convert email to lowercase
+                                                        'campus' => $campus,
+                                                        'password' => Hash::make('password'),
+                                                        'role' => 'student',
+                                                        'semester' => $request->semester[$key],
+                                                        'gender' => $request->gender[$key],
+                                                        ]);
+                                                        }
+                                                }
+                                                else
+                                                {
+                
+                foreach ($request->lname as $key => $lname) {
+                $counter++; // Increment counter within the loop
+                $formatted_counter = str_pad($counter, 2, '0', STR_PAD_LEFT); // Format counter with leading zeros
+                
+                $email = strtolower($program_code . $campus_code . $intake_year . $intake_month . $formatted_counter . '@mchs.mw');
+                $checked_email = User::where('email', $email)->first();
+                if (!empty($checked_email)) {
+                return redirect()->back()->with('invalid', 'This students list was already uploaded2');
+                }
+                
+                User::create([
+                'academicyear_id' => $request->acy[$key],
+                'programclass' => $request->class[$key],
+                'uploadlist_id' => $id,
+                'reg_num' => $reg_number . $formatted_counter,
+                'fname' => $request->fname[$key],
+                'lname' => $request->lname[$key],
+                'entry_level' => $request->entry_type[$key],
+                'email' => $email, // Convert email to lowercase
+                'campus' => $campus,
+                'password' => Hash::make('password'),
+                'role' => 'student',
+                'semester' => 1,
+                'gender' => $request->gender[$key],
+                ]);
+                }
+                
+                                                }
+                
+                               
+                                               $process = Uploadlist::find($id);
+                                               if(!empty($process))
+                                               {
+                                               
+                                                $process->update([
+                                                    'processed' => '1',
+                                                ]);
+                                               }
+                                                return redirect(route('saved.confirmed.students', $id));
+                                                //return view('admin.intake.confirmedStudents', $data);
+                                            
+                                     
+                                                break;
+                                                }
+                                              
+                                               
+
+                                            }
                 
         }
                        
@@ -270,9 +371,11 @@ User::create([
          //$academic_yr = Academicyear::all();
          //$prog_class = Programclass::all();  
          $class_students = Admission::where('uploadlist_id', $id)->first(); // we have students list, student class, program, academiyear ..
-         
+        
+
          $data['students'] = User::where('programclass',$class_students->class)
          ->where('academicyear_id', $class_students->academicyear)
+         ->where('uploadlist_id', $class_students->uploadlist_id)
          ->where('campus', $class_students->campus)->get();
          //$data['confirmedstudents'] = Student::where('academicyear_id', $request->acy[0])->where('programclass', $request->class[0])->get();
          //dd($data['students']);
@@ -380,6 +483,34 @@ User::create([
              }
         };
 
+    }
+
+    public function editPassword()
+    {
+        return view('admin.student.resetStudentPassword');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'old_password' => 'required|min:6|max:100',
+            'new_password' => 'required|min:6|max:100',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        $currentUser = Auth::user();
+        if(Hash::check($request->old_password, $currentUser->password))
+        {
+             $user = User::where('id', $currentUser->id)->update(['password' => Hash::make($request->new_password)]);
+             if($user)
+             {
+                return redirect()->back()->with('status', 'Password updated successfully');
+             }
+        }
+        else
+        {
+            return redirect()->back()->with('invalid', 'Password does not match');
+        }
     }
 
    

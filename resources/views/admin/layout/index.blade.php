@@ -169,8 +169,11 @@ $campus = App\Models\Campus::all()
                                     <div class="card-body">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
+                                                @php 
+                                                $allstudents = App\Models\User::where('role', 'student')->count()
+                                                @endphp
                                                 <p class="text-truncate font-size-14 mb-2">Current Students</p>
-                                                <h4 class="mb-2">3409</h4>
+                                                <h4 class="mb-2">{{$allstudents}}</h4>
                                                 
                                             </div>
                                             <div class="avatar-sm">
@@ -185,7 +188,8 @@ $campus = App\Models\Campus::all()
                                 </div>
                            
 
-                            @if($user->role=='lecturer' || $user->role=='Principal' || $user->role=='Dean' || $user->role=='HOD' || $user->role == 'admin' )
+                            @if($user->role=='lecturer' || $user->role=='Principal' || $user->role=='Dean' || 
+                            $user->role=='HOD' )
                             <div class="row">
                                 <div class="col-xl-3 col-md-6">
                                 <div class="card">
@@ -216,7 +220,7 @@ $campus = App\Models\Campus::all()
                                 </div><!-- end card -->
                             </div><!-- end col -->
                         @endif
-                        @if($user->role=='HOD' || $user->role == 'admin' )
+                        @if($user->role=='HOD' )
                             <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -246,7 +250,7 @@ $campus = App\Models\Campus::all()
                                 </div><!-- end card -->
                             </div><!-- end col -->
                         @endif
-                        @if($user->role=='Dean' || $user->role == 'admin')
+                        @if($user->role=='Dean')
                             <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -279,7 +283,7 @@ $campus = App\Models\Campus::all()
                        
 
                         
-                        @if($user->role=='Campus Regitrar' || $user->role == 'admin')
+                        @if($user->role=='Campus Regitrar')
                         <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -314,7 +318,7 @@ $campus = App\Models\Campus::all()
 
                         <div class="row">
 
-                        @if($user->role=='Principal' || $user->role == 'admin')
+                        @if($user->role=='Principal')
                         <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -346,7 +350,7 @@ $campus = App\Models\Campus::all()
                         @endif
 
 
-                        @if($user->role=='DCR' || $user->role == 'admin')
+                        @if($user->role=='DCR')
                         <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -380,7 +384,7 @@ $campus = App\Models\Campus::all()
                         
                             
                        
-                        @if($user->role=='College Registrar' || $user->role == 'admin')
+                        @if($user->role=='College Registrar')
                         <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -411,7 +415,7 @@ $campus = App\Models\Campus::all()
                             </div><!-- end col -->
                         @endif
                          
-                        @if($user->role=='Executive Director' || $user->role == 'admin')
+                        @if($user->role=='Executive Director')
                                 <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">

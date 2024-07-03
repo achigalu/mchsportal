@@ -486,7 +486,7 @@
         <div class="col-lg-6">
             <div class="mb-4">
                 <label class="form-label">T/A*</label>
-                <input class="form-control" name="traditional" type="text" placeholder="Firstname" id="validationCustom01">
+                <input class="form-control" name="traditional" type="text" placeholder="T/A" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
 
             </div>  
@@ -495,7 +495,7 @@
         <div class="col-lg-6">
             <div class="mb-4">
                 <label class="form-label">Village*</label>
-                <input class="form-control" name="village" type="text" placeholder="Firstname" id="validationCustom01">
+                <input class="form-control" name="village" type="text" placeholder="Village" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
 
             </div>  
@@ -515,7 +515,7 @@
     <div class="col-lg-4">
             <div class="mb-3">
                 <label class="form-label">Phone(If you have two)</label>
-                <input class="form-control" name="student_phone2" type="text" placeholder="Firstname" id="validationCustom01">
+                <input class="form-control" name="student_phone2" type="text" placeholder="" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
             </div>   
     </div>
@@ -523,7 +523,7 @@
     <div class="col-lg-4">
             <div class="mb-3">
                 <label class="form-label">Email(If you have one)</label>
-                <input class="form-control" name="student_email" type="text" placeholder="Firstname" id="validationCustom01">
+                <input class="form-control" name="student_email" type="email" placeholder="" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
             </div>   
     </div>
@@ -586,7 +586,7 @@
             <div class="mb-2">
                 <label class="form-label">Email</label>
                 @error('email') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" type="text" name="kin_email" placeholder="" id="example-text-input">
+                <input class="form-control" type="email" name="kin_email" placeholder="" id="example-text-input">
 
             </div>
             
@@ -605,7 +605,7 @@
   <div class="form-group">
 &nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update</button> &nbsp;&nbsp;
 </form>
-<a href="{{route('list.users')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
+<a href="{{route('student.dashboard')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
 </div>  
 
 

@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Uploaded List</title>
+        <title>MCHS Portal | List Permissions</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -26,6 +26,8 @@
         <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{asset('assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+        
+        
     </head>
 
     <body data-topbar="dark">
@@ -69,15 +71,23 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0"></h4>
+                                    <h4 class="mb-sm-0">Permissions</h4>
 
                                     <div class="page-title-right">
+                                    <div class="btn-group">
+<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
+aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+
+    
+</button>&nbsp;&nbsp;
+<div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Exel</a>
+    <a class="dropdown-item" href="#">PDF</a>
+   
+</div>
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('single.admission.student')}}">
-                                        <li class="btn btn-secondary"><i class="fas fa-user-plus"></i>&nbsp;&nbsp;Add Single Student</li> &nbsp;
-                                        </a>
-                                        <a href="{{route('upload.students')}}">
-                                        <li class="btn btn-secondary"><i class="fas fa-upload"></i>&nbsp;&nbsp;Upload Intake list</li> &nbsp;
+                                        <a href="{{route('add.permission')}}">
+                                        <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add permission</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -92,68 +102,35 @@
                                 <div class="card">
                                     <div class="card-body">
         
-                                        <h5>STEP 2: Confirm  {{$upload_name}} Selection List Upload</h5><br>
-                                        <div class="card col-12">
-  <div class="card-header">
-  
-  <h4><i class="fa fa-times" style="font-size:30px;color:#de7c7c"></i> Upload has errors: correct errors in the excel sheet and upload again</h4>
-
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item" style="color: red;">Your class CCM1 not defined in Academic programs class</li>
-    <li class="list-group-item" style="color: red;">Your fee category not defined in Fee category settings</li>
-    <li class="list-group-item" style="color: red;">Your Campus not defined in the system</li>
-  </ul>
-</div>
-         
-<div class="card-header">
-  <h4><i class="fas fa-check" style="font-size:30px;color:green"></i> Everything is good.</h4>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item" style="color: green;">Click save list to proceed.</li>
-    
-  </ul>
-</div>
-        
+                                        
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
-                                                <th>Surname</th>
-                                                <th>Firstname</th>
-                                                <th>Class</th>
-                                                <th>Entry type</th>
-                                                <th>Fee category</th>
-                                                <th>Campus</th>
+                                                <th>Permission Name</th>
+                                                <th>Permission Description</th>
+                                                <th>Created Date</th>
+                                                <th>Actions</th>
                                                 
                                             </tr>
                                             </thead>
         
         
                                             <tbody>
-<form action="">
-                                               
-                                        @foreach($admissions as $student)
-                                            <tr>
-                                                <td>{{$student->lname}}</td>
-                                                <td>{{$student->fname}}</td>
+                                            
+                                            <tr> 
+                                                <td>add subject</td>
+                                                <td>adding subject to a system</td>
+                                                <td>12.02.2024<span class="badge rounded-pill bg-secondary"></span></td>
                                                 <td>
-                                                <input class="form-control" type="text" value="{{$student->campus}}" disabled>
+                                                <a href="#"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href="#"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
-                                                <td>
-                                                <input class="form-control" type="text" value="Basic " disabled>
-                                                </td>
-                                                <td>
-                                                <input class="form-control" type="text" value="Basic Entry" disabled>
-                                                
-                                                </td>
-                                                <td>
-                                                <input class="form-control" type="text" value="{{$student->campus}}" disabled>
-                                                <option selected></option>
-                                       
-                                                </td>
-                                               
-                                            </tr>
-                                      @endforeach
+                                                </tr>
                                            
+                                   
+                                        
+                                            
                                             </tbody>
                                         </table>
         
@@ -162,50 +139,20 @@
                             </div> <!-- end col -->
                         </div> <!-- end row -->
         
-                        <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-sm-6">
-                            <div class="form-group">
-                            <a href="{{route('admission.student')}}">
-                        <button class="btn btn-secondary" type="submit"><i class="fas fa-angle-left"></i>&nbsp;&nbsp;Back</button>&nbsp;&nbsp;
-                        </a>
-                        @if(!empty($admissions))
-                        <a href="{{route('admission.student')}}">
-                        <li class="btn btn-warning"> <i class="fas fa-trash"></i>&nbsp;&nbsp;Discard list</li>
-                        </a>
-                        @endif
-                        </div> 
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="text-sm-end d-none d-sm-block">
-                                @if(!empty($admissions))     
-                        
-                        <button type="submit" class="btn btn-info"> <i class="fas fa-save"></i>&nbsp;&nbsp;Save list</button>
-                        @endif
-                        </a><br><br><p></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                       
-                    </form>            <!-- end row-->
+                      
+
+                      
+
+
+                      
+
+
+                      
 
 
                        
-                        <!-- end row-->
-
-
-                       
-                        <!-- end row-->
 
                         
-                        <!-- end row-->
-
-
-                        
-                        <!-- end row-->
-
-                       
                         <!-- end row-->
                         
                     </div> <!-- container-fluid -->
@@ -256,6 +203,7 @@
         <!-- Responsive examples -->
         <script src="{{asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
         <script src="{{asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+        
 
         <!-- Datatable init js -->
         <script src="{{asset('assets/js/pages/datatables.init.js')}}"></script>

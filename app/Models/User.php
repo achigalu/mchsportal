@@ -76,6 +76,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Myclasssubject::class);
     }
 
+    public function studentprofile()
+    {
+        return $this->hasOne(Studentprofile::class);
+    }
+
 
     // static public functions
 

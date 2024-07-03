@@ -127,14 +127,21 @@
                                             <input type="text" name="acy[]" value="{{$admission->academicyear}}" hidden>
                                             <input type="text" name="fname[]" value="{{$admission->fname}}" hidden>
                                             <input type="text" name="gender[]" value="{{$admission->gender}}" hidden>
+                                            <input type="text" name="semester[]" value="{{$admission->semester}}" hidden>
+                                            <input type="text" name="reg_num[]" value="{{$admission->reg_num}}" hidden>
                                             <td>{{$admission->lname}}</td>
                                             <input type="text" name="lname[]" value="{{$admission->lname}}" hidden>
                                             <td>{{$admission->fname}}</td>
                                             <td>
+                                                @php 
+                                                $my_class = App\Models\Admission::where('campus', $admission->campus)
+                                                @endphp
                                             <select name="class[]" id="" required>
-                                                <option value="">--select--</option>
+                                                <option value="" >--select--</option>
                                                 @foreach($myclass as $classes)
-                                                <option {{($classes->classcode==$admission->class)? 'selected' : ''}} value="{{$classes->classcode}}">{{$classes->classcode}}</option>
+                                                <option {{($classes->classcode == $admission->class)? 'selected' : ''}} value="{{$classes->classcode}}">{{$classes->classcode}}
+                                            
+                                                </option>
                                                 @endforeach
                                             </select></td>
                                             <td>
@@ -170,8 +177,12 @@
                                     </tbody>
                                         </table><p><br><hr>
                                         <button class="btn btn-secondary" type="submit" name="action" value="back"><i class="fas fa-angle-left"></i>&nbsp;&nbsp;Back</button>&nbsp;&nbsp;
+                                        @if($admissions->isNotEmpty())
                                         <button class="btn btn-warning" type="submit" name="action" value="discardlist"><i class="fas fa-trash"></i>&nbsp;&nbsp;Discard list</button>&nbsp;&nbsp;
+                                        @endif
+                                        @if($admissions->isNotEmpty())
                                         <button class="btn btn-info float-end" type="submit" name="action" value="savelist"><i class="fas fa-save"></i>&nbsp;&nbsp;Save list</button>&nbsp;&nbsp;
+                                        @endif
                                         </form><p></p>
                                        
                                     </div>
