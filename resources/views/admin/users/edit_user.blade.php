@@ -163,14 +163,16 @@
 
         
         <div class="col-lg-6">
+        @php 
+            $roles = DB::table('roles')->orderBy('name', 'asc')->get()           
+        @endphp
                 <label class="form-label">Roles</label> 
                 @error('role') <span class="text-danger">{{$message}}</span> @enderror 
                 <select class="form-control select2" name="role">
                     <option value="{{$user->role}}"> {{$user->role}} </option>
-                        <option value="admin">Admin</option>
-                        <option value="lecturer">Lecturer</option>
-                        <option value="hod">HOD</option>
-                        <option value="dean">Dean</option>
+                    @foreach($roles as $role)
+                        <option value="{{$role->name}}">{{$role->name}}</option>
+                   @endforeach
                 </select>
              </div>
 

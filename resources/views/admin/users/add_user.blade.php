@@ -111,8 +111,7 @@
             <div class="mb-3">
                 <label class="form-label">First Name</label>
                
-                <input class="form-control" name="fname" type="text" placeholder="Firstname" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" value="{{old('fname')}}" name="fname" type="text" placeholder="Firstname" id="validationCustom01">                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
                 
 
             </div>
@@ -123,7 +122,7 @@
             <div class="mb-2">
                 <label class="form-label">Surname</label>
                 
-                <input class="form-control" name="lname" type="text" placeholder="Surname" id="example-text-input">
+                <input class="form-control" value="{{old('lname')}}" name="lname" type="text" placeholder="Surname" id="example-text-input">
                 @error('lname') <span class="text-danger">{{$message}}</span> @enderror
 
             </div>
@@ -150,7 +149,7 @@
             <div class="mb-4">
                 <label class="form-label">Email</label>
                 @error('email') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" name="email" type="email" placeholder="Email" id="example-text-input">
+                <input class="form-control" value="{{old('email')}}" name="email" type="email" placeholder="Email" id="example-text-input">
             </div>
             
         </div>
@@ -158,14 +157,17 @@
 
         
         <div class="col-lg-6">
+            @php 
+            $roles = DB::table('roles')->orderBy('name', 'asc')->get()           
+            @endphp
                 <label class="form-label">Roles</label> 
                 @error('role') <span class="text-danger">{{$message}}</span> @enderror 
                 <select class="form-control select2" name="role">
                     <option value="">-- select --</option>
-                        <option value="admin">Admin</option>
-                        <option value="lecturer">Lecturer</option>
-                        <option value="hod">HOD</option>
-                        <option value="dean">Dean</option>
+                    @foreach($roles as $role)
+                        <option value="{{$role->name}}">{{$role->name}}</option>
+                    @endforeach
+                       
                 </select>
              </div>
 
@@ -215,7 +217,7 @@
             <div class="mb-3">
                 <label class="form-label">Password</label>
                 @error('password') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" type="password" name="password" placeholder="" id="example-text-input">
+                <input class="form-control" type="password" name="password"  placeholder="" id="example-text-input">
 
             </div>
             
@@ -232,7 +234,7 @@
         </div>
     </div>
   <div class="form-group">
-&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Submit</button> &nbsp;&nbsp;
+&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Create</button> &nbsp;&nbsp;
 </form>
 <a href="{{route('list.users')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
 </div>  

@@ -126,7 +126,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <td><span class="badge rounded-pill bg-secondary"></span>{{$role->description}}</td>
                                                 <td>
                                                 <a href="{{route('edit.role',$role->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('assign.permissions')}}"><button class="btn btn-outline-info"><i class="fas fa-plus"></i></button></a>
+                                                <a href="{{route('assign.permissions', $role->id)}}"><button class="btn btn-outline-info"><i class="fas fa-plus"></i></button></a>
                                                 <a href="{{route('delete.role',$role->id)}}"><button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button> </a>  
                                                 
                                                 </td>

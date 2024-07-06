@@ -103,212 +103,19 @@
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-<form action="{{route('store.student.profile')}}" method="POST" class="custom-validation">
+<form action="{{route('permissions.to.arole', $role->id)}}" method="POST" class="custom-validation">
     @csrf
-    <h5>Edit Permissions for role: Lecturer</h5><hr><p></p>
+    <h5>Permissions for role: {{$role->name}}</h5><hr><p></p>
     <div class="row">
-    
+    @error('permission_id') <span class="text-danger">{{$message}}</span> @enderror <br> 
     <div class="col-lg-12">
-        
+    
 <div class="mb-3">
-
-<input class="form-check-input mb-3" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input mb-3" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
-
-<input class="form-check-input" type="checkbox" id="formCheck1">
-<label class="form-check-label" for="formCheck1">
-Form Checkbox
-</label>
-&nbsp;&nbsp;
+@foreach($permissions as $permission)
+    <input class="form-check-input mb-3" type="checkbox" value="{{ $permission->name }}" name="permission[]"
+        {{ $rolePermissions->contains($permission->id) ? 'checked' : '' }}>&nbsp;{{ $permission->name }}
+    &nbsp;&nbsp;&nbsp;&nbsp;
+@endforeach
 </div>
   
 
@@ -321,7 +128,7 @@ Form Checkbox
   <div class="form-group">
 &nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update</button> &nbsp;&nbsp;
 </form>
-<a href="{{route('student.dashboard')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
+<a href="{{route('list.roles')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
 </div>  
 
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
@@ -113,14 +114,12 @@ class UsersController extends Controller
             'gender' => 'required',
             'email' => 'required|email|unique:users',
             'role' => 'required',
-            'department'=>'required',
-            'campus_id' => 'required',
             'password'  => 'required|between:8,255|confirmed',
             'password_confirmation' => 'required'
         ]);
         if($validated)
         {
-            $users = User::create([
+            $user = User::create([
                 'fname' => $request->fname,
                 'lname' => $request->lname,
                 'gender' => $request->gender,
@@ -131,10 +130,21 @@ class UsersController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            if($users)
+            if($user)
             {
-                return redirect()->back()->with('status', 'User'.' ' .$request->fname.' '.$request->lname. ' '.'created successfully');
+                $roleId = Role::where('name',$request->role)->first();
+                if(!empty($roleId))
+                {
+                   $user->roles()->sync($roleId->id);
+                  // $permission->syncRoles($roles);
+                  // $user->syncRoles([$role->name]);
+                }
+                else
+                {
+                    return redirect()->back()->with('status', 'Role not found');
+                }
             }
+            return redirect()->back()->with('status', 'User'.' ' .$request->fname.' '.'created successfully.');
         }
       
     }
@@ -152,6 +162,16 @@ class UsersController extends Controller
     public function updateUser(Request $request, $id)
     {
         //dd($request->all(), $id);
+        $validated = $request->validate([
+           'fname' => 'required|max:50',
+            'lname' => 'required|max:50',
+            'gender' => 'required',
+            'email' => 'required|email',
+            'role' => 'required',
+            'password'  => 'required|between:8,255|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+
         $updateUser = User::find($id);
         if(!empty($updateUser))
         {
@@ -165,6 +185,20 @@ class UsersController extends Controller
                 'campus' => $request->campus_id,
                 'password' => Hash::make($request->password)
             ]);
+            if($updateUser)
+            {
+                $roleId = Role::where('name',$request->role)->first();
+                if(!empty($roleId))
+                {
+                   $updateUser->roles()->sync($roleId->id);
+                  // $permission->syncRoles($roles);
+                  // $user->syncRoles([$role->name]);
+                }
+                else
+                {
+                    return redirect()->back()->with('status', 'Role not found');
+                }
+            }
             return redirect()->back()->with('status', 'User'.' ' .$request->fname.' '.'Updated successfully.');
         }
     }

@@ -114,6 +114,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             </thead>
         
         
+                                           
                                             <tbody>
                                             <?php $counter = 1; ?>
                                             @if($permissions->isNotEmpty())
