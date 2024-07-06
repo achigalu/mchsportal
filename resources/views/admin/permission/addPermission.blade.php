@@ -88,10 +88,10 @@
 <div class="card">
 <div class="card-body">
 
-@if(session()->has('message'))
+@if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
 <i class="mdi mdi-check-all me-2"></i>
-{{session()->get('message')}}
+{{session()->get('status')}}
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
@@ -104,7 +104,7 @@
 </div>
 @endif
 
-<form action="{{route('create.faculty')}}" method="POST" enctype="">
+<form action="{{route('store.permission')}}" method="POST" enctype="">
     @csrf
     <div class="row">
         <div class="col-lg-12">
@@ -113,8 +113,8 @@
             <label class="form-label">Permission Name</label>
                     
                     <div class="col-sm-12">
-                    @error('faculty_name') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="faculty_name" type="text" placeholder="" id="example-text-input">
+                    @error('name') <span class="text-danger">{{$message}}</span> @enderror
+                        <input class="form-control" name="name" type="text" placeholder="" id="example-text-input">
                     </div>
             </div>
 
@@ -122,8 +122,8 @@
             <label class="form-label">Permission Description</label>
                     
                     <div class="col-sm-12">
-                    @error('faculty_name') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="faculty_name" type="text" placeholder="" id="example-text-input">
+                    @error('description') <span class="text-danger">{{$message}}</span> @enderror
+                        <input class="form-control" name="description" type="text" placeholder="" id="example-text-input">
                     </div>
             </div>
 

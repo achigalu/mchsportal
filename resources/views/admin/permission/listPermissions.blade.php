@@ -83,7 +83,6 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 <div class="dropdown-menu">
     <a class="dropdown-item" href="#">Exel</a>
     <a class="dropdown-item" href="#">PDF</a>
-   
 </div>
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('add.permission')}}">
@@ -91,7 +90,6 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                         </a>
                                         </ul>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -106,6 +104,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
+                                                <td>ID</td>
                                                 <th>Permission Name</th>
                                                 <th>Permission Description</th>
                                                 <th>Created Date</th>
@@ -116,18 +115,22 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
         
         
                                             <tbody>
-                                            
+                                            <?php $counter = 1; ?>
+                                            @if($permissions->isNotEmpty())
+                                            @foreach($permissions as $permission)
                                             <tr> 
-                                                <td>add subject</td>
-                                                <td>adding subject to a system</td>
-                                                <td>12.02.2024<span class="badge rounded-pill bg-secondary"></span></td>
+                                                <td>{{$counter++}}</td>
+                                                <td>{{$permission->name}}</td>
+                                                <td>{{$permission->description}}</td>
+                                                <td>{{$permission->created_at}}<span class="badge rounded-pill bg-secondary"></span></td>
                                                 <td>
-                                                <a href="#"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="#"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href="{{route('edit.permission',$permission->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>
                                                 </tr>
-                                           
+                                            @endforeach
+                                            @endif
                                    
                                         
                                             
@@ -138,20 +141,6 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                 </div>
                             </div> <!-- end col -->
                         </div> <!-- end row -->
-        
-                      
-
-                      
-
-
-                      
-
-
-                      
-
-
-                       
-
                         
                         <!-- end row-->
                         

@@ -232,6 +232,10 @@ Route::controller(assessmentsController::class)->group(function(){
 Route::controller(roleController::class)->group(function(){
     Route::get('/list/roles', 'listRoles')->name('list.roles');
     Route::get('/add/role', 'addRole')->name('add.role');
+    Route::post('/store/role', 'storeRole')->name('store.role');
+    Route::get('/edit/role/{id}', 'editRole')->name('edit.role');
+    Route::get('/delete/role/{id}', 'deleteRole')->name('delete.role');
+    Route::post('/update/role/{id}', 'updateRole')->name('update.role');
    
 });
 
@@ -239,6 +243,9 @@ Route::controller(permissionController::class)->group(function(){
     Route::get('/list/permissions', 'listPermissions')->name('list.permissions');
     Route::get('/add/permission', 'addPermission')->name('add.permission');
     Route::get('/assign/permissions', 'assignPermissions')->name('assign.permissions');
+    Route::post('/store/permission', 'storePermission')->name('store.permission');
+    Route::get('/edit/permission/{id}', 'editPermission')->name('edit.permission');
+    Route::post('/update/permission/{id}', 'updatePermission')->name('update.permission');
 });
 
 Route::controller(dashboard::class)->group(function(){

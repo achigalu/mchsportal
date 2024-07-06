@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Add Role</title>
+        <title>MCHS Portal | Edit Permission</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="MCHS, add role" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -70,7 +70,7 @@
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-<h4 class="mb-sm-0">Add roles</h4>
+<h4 class="mb-sm-0">Edit Permission: {{$permission->name}}</h4>
 
 <div class="page-title-right">
 
@@ -104,26 +104,26 @@
 </div>
 @endif
 
-<form action="{{route('store.role')}}" method="POST" enctype="">
+<form action="{{route('update.permission', $permission->id)}}" method="POST" enctype="">
     @csrf
     <div class="row">
         <div class="col-lg-12">
 
         <div class="row mb-3">
-            <label class="form-label">Role Name</label>
+            <label class="form-label">Permission Name</label>
                     
                     <div class="col-sm-12">
-                    @error('role') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="name" type="text" placeholder="" id="example-text-input">
+                    @error('name') <span class="text-danger">{{$message}}</span> @enderror
+                        <input class="form-control" value="{{$permission->name}}" name="name" type="text" placeholder="" id="example-text-input">
                     </div>
             </div>
 
             <div class="row mb-3">
-            <label class="form-label">Role Description</label>
+            <label class="form-label">Permission Description</label>
                     
                     <div class="col-sm-12">
                     @error('description') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="description" type="text" placeholder="" id="example-text-input">
+                        <input class="form-control" name="description" value="{{$permission->description}}" type="text" placeholder="" id="example-text-input">
                     </div>
             </div>
 
@@ -154,10 +154,10 @@
 
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Create</button> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update</button> &nbsp;&nbsp;
 
 </form>
-<a href="{{route('list.roles')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
+<a href="{{route('list.permissions')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
 <!-- end row -->
 
 </div> <!-- container-fluid -->

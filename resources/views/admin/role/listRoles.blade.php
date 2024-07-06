@@ -116,17 +116,23 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
         
         
                                             <tbody>
-                                     
+                                    <?php $counter = 1; ?>
+                                     @if($roles->isNotEmpty())
+                                     @foreach($roles as $role)
+                         
                                             <tr> 
-                                                <td>4</td>
-                                                <td>HOD</td>
-                                                <td><span class="badge rounded-pill bg-secondary"></span>Head of Department</td>
+                                                <td>{{$counter++}}</td>
+                                                <td>{{$role->name}}</td>
+                                                <td><span class="badge rounded-pill bg-secondary"></span>{{$role->description}}</td>
                                                 <td>
-                                                <a href="#"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="#"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href="{{route('edit.role',$role->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                 <a href="{{route('assign.permissions')}}"><button class="btn btn-outline-info"><i class="fas fa-plus"></i></button></a>
+                                                <a href="{{route('delete.role',$role->id)}}"><button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button> </a>  
+                                                
                                                 </td>
-                                                </tr>
+                                            </tr>
+                                     @endforeach
+                                     @endif
                                            
                                           
                                         
