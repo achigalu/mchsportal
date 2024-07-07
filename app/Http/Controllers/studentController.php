@@ -511,6 +511,42 @@ class studentController extends Controller
         {
             return redirect()->back()->with('invalid', 'Password does not match');
         }
+    } // end function
+
+    public function allStudentsList()
+    {
+        $students = User::where('role', 'student')->get();
+        return view('admin.users.all_students', compact('students'));
+    } //end function
+
+    public function studentChangePassword($id)
+    {   
+        $student = User::find($id);
+        if($student)
+        {
+            return view('admin.users.student_change_password', compact('student'));
+        }
+       
+    } // end function 
+
+    public function adminUpdateStudentPassword(Request $request, $id)
+    {
+        //dd($request->all(), $id);
+        $validated = request()->validate([
+            'new_password' => 'required|min:6|max:100',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        
+
+        $student = User::find($id);
+        if($student)
+        {
+            $student->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+        }
+        return redirect()->back()->with('status', 'Password updated successfully');
     }
 
    

@@ -129,7 +129,7 @@
                         <div class="dropdown d-inline-block user-dropdown">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/avatar-1.jpg')}}"
+                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/3.jpg')}}"
                                     alt="Header Avatar">
                                 <span class="d-none d-xl-inline-block ms-1">
                                     
@@ -142,7 +142,7 @@
                             @if(Auth::user()->role=='student')
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                <a class="dropdown-item" href="{{route('admin.student.resetStudentPassword')}}"><i class="ri-user-line align-middle me-1"></i>Change password</a><p>
+                                <a class="dropdown-item" href="{{route('admin.student.resetStudentPassword')}}"><i class="ri-user-line align-middle me-1"></i>Change my password</a><p>
                                 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{{route('user.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
@@ -150,10 +150,8 @@
                             @else
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
-                                <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i>Other Profile</a>
-                                <a class="dropdown-item" href="#"><i class="ri-wallet-2-line align-middle me-1"></i> My Wallet</a>
-                                <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i class="ri-settings-2-line align-middle me-1"></i> Settings</a>
-                                <a class="dropdown-item" href="#"><i class="ri-lock-unlock-line align-middle me-1"></i> Lock screen</a>
+                                <a class="dropdown-item" href="{{route('user.reset.password')}}"><i class="ri-user-line align-middle me-1"></i>Change my password</a>
+                            
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{{route('user.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                             </div>

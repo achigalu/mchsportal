@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 
@@ -90,5 +91,32 @@ class permissionController extends Controller
             $role->syncPermissions($permissions);
             return redirect()->back()->with('status', 'Permissions for role:'.' ' .$role->name.' ' .'updated successfully');
         }
+    } // end function
+
+    public function userPermissions($id)
+    {
+        $user = User::findOrFail($id);
+        if(!empty($user))
+        {
+            $permissions = Permission::all();
+            $userPermissions = $user->getAllPermissions();
+            return view('admin.permission.user_permissions', compact('user', 'permissions', 'userPermissions'));
+        }
+    } // end function
+
+    public function directUserPermissions(Request $request, $id)
+    {
+        // Assume $user is an instance of the User model
+            $user = User::find(1);
+
+            // Define the permissions you want to assign
+            $permissions = $request->permission;
+
+                if (!empty($permissions)) 
+                {
+                    $user->syncPermissions($permissions);
+                }
+            
+            return redirect()->back()->with('status', 'Permissions for user:'.' ' .$user->fname. ' '.'successfully updated');
     }
 }

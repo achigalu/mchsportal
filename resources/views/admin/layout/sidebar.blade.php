@@ -45,12 +45,13 @@
                             </a>
                      
                        
-                        
-                        <li>
+                            @can('add program')
+                        <li>    
                                 <a href="javascript: void(0);" class="has-arrow waves-effect">
                                     <i class="fas fa-cogs" style="font-size:25px;color:#7196be"></i>
                                     <span style="color:gray;"><b> College Setup</b></span>
                                 </a>
+                                
                                 <ul class="sub-menu" aria-expanded="false">
                                     
                                     <li><a href="#">- College Details</a></li>
@@ -58,6 +59,7 @@
                                     
                                 </ul>
                             </li>
+                            @endcan
                         
                         
                         
@@ -97,7 +99,7 @@
                             <li>
                                 <a href="{{route('admission.student')}}" class=" waves-effect">
                                     <i class="fas fa-user-plus" style="font-size:15px;color:#7196be"></i>
-                                    <span style="color:gray;"><b> Students</b></span>
+                                    <span style="color:gray;"><b> Intake Uploads</b></span>
                                 </a>
                             </li>
 
@@ -126,7 +128,8 @@
                                     <span style="color:gray;"><b> Students List</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{route('class.list')}}">- Class list</a></li> 
+                                    <li><a href="{{route('all.students.list')}}">- All Students</a></li> 
+                                    <li><a href="{{route('class.list')}}">- Class List</a></li> 
                                     <li><a href="{{route('students.confirmation')}}">- Confirm Registration</a></li>
                                     
                                     

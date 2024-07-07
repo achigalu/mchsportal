@@ -83,6 +83,10 @@ Route::controller(UsersController::class)->group(function(){
     Route::get('/enable/user/{id}', 'enableUser')->name('enable.user');
     Route::get('/edit/user/{id}', 'editUser')->name('edit.user');
     Route::post('/update/user/{id}', 'updateUser')->name('update.user');
+    Route::get('/user/update/password', 'editUserPassword')->name('user.reset.password');
+    Route::post('/user/update/password', 'updateUserPassword')->name('user.update.password');
+    Route::get('/reset/user/password/{id}', 'resetUserPassword')->name('reset.user.password');
+    Route::post('/admin/update/user/password/{id}', 'adminUpdateUserPassword')->name('admin.update.user.password');
 })->middleware(['auth', 'verified'])->name('myhome');;
 
 Route::controller(studentController::class)->group(function(){
@@ -105,6 +109,10 @@ Route::controller(studentController::class)->group(function(){
     Route::post('/student/profile', 'storeStudentProfile')->name('store.student.profile');
     Route::get('/student/edit/password', 'editPassword')->name('admin.student.resetStudentPassword');
     Route::post('/update/student/password', 'updatePassword')->name('update.student.password');
+    Route::get('/all/students/list', 'allStudentsList')->name('all.students.list');
+    Route::get('/student/change/password/{id}', 'studentChangePassword')->name('student.change.password');
+    Route::post('admin/update/student/password/{id}', 'adminUpdateStudentPassword')->name('admin.update.student.password');
+    
     
     route::get('/list', 'list');
 });
@@ -247,6 +255,8 @@ Route::controller(permissionController::class)->group(function(){
     Route::get('/edit/permission/{id}', 'editPermission')->name('edit.permission');
     Route::post('/update/permission/{id}', 'updatePermission')->name('update.permission');
     Route::post('/permissions/to/role/{id}', 'permissionsToaRole')->name('permissions.to.arole');
+    Route::get('/user/permissions/{id}', 'userPermissions')->name('user.permissions');
+    Route::post('/direct/user/permissions/{id}', 'directUserPermissions')->name('direct.user.permissions');
 });
 
 Route::controller(dashboard::class)->group(function(){

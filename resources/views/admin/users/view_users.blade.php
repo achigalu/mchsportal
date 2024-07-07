@@ -143,8 +143,8 @@
                                                 </td>
                                                 <td>
                                                 <a href="{{route('edit.user',$user->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-plus"></i></button> </a>
+                                                <a href="{{route('reset.user.password', $user->id)}}"><button class="btn btn-outline-secondary"><i class="fas fa-lock"></i></button> </a>
+                                                <a href="{{route('user.permissions', $user->id)}}"><button class="btn btn-outline-info"><i class="fas fa-plus"></i></button> </a>
                                                 @if($user->status==0)  
                                                  <a href="{{route('enable.user', $user->id)}}" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#enable{{$user->id}}">
                                                     <i class="fas fa-check-circle">&nbsp;</i></a>

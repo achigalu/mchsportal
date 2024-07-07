@@ -201,7 +201,68 @@ class UsersController extends Controller
             }
             return redirect()->back()->with('status', 'User'.' ' .$request->fname.' '.'Updated successfully.');
         }
-    }
+    } // end function 
+
+    public function editUserPassword()
+    {
+        $user = Auth::user();
+        return view('admin.users.edit_user_password', compact('user'));
+
+    } // end function
+
+    public function updateUserPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'old_password' => 'required|min:6|max:100',
+            'new_password' => 'required|min:6|max:100',
+            'confirm_password' => 'required|same:new_password',
+            ]);
+        if($validated)
+        {
+            $user = Auth::user();
+            if(Hash::check($request->old_password, $user->password));
+            {
+                $currentUser = User::where('id', $user->id)->first();
+                if($currentUser)
+                $currentUser->update([
+                'password' => Hash::make($request->new_password),
+                ]);
+                return redirect()->back()->with('status', 'Password Updated successfully.');
+            }
+        }
+       
+    } // end function
+
+    public function resetUserPassword($id)
+    {
+        $user = User::findOrFail($id);
+        if($user)
+        {
+            return view('admin.users.reset_user_password', compact('user'));
+        }
+    } // end function
+
+    public function adminUpdateUserPassword(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'new_password' => 'required|min:6|max:100',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        if($id)
+        {
+            $user = User::findOrFail($id);
+            if($user)
+            {
+                $user->update([
+                    'password' => Hash::make($request->new_password),
+                ]);
+            }
+            return redirect()->back()->with('status', 'Password Updated successfully.');
+        }
+    } // end function
+
+   
 
     public function Logout( Request $request){
         Auth::guard('web')->logout();
