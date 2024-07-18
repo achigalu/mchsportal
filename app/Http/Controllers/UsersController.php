@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feecategory;
+use App\Models\Programclass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -67,7 +69,28 @@ class UsersController extends Controller
 
     public function loggedInStudent()
     {
-        return view('admin.student.dashboard');
+        $user = Auth::user();
+        $data['class'] = $user->programclass;
+        $data['campus'] = $user->campus;
+        if($data['campus']=='Lilongwe')
+        {
+            $data['campus'] ='1';
+        }
+        if($data['campus']=='Blantyre')
+        {
+            $data['campus'] ='2';
+        }
+        if($data['campus']=='Zomba')
+        {
+            $data['campus'] ='3';
+        }
+
+        $data['studentClass'] = Programclass::where('classcode', $data['class'])->where('campus_id', $data['campus'])->first();
+        $data['fees'] = Feecategory::findOrFail($data['studentClass']->feecategory_id);
+        // deductions of fees here// there will a table called student fees with all the fees of the student with an id for
+        // for each payment.
+        
+        return view('admin.student.dashboard', $data);
     }
 
     // Logged in admin here

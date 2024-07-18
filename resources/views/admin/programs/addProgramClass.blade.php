@@ -141,17 +141,19 @@ $ccampus = App\Models\Campus::find($pcampus)
                     </div>
             </div>
             @php 
-            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD', , 'HOD BASIC BT', 'HOD BASIC LL'])->get();
+            $lecturers = App\Models\User::whereIn('role', ['HOD'])->get();
             @endphp
             <div class="mb-3">
                 <label class="form-label">Class coordinator</label><br>
                 @error('class_coordinator') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-control select2" name="class_coordinator">
                 <option value="" selected>-- Select --</option>
+                @if($lecturers)
                     @foreach($lecturers as $coordinator)
                         <option value="{{$coordinator->id}}">{{$coordinator->fname}} {{$coordinator->lname}}
                         </option>
                     @endforeach
+                @endif
                 </select>
 
             </div>

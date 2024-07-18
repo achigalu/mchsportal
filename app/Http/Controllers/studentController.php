@@ -29,6 +29,11 @@ class studentController extends Controller
         return view('admin.intake.upload_student', $data);
     }
 
+    public function uploadOldStudents()
+    {
+        echo 'Old students upload';
+    }
+
     public function uploadedStudents(Request $request)
     {
         $validated = $request->validate([

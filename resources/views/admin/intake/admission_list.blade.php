@@ -76,8 +76,10 @@
                                         <a href="{{route('single.admission.student')}}">
                                         <li class="btn btn-secondary"><i class="fas fa-user-plus"></i>&nbsp;&nbsp;Add Single Student</li> &nbsp;
                                         </a>
-                                        <a href="{{route('upload.students')}}">
-                                        <li class="btn btn-secondary"><i class="fas fa-upload"></i>&nbsp;&nbsp;Upload Intake list</li> &nbsp;
+                                        <a href="{{route('upload.old.students')}}">
+                                        <li class="btn btn-outline-warning"><i class="fas fa-upload"></i>Upload Old Students</li>                                        </a>
+                                        <a href="{{route('upload.students')}}">&nbsp;&nbsp;
+                                        <li class="btn btn-secondary"><i class="fas fa-upload"></i>&nbsp;&nbsp;Upload New Students</li> &nbsp;
                                         </a>
                                         </ul>
                                     </div>

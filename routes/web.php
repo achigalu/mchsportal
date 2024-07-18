@@ -93,6 +93,7 @@ Route::controller(studentController::class)->group(function(){
     Route::get('/add/students', 'addStudent')->name('add.student');
     Route::get('/upload/students', 'uploadStudent')->name('upload.students');
     Route::post('/upload/students', 'uploadedStudents')->name('uploaded.students');
+    Route::get('/upload/old/students', 'uploadOldStudents')->name('upload.old.students');
     Route::get('/admission/students', 'admission')->name('admission.student');
     Route::get('/admission/single/student/add', 'singleStudentAdmission')->name('single.admission.student');
     Route::get('/confirm/students/list/{id}', 'confirmStudentsList')->name('confirm.students.list');
@@ -219,6 +220,7 @@ Route::controller(campusController::class)->group(function(){
 
 Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/class/list', 'classList')->name('class.list');
+    Route::get('/search/students/', 'searchStudents')->name('search.student');
     Route::get('/module/register', 'moduleRegister')->name('module.register');
     Route::get('/students/confirmation', 'studentsConfirmation')->name('students.confirmation');
     Route::post('/modules/to/students', 'modulesToStudents')->name('modules.to.students');

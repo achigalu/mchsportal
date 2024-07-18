@@ -29,11 +29,18 @@ class roleController extends Controller
 
        if($validated)
        {
+         $already = Role::where('name', $request->name)->first();
+         if(!empty($already))
+         {
+            return redirect()->back()->with('invalid', 'Role:'.' '.$request->name.' '.'already exist');
+         }else{
          $role = Role::create(['name' => $request->name, 'description' => $request->description]);
          $role->save();
+         }
          
+         return redirect()->back()->with('status', 'Role:'.' '.$request->name.' '.'Created Successfully'); 
        }
-       return redirect()->back()->with('status', 'Role:'.' '.$request->name.' '.'Created Successfully');
+       
    } // end function
 
    public function editRole($id)

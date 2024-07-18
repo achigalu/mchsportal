@@ -13,7 +13,28 @@ use Illuminate\Http\Request;
 class studentRegistrationController extends Controller
 {
   public function classList(){
-    return view('admin.registration.class_list');
+    $classes = Programclass::all();
+    $groupedClasses = [];
+    
+    if ($classes->isNotEmpty()) {
+        foreach ($classes as $class) {
+            $campusId = $class->campus_id;
+            
+            // Initialize the array for this campus_id if it doesn't exist
+            if (!isset($groupedClasses[$campusId])) {
+                $groupedClasses[$campusId] = [];
+            }
+            
+            // Add the class to the array for this campus_id
+            $groupedClasses[$campusId][] = $class;
+        }
+    }
+    
+    // Now you can use $groupedClasses as needed
+    // For example, to create a search list of campus IDs:
+    $campusList = array_keys($groupedClasses);
+
+    return view('admin.registration.class_list', compact('classes', 'campusList'));
   }
 
   public function moduleRegister(){
@@ -194,4 +215,63 @@ class studentRegistrationController extends Controller
         return view('admin.courses.assign_subjects_to_lecturers', $data)->with('invalid', 'Module not deleted');
       }
     }
+
+    public function searchStudents(Request $request)
+    {
+      // for search 
+      $data['classes'] = Programclass::all();
+      $groupedClasses = [];
+      
+      if ($data['classes']->isNotEmpty()) {
+          foreach ($data['classes'] as $class) {
+              $campusId = $class->campus_id;
+              
+              // Initialize the array for this campus_id if it doesn't exist
+              if (!isset($groupedClasses[$campusId])) {
+                  $groupedClasses[$campusId] = [];
+              }
+              
+              // Add the class to the array for this campus_id
+              $groupedClasses[$campusId][] = $class;
+          }
+      }
+      
+      // Now you can use $groupedClasses as needed
+      // For example, to create a search list of campus IDs:
+      $data['campusList'] = array_keys($groupedClasses);
+  
+      //return view('admin.registration.class_list', compact('classes', 'campusList'));
+      //for search
+       // classID => "1"
+       // semester => "1"
+       $classInstance = Programclass::findOrFail($request->classID);
+       $classcode = $classInstance->classcode;
+       $classcampus = $classInstance->campus_id;
+
+       if($classcampus==1)
+       {
+          $campus = 'Lilongwe';
+       }
+       elseif($classcampus==2)
+       {
+        $campus = 'Blantyre';
+       }
+       elseif($classcampus==3)
+       {
+        $campus = 'Zomba';
+       }
+  if($classcode) 
+  {
+    $data['students'] = User::where('programclass', $classcode)
+                    ->where('campus', $campus)
+                    ->where('semester', $request->semester)->get();
+
+  }
+  if (!empty($data['students']) && $data['students']->isNotEmpty()) {
+    return view('admin.registration.class_list', $data);
+} else {
+    return view('admin.registration.class_list', $data);
+}
+ 
+  }
 }

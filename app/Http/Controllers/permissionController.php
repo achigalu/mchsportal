@@ -41,13 +41,20 @@ class permissionController extends Controller
 
         if($validated)
         {
-            $permission = new Permission();
-            $permission->name = $request->name;
-            $permission->description = $request->description;
-            $permission->save();
+            $already = Permission::where('name', $request->name)->first();
+            if(!empty($already))
+            {
+                return redirect()->back()->with('invalid', 'Permission:'.' ' .$request->name.' ' .'already exist in the system.');  
+            }else{
+                $permission = new Permission();
+                $permission->name = $request->name;
+                $permission->description = $request->description;
+                $permission->save();
+            }
+            return redirect()->back()->with('status', 'Permission:'.' ' .$request->name.' ' .'created successfully'); 
         }
 
-        return redirect()->back()->with('status', 'Permission:'.' ' .$request->name.' ' .'created successfully');
+       
     } //end function
 
     public function editPermission($id)

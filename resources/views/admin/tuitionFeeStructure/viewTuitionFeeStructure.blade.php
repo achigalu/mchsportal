@@ -102,10 +102,10 @@
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr>
+                                                <th>Program Class</th>
+                                                <th>Fee Category</th>
                                                 <th>Local Fees (MK)</th>
                                                 <th>Foreign Fees ($)</th>
-                                                <th>Fee Category</th>
-                                                <th>Program Class</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -118,7 +118,7 @@
                                                 <td>ODL</td>
                                                 <td>Certificate in Clinical Medicine Year 1</td>
                                                 <td>
-                                                <a href="{{route('edit.program.class')}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                 <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
                                                 <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                 </td>

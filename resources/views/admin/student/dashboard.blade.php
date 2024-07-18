@@ -54,7 +54,7 @@
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
                                                 <p class="text-truncate font-size-14 mb-2">My fees balance</p>
-                                                <h4 class="mb-2">MK 880,000</h4>
+                                                <h4 class="mb-2">MK {{$fees->local_fee}}</h4>
                                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>View fee details</span></p>
                                             </div>
                                             <div class="avatar-sm">

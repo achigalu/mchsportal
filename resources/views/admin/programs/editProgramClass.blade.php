@@ -177,7 +177,7 @@
                         <select class="form-select" name="fcategory" aria-label="Default select example">
                            
                             @foreach($cfees as $cfee)
-                            <option {{($cfee->id==$pclass->feeecategory_id)? 'selected' : ""}} value="{{$cfee->id}}">{{$cfee->feecode}} | {{$cfee->feename}}</option>
+                            <option {{($cfee->id==$pclass->feecategory_id)? 'selected' : ""}} value="{{$cfee->id}}">{{$cfee->feecode}} | {{$cfee->feename}}</option>
 
                             @endforeach
                             </select>
