@@ -265,13 +265,20 @@ class studentRegistrationController extends Controller
     $data['students'] = User::where('programclass', $classcode)
                     ->where('campus', $campus)
                     ->where('semester', $request->semester)->get();
+        if($data['students']->isNotEmpty())
+        {
+          $data['singleStudent'] = $data['students']->first();
+ 
+          return view('admin.registration.class_list2', $data);
+        }
+        else
+        {
+          return redirect()->back()->with('invalid', 'Currently no students found');
+        }
 
   }
-  if (!empty($data['students']) && $data['students']->isNotEmpty()) {
-    return view('admin.registration.class_list', $data);
-} else {
-    return view('admin.registration.class_list', $data);
-}
+
+
  
   }
 }

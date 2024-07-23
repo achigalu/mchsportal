@@ -67,29 +67,29 @@
 
                         <!-- start page title -->
                         <div class="row">
-                            <div class="col-12">
-                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">All Courses</h4>
+<div class="col-12">
+<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+<h4 class="mb-sm-0">All Courses</h4>
 
-                                    <div class="page-title-right">
-                                    <div class="btn-group">
+<div class="page-title-right">
+<div class="btn-group">
 <button type="button" class="btn btn-secondary"><i class="fas fa-download"></i>&nbsp;&nbsp;Download</button>
 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="mdi mdi-chevron-down"></i>
+<i class="mdi mdi-chevron-down"></i>
 </button>&nbsp;&nbsp;
 <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Exel</a>
-    <a class="dropdown-item" href="#">PDF</a>
-   
+<a class="dropdown-item" href="#">Exel</a>
+<a class="dropdown-item" href="#">PDF</a>
+
 </div>
 
-    <ul class="breadcrumb m-0">
-    <a href="{{route('add.course')}}">
-    <li class="btn btn-secondary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Subject</li>&nbsp;&nbsp;
-    <a href="{{route('configured.courses')}}">
-    <li class="btn btn-secondary"><i class="fa fa-cog"></i>&nbsp;&nbsp;Configured Subjects</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </a>
-    </ul>
+<ul class="breadcrumb m-0">
+<a href="{{route('add.course')}}">
+<li class="btn btn-secondary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Subject</li>&nbsp;&nbsp;
+<a href="{{route('configured.courses')}}">
+<li class="btn btn-secondary"><i class="fa fa-cog"></i>&nbsp;&nbsp;Configured Subjects</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+</ul>
 
 </div>
 

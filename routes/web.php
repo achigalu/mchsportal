@@ -23,6 +23,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\permissionController;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\roleController;
+use App\Http\Controllers\gradeController;
 
 
 /*
@@ -94,6 +95,7 @@ Route::controller(studentController::class)->group(function(){
     Route::get('/upload/students', 'uploadStudent')->name('upload.students');
     Route::post('/upload/students', 'uploadedStudents')->name('uploaded.students');
     Route::get('/upload/old/students', 'uploadOldStudents')->name('upload.old.students');
+    Route::post('/upload/old/students', 'uploadingOldStudents')->name('uploaded.old.students');
     Route::get('/admission/students', 'admission')->name('admission.student');
     Route::get('/admission/single/student/add', 'singleStudentAdmission')->name('single.admission.student');
     Route::get('/confirm/students/list/{id}', 'confirmStudentsList')->name('confirm.students.list');
@@ -260,6 +262,26 @@ Route::controller(permissionController::class)->group(function(){
     Route::get('/user/permissions/{id}', 'userPermissions')->name('user.permissions');
     Route::post('/direct/user/permissions/{id}', 'directUserPermissions')->name('direct.user.permissions');
 });
+
+Route::controller(gradeController::class)->group(function(){
+    Route::get('/list/old/students', 'listOldStudents')->name('grade.old.students');
+    Route::get('/list/current/students', 'listCurrentStudents')->name('grade.current.students');
+    Route::post('/search/old/students', 'searchOldStudents')->name('search.old.students');
+    Route::post('/search/current/students', 'searchCurrentStudents')->name('search.current.students');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Route::controller(dashboard::class)->group(function(){
     Route::get('/dashboard_a', 'index')->name('dashboard.a');

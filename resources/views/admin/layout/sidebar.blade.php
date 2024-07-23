@@ -142,8 +142,8 @@
                                     <span style="color:gray;"><b> Examinations</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="#">- Management</a></li>
-                                    <li><a href="#">- Assessments</a></li>
+                                    <li><a href="{{route('grade.current.students')}}">- Grade(Current students)</a></li>
+                                    <li><a href="{{route('grade.old.students')}}">- Grade(Old students)</a></li>
                                     <li><a href="#">- Reports</a></li>
                                     
                                     

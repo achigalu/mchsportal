@@ -31,8 +31,24 @@ class studentController extends Controller
 
     public function uploadOldStudents()
     {
-        echo 'Old students upload';
+        $data['academicy'] = Academicyear::all();
+        return view('admin.intake.upload_old_student', $data);
     }
+    public function uploadingOldStudents(Request $request)
+    {
+        $validated = $request->validate([
+            'students_upload' => 'required|file|mimes:csv,xls,xlsx|max:2048',
+            'academic_yr_id' => 'required',
+            'program_id' =>'required',
+            'intake_name' => 'required',
+         ]);
+         $programCampus = Program::where('id', $request->program_id)->first();
+
+
+         dd($request->all(), $programCampus->campus_id);
+    }
+
+
 
     public function uploadedStudents(Request $request)
     {
@@ -64,7 +80,10 @@ class studentController extends Controller
                 
             ]);
 
-            if ($upload = Uploadlist::where('academic_yr_id', $request->academic_yr_id)->where('campus', $request->campus)->where('upload_name', $request->intake_name)->first()) {
+            if ($upload = Uploadlist::where('academic_yr_id', $request->academic_yr_id)
+            ->where('campus', $request->campus)
+            ->where('upload_name', $request->intake_name)
+            ->first()) {
             }
 
             $uploadedID = Uploadlist::find($upload->id);
@@ -183,11 +202,12 @@ class studentController extends Controller
                                
                                 // check if some students are already uploaded - count to add extra
                                 // check if 
-                         $class = Programclass::where('classcode' , $request->class[0])->first();
+                         $class = Programclass::where('classcode' , $request->class[0])
+                         ->first();
                             
                          if (!$class)
                                 {
-                                    return redirect()->route('confirm.students.lists', $id)->with('invalid', 'This'.' '.$request->class[0].' '.' class not defined.');
+                                    return redirect()->route('confirm.students.lists', $id)->with('invalid', 'This'.' '.$request->class[0].' '.' class not defined in this system.');
                                 }
                               
                          else{ 
@@ -195,16 +215,49 @@ class studentController extends Controller
                                // $data['reference_code'] = Admission::where('reference_code', )->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();   
                                // program code like CCM
 
-                                $oldStudents = Admission::where('academicyear', $request->acy[0])->where('uploadlist_id', $id)
-                                ->where('campus',  $request->campus[0])->get();
+                                $oldStudents = Admission::where('academicyear', $request->acy[0])
+                                ->where('uploadlist_id', $id)
+                                ->where('campus',  $request->campus[0])
+                                ->get();
+
+                                if ($oldStudents->isNotEmpty()) {
+                                    $firstStudent = $oldStudents->first();
+                                    $oldStudentsClass = $firstStudent->class;
+                                    $oldStudentsCampus = $firstStudent->campus;
+                                    if($oldStudentsCampus=="Lilongwe")
+                                    {
+                                        $oldStudentsCampus=1;
+                                    }
+                                    elseif($oldStudentsCampus=="Blantyre")
+                                    {
+                                        $oldStudentsCampus=2;
+                                    }
+                                    else
+                                    {
+                                        $oldStudentsCampus=3;
+                                    }
+
+                                    $programID = Programclass::where('classcode', $oldStudentsClass)
+                                    ->where('campus_id', $oldStudentsCampus)->first();
+                                    $programID = $programID->program->id;
+                                   // dd($programID);
+                                     // Replace 'attribute_name' with the actual attribute you want to access
+                                    // Do something with $attribute
+                                }
                                 // Check if any of the old students have a non-empty reg_num
+
                                                 $hasRegNum = $oldStudents->pluck('reg_num')->filter()->isNotEmpty();
 
                                                 if ($hasRegNum) {
                                                 // There are students with non-empty reg_num values
                                                 foreach ($request->lname as $key => $lname) {
                                                    
-                                                    $email = $request->reg_num[$key].'@mchs.mw';
+                                                    $reg_num = $request->reg_num[$key];
+                                                    $formatted_reg_num = str_replace('/', '', $reg_num);
+                                                    $formatted_reg_num = strtolower($formatted_reg_num);
+                                                   // echo $formatted_reg_num;  // Output: dcmll20240803
+
+                                                    $email = $formatted_reg_num.'@mchs.mw';
                                                     $checkOldRegNum = User::where('reg_num', $request->reg_num[$key])->first();
                                                     if ($checkOldRegNum) {
                                                     return redirect()->back()->with('invalid', 'This students list already uploaded in this system');
@@ -220,6 +273,7 @@ class studentController extends Controller
                                                     'entry_level' => $request->entry_type[$key],
                                                     'email' => $email, // Convert email to lowercase
                                                     'campus' => $request->campus[$key],
+                                                    'program_id' => $programID,
                                                     'password' => Hash::make('password'),
                                                     'role' => 'student',
                                                     'semester' => $request->semester[$key],
@@ -242,8 +296,38 @@ class studentController extends Controller
                                                 } else
                                                 {
                                                 // if no reg_nums proceed.
-
+                                                
                                                 $program_code = $class->program->program_code;
+                                               // $program_id = $class->program_id;
+
+                                                $uploadStudents = Admission::where('academicyear', $request->acy[0])
+                                                ->where('uploadlist_id', $id)
+                                                ->where('campus',  $request->campus[0])
+                                                ->get();
+                
+                                                if ($uploadStudents->isNotEmpty()) {
+                                                    $firstStudent = $uploadStudents->first();
+                                                    $uploadStudentsClass = $firstStudent->class;
+                                                    $uploadStudentsCampus = $firstStudent->campus;
+                                                    if($uploadStudentsCampus=="Lilongwe")
+                                                    {
+                                                        $uploadStudentsCampus=1;
+                                                    }
+                                                    elseif($uploadStudentsCampus=="Blantyre")
+                                                    {
+                                                        $uploadStudentsCampus=2;
+                                                    }
+                                                    else
+                                                    {
+                                                        $uploadStudentsCampus=3;
+                                                    }
+                
+                                                    $programID = Programclass::where('classcode', $uploadStudentsClass)
+                                                    ->where('campus_id', $uploadStudentsCampus)->first();
+                                                    //dd($programID->program_id);
+                                                    $programID = $programID->program_id;
+                                                }
+
                                                 // campus like LL, BT or ZA
                                                 $campus = $request->campus[0];
                                                 if($campus== 'Lilongwe')
@@ -260,6 +344,7 @@ class studentController extends Controller
                                                     }
                                                 
                                                     // year like 2024, 2020
+
                                                 $academic_yr = Academicyear::where('id', $request->acy[0])->first();
                                                 $intake_year = $academic_yr->ayear;
                                                 
@@ -293,7 +378,7 @@ class studentController extends Controller
                                                         $email = strtolower($program_code . $campus_code . $intake_year . $intake_month . $formatted_counter . '@mchs.mw');
                                                         $checked_email = User::where('email', $email)->first();
                                                         if (!empty($checked_email)) {
-                                                        return redirect()->back()->with('invalid', 'This students list was already uploaded1');
+                                                        return redirect()->back()->with('invalid', 'This students list was already uploaded in this system.');
                                                         }
                                                         
                                                         User::create([
@@ -308,6 +393,7 @@ class studentController extends Controller
                                                         'campus' => $campus,
                                                         'password' => Hash::make('password'),
                                                         'role' => 'student',
+                                                        'program_id' => $programID,
                                                         'semester' => $request->semester[$key],
                                                         'gender' => $request->gender[$key],
                                                         ]);
@@ -337,6 +423,7 @@ class studentController extends Controller
                 'email' => $email, // Convert email to lowercase
                 'campus' => $campus,
                 'password' => Hash::make('password'),
+                'program_id' => $programID,
                 'role' => 'student',
                 'semester' => 1,
                 'gender' => $request->gender[$key],
