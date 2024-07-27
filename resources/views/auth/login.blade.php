@@ -36,26 +36,13 @@
                             </div>
                         </div>
                         <div class="p-3">
-                           
-
-                            
-
-                        @if(session()->has('status'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="mdi mdi-check-all me-2"></i>
-                        {{session()->get('status')}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        @if($errors->get('login'))
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                     <div style="color: #ed686f">
+                                    <x-input-error :messages="$errors->get('login')" class="mt-2" />
+                                    </div>
                         </div>
                         @endif
-
-                        @if(session()->has('invalid'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="mdi mdi-block-helper me-2"></i>
-                        {{session()->get('invalid')}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                        @endif
-                        
                             <form class="form-horizontal mt-0" method="POST" action="{{ route('login') }}">
                                  @csrf
     
@@ -63,7 +50,7 @@
                                     <div class="col-12">
                                     <x-input-label for="login" :value="__('Email or Registration #')" />
                                         <input id="login" class="form-control" type="text" name="login" required autofocus>
-                                    <x-input-error :messages="$errors->get('login')" class="mt-2" />
+                                     
                                     </div>
                                 </div>
 
@@ -71,7 +58,9 @@
                                     <div class="col-12">
                                     <x-input-label for="password" :value="__('Password')" />
                                         <input id="password" class="form-control" type="password" name="password" required autofocus>
-                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                        <div style="color: #ed9968;">
+                                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                        </div>
                                     </div>
                                 </div>
 

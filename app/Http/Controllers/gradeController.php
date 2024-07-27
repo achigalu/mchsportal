@@ -61,7 +61,41 @@ class gradeController extends Controller
 
     public function searchOldStudents(Request $request)
     {
-        dd($request->all());
+        $request->validate([
+            'acyID' => 'required',
+            'classID' => 'required',
+            'semester' => 'required',
+        ]);
+
+        $academicyear = $request->acyID;
+        $programclassID = $request->classID;
+        $semester = $request->semester;
+
+        // $programClass = Programclass::find($programclassID); // Keep the original object
+    
+       // $program = $programClass->program; // Access the related Program model
+       // $programcampus = $program->campus_id;
+       // $programclass = $programClass->classcode; // Use the original object
+    
+       // dd($academicyear, $program, $programcampus, $semester, $programclass);
+
+        
+        
+        $programClass = Programclass::find($programclassID);
+        $program = $programClass->program_id;
+        $programcampus = $programClass->campus_id;
+        $programclass = $programClass->classcode;
+
+        dd(
+            $academicyear,
+            $program,
+            $programcampus,
+            $semester,
+            $programclass
+         );
+
+        
+
     }
 
     public function searchCurrentStudents(Request $request)

@@ -108,7 +108,7 @@
                         
                     <div class="card-body" >
                     <select class="form-control select2" aria-label="Default select example" name="classID" required>
-                    <option selected="">-- selects --</option>
+                    <option value="">-- selects --</option>
                     @if($classes->isNotEmpty())
                     @foreach($classes as $class)
                     <option value="{{$class->id}}">{{$class->classcode}} - 
@@ -130,7 +130,7 @@
                         
                     <div class="card-body">
                     <select class="form-select" aria-label="Default select example" name="semester" required>
-                    <option selected="">-- select --</option>
+                    <option value="">-- select --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     </select>
