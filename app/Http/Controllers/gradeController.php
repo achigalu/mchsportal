@@ -94,11 +94,19 @@ class gradeController extends Controller
             $programclass
          );
 
+         // Select old students based on above attributes...
+
         
 
     }
 
     public function searchCurrentStudents(Request $request)
+    {
+        dd($request->all());
+        // Enter grades on behalf of the lecturers...
+    }
+
+    public function configOldClassSubjects(Request $request)
     {
         dd($request->all());
     }

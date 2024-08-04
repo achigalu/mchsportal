@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Add Program</title>
+        <title>MCHS Portal | Configure class subjects</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -116,6 +116,7 @@
         <input class="form-control" type="text" value="{{$class->id}}" name="class_id" id="example-text-input" hidden>
         <input class="form-control" type="text" value="{{$class->campus_id}}" name="campus" id="example-text-input" hidden>
         <input class="form-control" type="text" value="{{$subject->id}}" name="subject_id" id="example-text-input" hidden>
+        <input class="form-control" type="text" value="{{$ay}}" name="ay" id="example-text-input" hidden>
         <div class="row mb-3">
             <label class="form-label">Semester</label>
                     <div class="col-sm-12">

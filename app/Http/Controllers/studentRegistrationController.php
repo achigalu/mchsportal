@@ -52,43 +52,49 @@ class studentRegistrationController extends Controller
       'class' => 'required',
       'semester' => 'required'
     ]);
+//dd($request->all());
     $data['class'] = $request->class;
     $data['semester'] = $request->semester;
+    $data['ay'] = $request->ay;
+    $data['ourclass'] = Programclass::find($request->class);
+    $data['class_program'] = $data['ourclass']->program_id;
+    $data['class_code'] = $data['ourclass']->classcode;
     
     return view('admin.intake.attach_subjects_to_students', $data);
 
   }
-  public function allocateSubjectToStudents($class, $semester, $campus)
+  public function allocateSubjectToStudents($class, $semester, $campus, $ay)
   {
     $stuCampus=$campus;
     $myCampus = $campus;
-
-    $classSubjects = Myclasssubject::where('programclass_id', $class)->where('semester', $semester)->get();
-    $singleSubject = $classSubjects->first();
-   
+   // $classCampus = Campus::find($campus);
     $classID = Programclass::where('id', $class)->first();
+   // dd($class, $semester, $campus, $ay);
+    $classSubjects = Myclasssubject::where('programclass_id', $class)
+    ->where('semester', $semester)
+    ->where('academicyear_id', $ay)
+    ->where('classcode', $classID->classcode)
+    ->get();
+
+    //dd($classSubjects);
+
+    //$singleSubject = $classSubjects->first();
+   
+    
     $campus = Campus::where('id', $campus)->first();
     $classCode = $classID->classcode;
     $campus = $campus->campus;
     
-    $classStudents = User::where('programclass', $classCode)->where('semester', $semester)->where('campus', $campus)->get();
+    $classStudents = User::where('programclass', $classCode)
+    ->where('semester', $semester)
+    ->where('campus', $campus)
+    ->where('academicyear_id', $ay)
+    ->get();
+    //dd($class, $semester, $ay);
     $singleStudent = $classStudents->first();
     if(($singleStudent))
     {
-    
-   
-    if($singleStudent->campus == 'Lilongwe')
-    {
-        $Scampus = 1;
-    }
-    if($singleStudent->campus == 'Blantyre')
-    {
-        $Scampus = 2;
-    }
-    if($singleStudent->campus == 'Zomba')
-    {
-        $Scampus = 3;
-    }
+ 
 
     if(!empty($classSubjects) && !empty($classStudents)){
       // creating pivot table for Students and Subjects

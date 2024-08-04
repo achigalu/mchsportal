@@ -69,7 +69,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Subject Configurations</h4>
+                                    <h4 class="mb-sm-0"></h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -84,12 +84,9 @@
 </div>
 
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('add.subject.to.class')}}"><li class="btn btn-secondary">
+                                        <a href="{{route('add.subject.to.old.class')}}"><li class="btn btn-secondary">
                                         <i class=" fas fa-arrow-left"></i>&nbsp;&nbsp;Back</li></a>&nbsp;
 
-                                        <a href="{{route('view.courses')}}">
-                                        <li class="btn btn-secondary"><i class="fa fa-cog"></i>&nbsp;&nbsp;Configure Subjects</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </a>
                                         </ul>
 
 
@@ -101,22 +98,45 @@
                         <!-- end page title -->
                         
 @php
-$class = App\Models\Programclass::where('id', $class)->first();
+$class = App\Models\Programclass::where('id', $myclass)->first();
+@endphp
+
+@php
 $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id)
 ->where('academicyear_id', $ay)
-->get()
+->where('semester', $semester)->get()
+@endphp
+
+@php 
+$academicyear = App\Models\Academicyear::find($ay)
 @endphp
 
 
 
                         <div class="row">
+                        <h4>
+
+
+  
+
+
+Assign Subjects to: <span style="color: red;">{{$class->classcode}} -
+@if($class->campus_id==1) LL @endif
+@if($class->campus_id==2) BT @endif
+@if($class->campus_id==3) ZA @endif
+</span>  |
+
+{{$academicyear->ayear}} {{$academicyear->month}} {{$academicyear->description}} - Semester: 
+{{$semester}}
+
+</h4> 
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                    @if(session()->has('message'))
+                                    @if(session()->has('status'))
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <i class="mdi mdi-check-all me-2"></i>
-                                        {{session()->get('message')}}
+                                        {{session()->get('status')}}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                         @endif
@@ -130,40 +150,29 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         @endif
     
                                         <h4 class="card-title mb-4"></h4>@error('class_id') <span class="text-danger">{{$message}}</span> @enderror
-                                        <form action="{{route('config.class.subjects')}}" method="post">
+                                        <form action="{{route('store.old.class.subjects')}}" method="post">
                                             @csrf
                                         <div class="table-responsive input-group">
-                                        <input type="text" name="class_id" value="{{$class->id}}" hidden>
-                                        <input type="text" name="ay" value="{{$ay}}" hidden>
-                                       <h4>
-                                       Assign Subjects to: <span style="color: red;">
-
-                                        @php 
-                                        $myay = App\Models\Academicyear::find($ay)
-                                        @endphp
-
-                                        {{$class->classcode}} 
-                                        - @if($class->campus_id ==1) LL @endif
-                                          @if($class->campus_id ==2) BT @endif
-                                          @if($class->campus_id ==3) ZA @endif
-                                        | {{$myay->ayear}} - {{$myay->month}} {{$myay->description}}
-                                        </span>
-                                       </h4> 
+                                        
+                                        <input type="text" name="ayID" value="{{$ay}}" hidden>
+                                        <input type="text" name="classID" value="{{$myclass}}" hidden>
+                                        <input type="text" name="semester" value="{{$semester}}" hidden>
+                         
                                        @error('subject_id') <span class="text-danger">{{$message}}</span> @enderror 
                                         </div>
             
                                         <div class="table-responsive input-group">
                                         
                                         <select class="form-select shadow-none form-select-sm" name="subject_id" required>
-                                        <option selected value="">--Select--</option>
+                                        <option selected value="">--Select Subject--</option>
                                         @foreach($subjects as $subject)
                         
                                             <option value="{{$subject->id}}">{{$subject->code}} {{$subject->name}}</option>
-                                            @endforeach
+                                        @endforeach
                                             </select>&nbsp;&nbsp;
                                            
                                             
-                                            <button type="submit" class="btn btn-warning">Config</button>
+                                            <button type="submit" class="btn btn-warning">Assign Subject</button>
                                         </div>
                                         </form>
                                     </div><!-- end card -->

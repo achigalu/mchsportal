@@ -31,9 +31,12 @@
                     @php
                     $student = Auth::user()
                     @endphp
+                    @php 
+                    $ay = App\Models\Academicyear::find($student->academicyear_id)
+                    @endphp
                     
                     @if(!empty($student->programclass))
-                <h4 class="mb-sm-0 col-md-12" style="color: gray;">{{$student->fname}} {{$student->lname}} ({{$student->reg_num}}):<b style="color:#7196be;"> {{$student->programclass}} - Semester {{$student->semester}}</b> | {{$student->campus}} - Campus</h4> 
+                <h4 class="mb-sm-0 col-md-12" style="color: gray;">{{$student->fname}} {{$student->lname}} ({{$student->reg_num}}):<b style="color:#7196be;"> {{$student->programclass}} | {{$ay->ayear}} {{$ay->month}} * {{$ay->description}} | Semester {{$student->semester}}</b> | {{$student->campus}} - Campus</h4> 
                   
                     @endif
                 </div>

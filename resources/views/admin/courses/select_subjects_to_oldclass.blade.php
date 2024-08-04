@@ -69,7 +69,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Subject Configurations</h4>
+                                    <h4 class="mb-sm-0">Add Subjects to Old Class</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -84,7 +84,7 @@
 </div>
 
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('add.subject.to.class')}}"><li class="btn btn-secondary">
+                                        <a href="{{route('add.subject.to.old.class')}}"><li class="btn btn-secondary">
                                         <i class=" fas fa-arrow-left"></i>&nbsp;&nbsp;Back</li></a>&nbsp;
 
                                         <a href="{{route('view.courses')}}">
@@ -102,9 +102,7 @@
                         
 @php
 $class = App\Models\Programclass::where('id', $class)->first();
-$class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id)
-->where('academicyear_id', $ay)
-->get()
+$class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id)->get()
 @endphp
 
 
@@ -130,27 +128,31 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         @endif
     
                                         <h4 class="card-title mb-4"></h4>@error('class_id') <span class="text-danger">{{$message}}</span> @enderror
-                                        <form action="{{route('config.class.subjects')}}" method="post">
+                                        <form action="{{route('add.subjects.to.old.class')}}" method="post">
                                             @csrf
                                         <div class="table-responsive input-group">
                                         <input type="text" name="class_id" value="{{$class->id}}" hidden>
-                                        <input type="text" name="ay" value="{{$ay}}" hidden>
-                                       <h4>
-                                       Assign Subjects to: <span style="color: red;">
-
-                                        @php 
-                                        $myay = App\Models\Academicyear::find($ay)
-                                        @endphp
-
-                                        {{$class->classcode}} 
-                                        - @if($class->campus_id ==1) LL @endif
-                                          @if($class->campus_id ==2) BT @endif
-                                          @if($class->campus_id ==3) ZA @endif
-                                        | {{$myay->ayear}} - {{$myay->month}} {{$myay->description}}
-                                        </span>
-                                       </h4> 
-                                       @error('subject_id') <span class="text-danger">{{$message}}</span> @enderror 
+                                    
+                                        
+                                       Assign Subjects to: &nbsp;<h3 class="badge rounded-pill bg-success">{{$class->classcode}}</h3> 
+                                       
+                                       <h3 class="badge rounded-pill bg-success">
+                                       @if($class->campus_id ==1) Lilongwe Campus @endif
+                                       @if($class->campus_id ==2) Blantyre Campus @endif
+                                        @if($class->campus_id ==3) Zomba Campus @endif
+                                       </h3> 
+                                      &nbsp;semester: &nbsp; <h3 class="badge rounded-pill bg-warning">{{$semester}}</h3>
+                                      @php
+                                      $academicyear = App\Models\Academicyear::find($ay)
+                                      @endphp
+                                      &nbsp;&nbsp;Intake: &nbsp;&nbsp; <h3 class="badge rounded-pill bg-warning">{{$academicyear->ayear}} {{$academicyear->month}} {{$academicyear->description}}</h3>
+                                     
+                                       @error('subject_id') <span class="text-danger"></span> @enderror 
                                         </div>
+                                        <input type="text" name="academicyr" value="{{$ay}}" hidden>
+                                        <input type="text" name="class" value="{{$class->id}}" hidden>
+                                        <input type="text" name="semester" value="{{$semester}}" hidden>
+
             
                                         <div class="table-responsive input-group">
                                         
@@ -159,11 +161,10 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         @foreach($subjects as $subject)
                         
                                             <option value="{{$subject->id}}">{{$subject->code}} {{$subject->name}}</option>
-                                            @endforeach
+                                        @endforeach
                                             </select>&nbsp;&nbsp;
-                                           
-                                            
-                                            <button type="submit" class="btn btn-warning">Config</button>
+
+                                            <button type="submit" class="btn btn-warning">Assign</button>
                                         </div>
                                         </form>
                                     </div><!-- end card -->

@@ -204,13 +204,19 @@ Route::controller(coursesController::class)->group(function(){
     Route::get('/configured/courses', 'configuredCourse')->name('configured.courses');
     Route::get('/add/subject/class', 'addSubjectToClass')->name('add.subject.to.class');
     Route::post('/class/subjects','classSubjects')->name('class.subjects');
-    Route::get('/class/subjects/{class_id}','classSubjectsWithId')->name('class.subjects.withID');
+    Route::get('/class/subjects/{class_id}/{ay}','classSubjectsWithId')->name('class.subjects.withID');
     Route::post('/config/class/subjects','configClassSubjects')->name('config.class.subjects');
     Route::post('/configured/subject', 'configuredSubject')->name('configured.subject');
     Route::get('/add/subject/to/students', 'addSubjectToStudent')->name('add.subject.to.students');
     Route::post('/add/class/subjects', 'addClassSubjects')->name('add.class.subjects');
     Route::get('/add/subjects/to/lecturers', 'addSubjectsToLecturers')->name('subjects.to.lecturers');
     Route::get('/view/lecturer/courses/{id}', 'lecturerCourses')->name('lecturer.courses');
+    Route::get('/add/subject/to/old/class', 'addSubjectToOldClass')->name('add.subject.to.old.class');
+    Route::get('/add/subject/to/old/students', 'addSubjectToOldStudents')->name('add.subject.to.old.students');
+    Route::post('/add/subject/to/old/classes', 'storeSubjectToOldClass')->name('add.subjects.to.old.classes');
+    Route::post('/add/subject/to/old/studentss', 'storeSubjectToOldStudents')->name('add.subject.to.old.studentss');
+    Route::post('/store/old/class/subjects', 'soreOldClassSubjects')->name('store.old.class.subjects');
+    Route::get('/allocate/subjects/to/oldstudents/{class}/{semester}/{campus}/{ay}', 'allocateSubjectToOldStudents')->name('allocate.subjects.to.old.students');
 
 });
 
@@ -226,7 +232,7 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/module/register', 'moduleRegister')->name('module.register');
     Route::get('/students/confirmation', 'studentsConfirmation')->name('students.confirmation');
     Route::post('/modules/to/students', 'modulesToStudents')->name('modules.to.students');
-    Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
+    Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}/{ay}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
     Route::post('/modules/to/lecturers', 'ModulesToLecturers')->name('modules.to.lecturers');
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
     Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer');  
@@ -268,6 +274,7 @@ Route::controller(gradeController::class)->group(function(){
     Route::get('/list/current/students', 'listCurrentStudents')->name('grade.current.students');
     Route::post('/search/old/students', 'searchOldStudents')->name('search.old.students');
     Route::post('/search/current/students', 'searchCurrentStudents')->name('search.current.students');
+    Route::get('/myold/class/subjects', 'configOldClassSubjects')->name('config.myold.class.subjects');
 });
 
 

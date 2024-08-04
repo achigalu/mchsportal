@@ -5,7 +5,7 @@
     <head>
         
     <meta charset="utf-8" />
-        <title>MCHS Portal | College Faculties</title>
+        <title>MCHS Portal | {{$title}}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -75,9 +75,6 @@
 
 <!-- start page title -->
 
-
-
-
 <div class="row">
 <div class="col-lg-12">
 
@@ -86,17 +83,18 @@
 $myclass = App\Models\Programclass::find($class)
 @endphp
 
+@php 
+$academicy = App\Models\Academicyear::find($ay)
+@endphp
 
 @php
-$mystudents = App\Models\User::where('programclass',$myclass->classcode)
-->where('semester',$semester)
-->where('campus',$myclass->campus->campus)
+$mystudents = App\Models\User::where('program_id', $myclass->program_id)
 ->where('academicyear_id', $ay)
 ->count()
 @endphp
 
 @php
-       $classsubjects = App\Models\Myclasssubject::where('programclass_id', $class)
+       $classsubjects = App\Models\Myclasssubject::where('programclass_id', $myclass->id)
       ->where('semester', $semester)
       ->where('academicyear_id', $ay)->get();
 @endphp
@@ -130,7 +128,7 @@ $mystudents = App\Models\User::where('programclass',$myclass->classcode)
 <div class="page-title-right" style="margin-right: 25px; float: right;">
 
 <div class="btn-group">
-<a href="{{route('add.subject.to.students')}}">
+<a href="{{route('add.subject.to.old.students')}}">
 <button type="button" class="btn btn-secondary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back&nbsp;&nbsp;</button> 
 </a>
 </div>
@@ -148,8 +146,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
     <a class="dropdown-item" href="#">PDF</a>
    
 </div>
-<a href="{{ route('allocate.subjects.to.students', ['class' =>$myclass->id, 'semester' =>$semester, 'ay' =>$ay, 'campus' =>$myclass->campus_id ]) }}">
-<button type="button" class="btn btn-warning"><i class="fas fa-users" data-bs-toggle="dropdown"></i>&nbsp;&nbsp;Assign Subjects to Students&nbsp;&nbsp;</button>
+<a href="{{ route('allocate.subjects.to.old.students', ['class' =>$myclass->id, 'semester' =>$semester, 'ay'=>$ay, 'campus' =>$myclass->campus_id ]) }}">
+<button type="button" class="btn btn-warning"><i class="fas fa-users" data-bs-toggle="dropdown"></i>&nbsp;&nbsp;Assign Subjects to old Students&nbsp;&nbsp;</button>
 </a>
 
 @endif
@@ -174,7 +172,10 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 <h4> @if(!empty($myclass->classcode))
                     <h4 class="card-title"><b style="color: #69514B;">{{$myclass->classcode}} - @if($myclass->campus_id==1) LL @endif 
                             @if($myclass->campus_id==2) BT @endif
-                            @if($myclass->campus_id==3) ZA @endif | Semester: </b>{{$semester}}</h4>
+                            @if($myclass->campus_id==3) ZA @endif | <span style="color: red;">
+                            
+                            {{$academicy->ayear}} {{$academicy->month}} {{$academicy->description}}
+                            </span> | Semester: </b>{{$semester}}</h4>
                     @endif</h4>
 
  </div>

@@ -121,7 +121,25 @@
                     <option value="" selected="">-- select --</option>
                     @foreach($class as $myclass)
                   
-                    <option value="{{$myclass->id}}">{{$myclass->classcode}} - @if($myclass->campus_id==1) LL @endif @if($myclass->campus_id==2) BT @endif @if($myclass->campus_id==3) ZA @endif</option>
+                    <option value="{{$myclass->id}}">{{$myclass->classcode}} -
+                         @if($myclass->campus_id==1) LL @endif @if($myclass->campus_id==2) BT @endif
+                          @if($myclass->campus_id==3) ZA @endif</option>
+                    @endforeach
+                    </select>
+                    </div>
+                    </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                    <label for="">Intake</label>
+                    <div class="card bg-light text-dark">
+                     
+                    <div class="card-body" >
+                    <select class="form-control select2" name="ay" aria-label="Default select example">
+                    <option value="" selected="">-- select intake--</option>
+                    @foreach($academic as $myacademic)
+                  
+                    <option value="{{$myacademic->id}}">{{$myacademic->ayear}} - {{$myacademic->month}} {{$myacademic->description}}</option>
                     @endforeach
                     </select>
                     </div>
@@ -130,7 +148,7 @@
 
                    
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                     <label for="">Semester</label>
                         <div class="card bg-light text-dark">
                         
@@ -157,20 +175,7 @@
                     </div>
                     </form>
                     
-                    <div class="form-group col-md-3">
-                    <label for="" ></label>
-                    <div class="card bg-light text-dark">
-                       
-                    <div class="card-body">
-
-                    @if(isset($student_class) && !empty($student_class) && isset($student_class->classcode) && !empty($student_class->campus_id))
-                    <a href="{{ route('allocate.subjects.to.students', ['class' =>$student_class->classcode, 'semester' =>$student_semester, 'campus' =>$student_class->campus_id ]) }}">
-                    <button class="btn btn-info" type="submit" style="margin-top: 8px;">Allocate Subjects</button>
-                    </a>
-                    @endif   
-                    </div>
-                    </div>
-                    </div>
+                   
                     </div>
 
 
@@ -184,56 +189,7 @@
 
 </div>
     
-<div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        @if(!empty($classsubject))
-                                        <h4 class="card-title">Class: <b style="color: red;">{{$classsubject->programclass->classcode}} - @if($classsubject->programclass->campus_id==1) LL @endif 
-                                                @if($classsubject->programclass->campus_id==2) BT @endif
-                                                @if($classsubject->programclass->campus_id==3) ZA @endif | Semester: </b>{{$classsubject->semester}}</h4><br>
-                                        @endif
 
-        
-                                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                            <thead>
-                                            <tr style="background-color:#e6e6e6;">
-                                                <th>#</th>
-                                                <th>Class</th>
-                                                <th>Subject Code</th>
-                                                <th>Subject Name</th>
-                                                <th>Semester</th>
-                                                <th>Enrolled Students</th>
-                                                
-                                            </tr>
-                                            </thead>
-                                           
-                                             <tbody>         
-                                              @if(!empty($classSubjects))
-                                            @php $id = 0 @endphp <!-- Move the initialization outside of the loop -->
-                                                            @foreach($classSubjects as $subjects)
-                                                            <tr>
-                                                              
-                                                                <td>{{ ++$id }}</td>
-                                                                <td>{{$subjects->programclass->classcode}}</td>
-                                                                <td>{{$subjects->course->code}}</td>
-                                                                <td>{{$subjects->course->name}}</td>
-                                                               
-                                                                <td>{{$semester}}</td>
-                                                                
-                                                                <td><span class="badge rounded-pill bg-success">{{$mystudents}}</span></td>
-
-                                                            </tr>
-
-                                            @endforeach
-                                           @endif
-                                            </tbody>
-                                        </table>
-        
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div> <!-- end row -->
 
 
 </div>

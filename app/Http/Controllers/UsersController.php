@@ -51,7 +51,7 @@ class UsersController extends Controller
            }
            elseif($role == 'lecturer')
            {
-                //return redirect(route('admin.dashboard'));
+                return redirect(route('admin.dashboard'));
            }
            else
            {

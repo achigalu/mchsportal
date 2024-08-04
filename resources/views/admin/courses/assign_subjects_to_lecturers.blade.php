@@ -135,6 +135,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                       @php
                       $academic = App\Models\Academicyear::where('status',1)->get()
                       @endphp 
+
+                     
                       <form action="{{route('modules.to.lecturers')}}" method="post">
                      @csrf
                     <div class="row">
@@ -148,7 +150,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                     
                     @foreach($data as $myclass)
                   
-                    <option value="{{$myclass->programclass_id}}">{{$myclass->classcode}} - @if($myclass->campus_id==1) LL @endif @if($myclass->campus_id==2) BT  @endif @if($myclass->campus_id==3) ZA  @endif</option>
+                    <option value="{{$myclass->programclass_id}}">{{$myclass->classcode}} - 
+                    @php
+                      $mycampus = App\Models\Programclass::find($myclass->programclass_id);
+                    @endphp
+                    @if($mycampus->campus_id==1) LL @endif @if($mycampus->campus_id==2) BT  @endif @if($mycampus->campus_id==3) ZA  @endif</option>
 
                     @endforeach
                    
@@ -231,10 +237,16 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                                             <td>{{ ++$id }}</td>
                                             <td>
-                                            {{$subject->classcode}} - @if($subject->campus_id==1)LL @endif
-                                            @if($subject->campus_id==2)BT @endif
-                                            @if($subject->campus_id==3)ZA @endif
+                                            @php
+                                            $mycampus = App\Models\Programclass::find($subject->programclass_id);
+                                            @endphp
+                                            
+                                            {{$subject->classcode}} - 
+                                            @if($mycampus->campus_id==1)LL @endif
+                                            @if($mycampus->campus_id==2)BT @endif
+                                            @if($mycampus->campus_id==3)ZA @endif
                                             </td>
+                                            
                                             <td>
                                             @php
                                             $coursecode = App\Models\Course::find($subject->course_id) 
@@ -251,11 +263,15 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                     <div class="row">
                                                         <div class="col">
                                                         @php 
-                                                        $lecturers = App\Models\lecturerSubjects::where('courseid',$subject->course_id)
-                                                        ->where('campus_id', $subject->campus_id)->get()
+                                                        $campus = App\Models\Programclass::find($mycampus->campus_id)
                                                         @endphp
 
-                                                        @if(!empty($lecturers))
+                                                        @php 
+                                                        $lecturers = App\Models\lecturerSubjects::where('courseid',$subject->course_id)
+                                                        ->where('classid', $subject->programclass_id)->get()
+                                                        @endphp
+
+                                                        @if($lecturers->isNotEmpty())
 
                                                         @foreach($lecturers as $lecturer)
                                                         
@@ -284,9 +300,10 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                             <div class="modal-body">
 
                                                             Are you sure to delete lecturer <span style="color:red;">{{$user->fname}} {{$user->lname}}</span>
-                                                             from <br>{{$coursecode->code}} | {{$coursecode->name}} -  @if($subject->campus_id==1)LL @endif
-                                                            @if($subject->campus_id==2)BT @endif
-                                                            @if($subject->campus_id==3)ZA @endif ?
+                                                             from <br>{{$coursecode->code}} | {{$coursecode->name}} - 
+                                                            @if($mycampus->campus_id==1)LL @endif
+                                                            @if($mycampus->campus_id==2)BT @endif
+                                                            @if($mycampus->campus_id==3)ZA @endif ?
                                                                
                                                             </div>
                                                            

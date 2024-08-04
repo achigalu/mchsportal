@@ -118,20 +118,29 @@
                                         </div>
                                         @endif
     
-                                        <h4 class="card-title mb-4">Select Class</h4>@error('class_id') <span class="text-danger">{{$message}}</span> @enderror
+                                        <h4 class="card-title mb-4">Select Class and Intake</h4>@error('class_id') <span class="text-danger">{{$message}}</span> @enderror
                                         <form action="{{route('class.subjects')}}" method="post">
                                             @csrf
                                         <div class="table-responsive input-group">
                                         
                                         <select class="form-select shadow-none form-select-sm" name="class_id" required>
-                                        <option selected value="">--Select--</option>
+                                        <option selected value="">--Select class--</option>
                                             @foreach($classes as $class)
-                                            
-                                            
 
                                                 <option value="{{$class->id}}">{{$class->classcode}} - @if($class->campus_id==1) LL @endif 
                                                 @if($class->campus_id==2) BT @endif
                                                 @if($class->campus_id==3) ZA @endif
+                                                </option>
+                                                
+                                            @endforeach
+                                            </select>&nbsp;&nbsp;
+
+                                            <select class="form-select shadow-none form-select-sm" name="ay" required>
+                                        <option selected value="">--Select intake--</option>
+                                            @foreach($ay as $myay)
+                                            
+                                                <option value="{{$myay->id}}">{{$myay->ayear}} - {{$myay->month}} {{$myay->description}}
+                                                
                                                 </option>
                                                 
                                             @endforeach
