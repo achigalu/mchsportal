@@ -78,7 +78,10 @@
 
 
 
-
+@if(!empty($singleStudent))
+@php 
+$acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
+@endphp
 
 
 
@@ -102,13 +105,26 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 <div class="dropdown-menu">
 <a class="dropdown-item" href="#">Exel</a>
 <a class="dropdown-item" href="#">PDF</a>
-
 </div>
+
 <ul class="breadcrumb m-0">
 <a href="{{route('class.list')}}">
 <li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 </ul>
+
+<ul class="breadcrumb m-0">
+<a href="{{route('get.exam.numbers', ['pclass' => $singleStudent->programclass, 'pcampus' => $singleStudent->campus, 'psemester' => $singleStudent->semester])}}">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Generate Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+</ul>
+
+<ul class="breadcrumb m-0">
+<a href="">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;View Previous Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+</ul>
+
 </div>
 
 </div>
@@ -124,15 +140,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                    @if(!empty($singleStudent))
-                                    @php 
-                                    $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
-                                    @endphp
+                                   
 
                                     
-                                        <h4 class="card-title">Result for Class: &nbsp;<span class="badge rounded-pill bg-info"> {{$singleStudent->programclass}} &nbsp;</span>
-                                         Academic Year: &nbsp;
-                                        <span class="badge rounded-pill bg-info"> {{$acy->ayear}} | {{$acy->month}} - {{$acy->description}}&nbsp;</span>
+                                        <h4 class="card-title">Result for Class: &nbsp;<span class="badge rounded-pill bg-info"> {{$singleStudent->programclass}} - {{$singleStudent->campus}} &nbsp;</span>
+                                        
                                          Semester: &nbsp;
                                         <span class="badge rounded-pill bg-info"> {{$singleStudent->semester}} &nbsp;</span></h4><br>
                                     @endif

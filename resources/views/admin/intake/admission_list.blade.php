@@ -74,12 +74,11 @@
                                     <div class="page-title-right">
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('single.admission.student')}}">
-                                        <li class="btn btn-secondary"><i class="fas fa-user-plus"></i>&nbsp;&nbsp;Add Single Student</li> &nbsp;
+                                        <li class="btn btn-outline-info"><i class="fas fa-user-plus"></i>&nbsp;&nbsp;Add Single Student</li> &nbsp;
                                         </a>
-                                        <a href="{{route('upload.old.students')}}">
-                                        <li class="btn btn-outline-warning"><i class="fas fa-upload"></i>Upload Old Students</li>                                        </a>
+                                                                        </a>
                                         <a href="{{route('upload.students')}}">&nbsp;&nbsp;
-                                        <li class="btn btn-secondary"><i class="fas fa-upload"></i>&nbsp;&nbsp;Upload New Students</li> &nbsp;
+                                        <li class="btn btn-outline-secondary"><i class="fas fa-upload"></i>&nbsp;&nbsp;Upload New Students</li> &nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -143,7 +142,7 @@
                                                 </td>
                                                 <td>
                                                
-                                                <a href="{{route('students.admission.details', $admissions->id)}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                <a href="{{route('students.admission.details', $admissions->id)}}"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a>  
                                                 
                                                 <button type="button" class="btn btn-warning waves-effect waves-light " data-bs-toggle="modal" data-bs-target="#myModal{{$admissions->id}}"><i class="fas fa-trash"></i></button>
                                                  

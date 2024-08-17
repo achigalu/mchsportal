@@ -24,29 +24,29 @@ class studentController extends Controller
         return view('admin.intake.add_student');
     }
 
-    public function uploadStudent(){
-        $data['academicy'] = Academicyear::all();
-        return view('admin.intake.upload_student', $data);
-    }
+     public function uploadStudent(){
+         $data['academicy'] = Academicyear::all();
+         return view('admin.intake.upload_student', $data); 
+     }
 
-    public function uploadOldStudents()
-    {
-        $data['academicy'] = Academicyear::all();
-        return view('admin.intake.upload_old_student', $data);
-    }
-    public function uploadingOldStudents(Request $request)
-    {
-        $validated = $request->validate([
-            'students_upload' => 'required|file|mimes:csv,xls,xlsx|max:2048',
-            'academic_yr_id' => 'required',
-            'program_id' =>'required',
-            'intake_name' => 'required',
-         ]);
-         $programCampus = Program::where('id', $request->program_id)->first();
+    // public function uploadOldStudents()
+    // {
+    //     $data['academicy'] = Academicyear::all();
+    //     return view('admin.intake.upload_old_student', $data);
+    // }
+    // public function uploadingOldStudents(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'students_upload' => 'required|file|mimes:csv,xls,xlsx|max:2048',
+    //         'academic_yr_id' => 'required',
+    //         'program_id' =>'required',
+    //         'intake_name' => 'required',
+    //      ]);
+    //      $programCampus = Program::where('id', $request->program_id)->first();
 
 
-         dd($request->all(), $programCampus->campus_id);
-    }
+    //      dd($request->all(), $programCampus->campus_id);
+    // }
 
 
 
@@ -63,7 +63,12 @@ class studentController extends Controller
       //$mymonth = Academicyear::findmonth($intake_month->intake_name);
       $fomartdate = Carbon::parse($intake_month->month)->month;
       $formatedmonth = str_pad($fomartdate, 2, '0', STR_PAD_LEFT);
-      $already = Uploadlist::where('academic_yr_id', $request->academic_yr_id)->where('intake_month',$formatedmonth)->where('campus',$request->campus)->where('upload_name',$request->intake_name)->first();
+      $already = Uploadlist::where('academic_yr_id', $request->academic_yr_id)
+      ->where('intake_month',$formatedmonth)
+      ->where('campus',$request->campus)
+      ->where('upload_name',$request->intake_name)
+      ->first();
+
         if($validated){
             
             if(!empty($already))
@@ -82,8 +87,10 @@ class studentController extends Controller
 
             if ($upload = Uploadlist::where('academic_yr_id', $request->academic_yr_id)
             ->where('campus', $request->campus)
+            ->where('intake_month',$formatedmonth)
             ->where('upload_name', $request->intake_name)
-            ->first()) {
+            ->first()) 
+            {
             }
 
             $uploadedID = Uploadlist::find($upload->id);
@@ -116,7 +123,7 @@ class studentController extends Controller
 
        /// here we call blade file to validate the data and store it in another table (student table)
        
-        return redirect()->back()->with('invalid', 'Something went wrong');  
+        return redirect()->back()->with('invalid', 'Something unknown to us went wrong');  
            
         }
        
@@ -143,7 +150,9 @@ class studentController extends Controller
         $ayear_id = $admissions->academic_yr_id;
         $upload_id = $id;
         $data['upload_name'] = $admissions->upload_name;
-        $data['admissions'] = Admission::where('academicyear', $ayear_id)->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();
+        $data['admissions'] = Admission::where('academicyear', $ayear_id)
+        ->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc')
+        ->get();
 
         return view('admin.intake.confirmStudentsList', $data);
     }
@@ -157,7 +166,9 @@ class studentController extends Controller
             {   $class_students = Admission::where('uploadlist_id', $id)->first();
                 $data['title'] = 'Uploaded Class List';
                 $data['uploadedStudents'] = User::where('uploadlist_id' , $id)->get();
-                $data['stu'] = User::where('programclass',$class_students->class)->where('academicyear_id', $class_students->academicyear)->first();
+                $data['stu'] = User::where('programclass',$class_students->class)
+                ->where('academicyear_id', $class_students->academicyear)
+                ->first();
                 $data['academicyear'] = Academicyear::find($data['stu']->academicyear_id);
                 return view('admin.intake.allAdmittedClassList', $data);
             }
@@ -168,7 +179,9 @@ class studentController extends Controller
                 $data['upload_id'] = $upload_id;
                 $data['title'] = 'Uploaded Class List';
                 $data['upload_name'] = $admissions->upload_name;
-                $data['admissions'] = Admission::where('academicyear', $data['ayear_id'])->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();
+                $data['admissions'] = Admission::where('academicyear', $data['ayear_id'])
+                ->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc')
+                ->get();
                 $data['myclass'] = Programclass::all();
                 $data['program'] = Program::all();
                // $data['single'] = Admission::where('uploadlist_id', $upload_id)->first();
@@ -260,9 +273,9 @@ class studentController extends Controller
                                                     $email = $formatted_reg_num.'@mchs.mw';
                                                     $checkOldRegNum = User::where('reg_num', $request->reg_num[$key])->first();
                                                     if ($checkOldRegNum) {
-                                                    return redirect()->back()->with('invalid', 'This students list already uploaded in this system');
+                                                    return redirect()->back()->with('invalid', 'This students list already uploaded in this portal');
                                                     }
-                                                    
+                                                    // Continuing or graduated students with regNums already in place
                                                     User::create([
                                                     'academicyear_id' => $request->acy[$key],
                                                     'programclass' => $request->class[$key],
@@ -378,9 +391,9 @@ class studentController extends Controller
                                                         $email = strtolower($program_code . $campus_code . $intake_year . $intake_month . $formatted_counter . '@mchs.mw');
                                                         $checked_email = User::where('email', $email)->first();
                                                         if (!empty($checked_email)) {
-                                                        return redirect()->back()->with('invalid', 'This students list was already uploaded in this system.');
+                                                        return redirect()->back()->with('invalid', 'This students list was already uploaded in this mchs system.');
                                                         }
-                                                        
+                                                       // Adding to the existing list of new students
                                                         User::create([
                                                         'academicyear_id' => $request->acy[$key],
                                                         'programclass' => $request->class[$key],
@@ -398,6 +411,16 @@ class studentController extends Controller
                                                         'gender' => $request->gender[$key],
                                                         ]);
                                                         }
+                                                        $process = Uploadlist::find($id);
+                                                        if(!empty($process))
+                                                        {
+                                                        
+                                                         $process->update([
+                                                             'processed' => '1',
+                                                         ]);
+                                                        }
+                                                         return redirect(route('saved.confirmed.students', $id));
+                                                         //return view('admin.intake.confirmedStudents', $data);
                                                 }
                                                 else
                                                 {
@@ -411,7 +434,7 @@ class studentController extends Controller
                 if (!empty($checked_email)) {
                 return redirect()->back()->with('invalid', 'This students list was already uploaded2');
                 }
-                
+                // new students and assigned regNumbers from 1
                 User::create([
                 'academicyear_id' => $request->acy[$key],
                 'programclass' => $request->class[$key],

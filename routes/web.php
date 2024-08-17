@@ -20,6 +20,7 @@ use App\Http\Controllers\studentRegistrationController;
 use App\Http\Controllers\tuitionFeeCategoryController;
 use App\Http\Controllers\tuitionFeeStructureController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\examnumbersController;
 use App\Http\Controllers\permissionController;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\roleController;
@@ -94,8 +95,8 @@ Route::controller(studentController::class)->group(function(){
     Route::get('/add/students', 'addStudent')->name('add.student');
     Route::get('/upload/students', 'uploadStudent')->name('upload.students');
     Route::post('/upload/students', 'uploadedStudents')->name('uploaded.students');
-    Route::get('/upload/old/students', 'uploadOldStudents')->name('upload.old.students');
-    Route::post('/upload/old/students', 'uploadingOldStudents')->name('uploaded.old.students');
+    // Route::get('/upload/old/students', 'uploadOldStudents')->name('upload.old.students');
+    // Route::post('/upload/old/students', 'uploadingOldStudents')->name('uploaded.old.students');
     Route::get('/admission/students', 'admission')->name('admission.student');
     Route::get('/admission/single/student/add', 'singleStudentAdmission')->name('single.admission.student');
     Route::get('/confirm/students/list/{id}', 'confirmStudentsList')->name('confirm.students.list');
@@ -235,7 +236,8 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}/{ay}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
     Route::post('/modules/to/lecturers', 'ModulesToLecturers')->name('modules.to.lecturers');
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
-    Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer');  
+    Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer'); 
+    Route::get('/student/exam/number', 'classList')->name('student.exam.numbers'); 
 });
 
 Route::controller(assessmentsController::class)->group(function(){
@@ -275,6 +277,12 @@ Route::controller(gradeController::class)->group(function(){
     Route::post('/search/old/students', 'searchOldStudents')->name('search.old.students');
     Route::post('/search/current/students', 'searchCurrentStudents')->name('search.current.students');
     Route::get('/myold/class/subjects', 'configOldClassSubjects')->name('config.myold.class.subjects');
+});
+
+Route::controller(examnumbersController::class)->group(function(){
+    Route::get('/get/exam/numbers/{pclass}/{pcampus}/{psemester}', 'getExamNumbers')->name('get.exam.numbers');
+    
+    
 });
 
 

@@ -146,7 +146,7 @@
                                     <li><a href="{{route('grade.current.students')}}">- Grade(Current students)</a></li>
                                     <li><a href="{{route('grade.old.students')}}">- Grade(Old students)</a></li>
                                     
-                                    <li><a href="#">- Exam numbers</a></li>
+                                    <li><a href="{{route('student.exam.numbers')}}">- Exam numbers</a></li>
                                     
                                     
                                 </ul>
