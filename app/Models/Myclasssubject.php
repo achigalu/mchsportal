@@ -31,7 +31,7 @@ public function user()
 
 static public function ClassSubject($class_id, $semester)
 {
-    return self::where('programclass_id', $class_id)->where('semester', $semester)->get();
+    return self::where('programclass_id', $class_id)->where('semester', $semester)->whereNull('academicyear_id')->get();
 
 }
 

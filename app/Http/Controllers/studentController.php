@@ -287,10 +287,11 @@ class studentController extends Controller
                                                     'email' => $email, // Convert email to lowercase
                                                     'campus' => $request->campus[$key],
                                                     'program_id' => $programID,
-                                                    'password' => Hash::make('password'),
-                                                    'role' => 'student',
+                                                    'password' => Hash::make(strtolower($request->lname[$key])),
+                                                    'role' => $request->role[$key],
                                                     'semester' => $request->semester[$key],
                                                     'gender' => $request->gender[$key],
+                                                    
                                                     ]);
                                                     
                                                     }
@@ -404,8 +405,8 @@ class studentController extends Controller
                                                         'entry_level' => $request->entry_type[$key],
                                                         'email' => $email, // Convert email to lowercase
                                                         'campus' => $campus,
-                                                        'password' => Hash::make('password'),
-                                                        'role' => 'student',
+                                                        'password' => Hash::make(strtolower($request->lname[$key])),
+                                                        'role' => $request->role[$key],
                                                         'program_id' => $programID,
                                                         'semester' => $request->semester[$key],
                                                         'gender' => $request->gender[$key],
@@ -445,9 +446,9 @@ class studentController extends Controller
                 'entry_level' => $request->entry_type[$key],
                 'email' => $email, // Convert email to lowercase
                 'campus' => $campus,
-                'password' => Hash::make('password'),
+                'password' => Hash::make(strtolower($request->lname[$key])),
                 'program_id' => $programID,
-                'role' => 'student',
+                'role' => $request->role[$key],
                 'semester' => 1,
                 'gender' => $request->gender[$key],
                 ]);

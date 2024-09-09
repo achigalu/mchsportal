@@ -5,7 +5,7 @@
     <head>
         
     <meta charset="utf-8" />
-        <title>MCHS Portal | College Faculties</title>
+        <title>MCHS Portal | Students List</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -95,7 +95,7 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-<h4 class="mb-sm-0">Programs List</h4>
+<h4 class="mb-sm-0">Students List</h4>
 
 <div class="page-title-right">
 <div class="btn-group">
@@ -108,22 +108,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 </div>
 
 <ul class="breadcrumb m-0">
-<a href="{{route('class.list')}}">
+<a href="{{route('student.exam.numbers')}}">
 <li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 </ul>
 
-<ul class="breadcrumb m-0">
-<a href="{{route('get.exam.numbers', ['pclass' => $singleStudent->programclass, 'pcampus' => $singleStudent->campus, 'psemester' => $singleStudent->semester])}}">
-<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Generate Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</a>
-</ul>
-
-<ul class="breadcrumb m-0">
-<a href="">
-<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;View Previous Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</a>
-</ul>
 
 </div>
 
@@ -173,7 +162,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                                                 <td>{{$student->fname}} {{$student->lname}}</td>
                                                 <td>{{$student->gender}}</td>
                                                 <td>Active</td>
-                                                <td><a href=""><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a></td> 
+                                                <td><a href="#"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a></td> 
                                             </tr>
                                             @endforeach
                                             

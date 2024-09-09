@@ -113,12 +113,12 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{route('add.course')}}">- Create Subject</a></li>
                                     <li><a href="{{route('view.courses')}}">- All Subjects</a></li>
-                                    <li><a href="{{route('add.subject.to.class')}}">- Current Class </a></li>
-                                    <li><a href="{{route('add.subject.to.students')}}">- Current Students </a></li>
+                                    <li><a href="{{route('add.subject.to.class')}}">- Class </a></li>
+                                    <li><a href="{{route('add.subject.to.students')}}">- Students </a></li>
                                     
                                     <li><a href="{{route('add.subject.to.old.class')}}">- Old Class </a></li>
                                     <li><a href="{{route('add.subject.to.old.students')}}">- Old Students</a></li>
-                                    <li><a href="{{route('subjects.to.lecturers')}}">- To Lecturers</a></li>
+                                    <li><a href="{{route('subjects.to.lecturers')}}">- Lecturers</a></li>
                                 </ul>
                             </li>
                     
@@ -143,8 +143,8 @@
                                     <span style="color:gray;"><b> Examinations</b></span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="{{route('grade.current.students')}}">- Grade(Current students)</a></li>
-                                    <li><a href="{{route('grade.old.students')}}">- Grade(Old students)</a></li>
+                                    <li><a href="{{route('grade.current.students')}}">- Grades</a></li>
+                                    <li><a href="{{route('grade.old.students')}}">- Grades(Old students)</a></li>
                                     
                                     <li><a href="{{route('student.exam.numbers')}}">- Exam numbers</a></li>
                                     

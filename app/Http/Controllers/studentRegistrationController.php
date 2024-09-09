@@ -6,6 +6,7 @@ use App\Models\Myclasssubject;
 use App\Models\Programclass;
 use App\Models\User;
 use App\Models\Campus;
+use App\Models\Course;
 use App\Models\lecturerSubjects;
 use App\Models\Studentsubject;
 use Illuminate\Http\Request;
@@ -37,6 +38,32 @@ class studentRegistrationController extends Controller
     return view('admin.registration.class_list', compact('classes', 'campusList'));
   }
 
+  public function examClassList()
+  {
+    $classes = Programclass::all();
+    $groupedClasses = [];
+    
+    if ($classes->isNotEmpty()) {
+        foreach ($classes as $class) {
+            $campusId = $class->campus_id;
+            
+            // Initialize the array for this campus_id if it doesn't exist
+            if (!isset($groupedClasses[$campusId])) {
+                $groupedClasses[$campusId] = [];
+            }
+            
+            // Add the class to the array for this campus_id
+            $groupedClasses[$campusId][] = $class;
+        }
+    }
+    
+    // Now you can use $groupedClasses as needed
+    // For example, to create a search list of campus IDs:
+    $campusList = array_keys($groupedClasses);
+
+    return view('admin.registration.exam_class_list', compact('classes', 'campusList')); 
+  }
+
   public function moduleRegister(){
     return view('admin.registration.module_register');
   }
@@ -55,7 +82,6 @@ class studentRegistrationController extends Controller
 //dd($request->all());
     $data['class'] = $request->class;
     $data['semester'] = $request->semester;
-    $data['ay'] = $request->ay;
     $data['ourclass'] = Programclass::find($request->class);
     $data['class_program'] = $data['ourclass']->program_id;
     $data['class_code'] = $data['ourclass']->classcode;
@@ -63,7 +89,7 @@ class studentRegistrationController extends Controller
     return view('admin.intake.attach_subjects_to_students', $data);
 
   }
-  public function allocateSubjectToStudents($class, $semester, $campus, $ay)
+  public function allocateSubjectToStudents($class, $semester, $campus)
   {
     $stuCampus=$campus;
     $myCampus = $campus;
@@ -72,7 +98,7 @@ class studentRegistrationController extends Controller
    // dd($class, $semester, $campus, $ay);
     $classSubjects = Myclasssubject::where('programclass_id', $class)
     ->where('semester', $semester)
-    ->where('academicyear_id', $ay)
+    ->whereNull('academicyear_id')
     ->where('classcode', $classID->classcode)
     ->get();
 
@@ -88,7 +114,6 @@ class studentRegistrationController extends Controller
     $classStudents = User::where('programclass', $classCode)
     ->where('semester', $semester)
     ->where('campus', $campus)
-    ->where('academicyear_id', $ay)
     ->get();
     //dd($class, $semester, $ay);
     $singleStudent = $classStudents->first();
@@ -177,15 +202,21 @@ class studentRegistrationController extends Controller
       $data['myclassSubjects'] = $myClassSubjects;
       $data['class_id'] = $request->class_id;
       $data['semester'] = $request->semester;
+      $data['campus'] = Programclass::find($request->class_id);
+      $data['courseID'] = Course::find($request->course_id);
       if(!empty($request->class_id) && !empty($request->semester))
       {
         $lecturerSubject = lecturerSubjects::firstOrCreate(
           [
           'classid' => $request->class_id,
           'semester' => $request->semester,
-          'campus_id' => $request->campus_id,
+          'campus_id' => $data['campus']->campus_id,
           'userid' => $request->lecturer_id,
           'courseid' => $request->course_id,
+          'basic' => $data['courseID']->level,
+          'access_level1' => $request->lecturer_id,
+          'access_level2' => $request->lecturer_id,
+          'access_level3' => $request->lecturer_id,
           
           ],
           [
@@ -257,20 +288,31 @@ class studentRegistrationController extends Controller
        if($classcampus==1)
        {
           $campus = 'Lilongwe';
+          $campus1 = 'LL';
        }
        elseif($classcampus==2)
        {
         $campus = 'Blantyre';
+        $campus1 = 'BT';
        }
        elseif($classcampus==3)
        {
         $campus = 'Zomba';
+        $campus1 = 'ZA';
        }
   if($classcode) 
   {
     $data['students'] = User::where('programclass', $classcode)
                     ->where('campus', $campus)
                     ->where('semester', $request->semester)->get();
+
+        $singlestudent = $data['students']->first();          
+        $data['count'] = $data['students']->count();
+        $data['classcampus'] = $campus1;
+        $data['classcode'] = $classcode;
+        $data['semester'] = $request->semester;
+        $data['academic_yr'] = $singlestudent->academicyear_id;
+        
         if($data['students']->isNotEmpty())
         {
           $data['singleStudent'] = $data['students']->first();
@@ -286,5 +328,82 @@ class studentRegistrationController extends Controller
 
 
  
+  }
+
+  public function ExamSearchStudents(Request $request)
+  {
+    $data['classes'] = Programclass::all();
+    $groupedClasses = [];
+    
+    if ($data['classes']->isNotEmpty()) {
+        foreach ($data['classes'] as $class) {
+            $campusId = $class->campus_id;
+            
+            // Initialize the array for this campus_id if it doesn't exist
+            if (!isset($groupedClasses[$campusId])) {
+                $groupedClasses[$campusId] = [];
+            }
+            
+            // Add the class to the array for this campus_id
+            $groupedClasses[$campusId][] = $class;
+        }
+    }
+    
+    // Now you can use $groupedClasses as needed
+    // For example, to create a search list of campus IDs:
+    $data['campusList'] = array_keys($groupedClasses);
+
+    //return view('admin.registration.class_list', compact('classes', 'campusList'));
+    //for search
+     // classID => "1"
+     // semester => "1"
+     $classInstance = Programclass::findOrFail($request->classID);
+     $classcode = $classInstance->classcode;
+     $classcampus = $classInstance->campus_id;
+
+     if($classcampus==1)
+     {
+        $campus = 'Lilongwe';
+        $campus1 = 'LL';
+     }
+     elseif($classcampus==2)
+     {
+      $campus = 'Blantyre';
+      $campus1 = 'BT';
+     }
+     elseif($classcampus==3)
+     {
+      $campus = 'Zomba';
+      $campus1 = 'ZA';
+     }
+if($classcode) 
+{
+  $data['students'] = User::where('programclass', $classcode)
+                  ->where('campus', $campus)
+                  ->where('semester', $request->semester)->get();
+
+      $singlestudent = $data['students']->first();          
+      $data['count'] = $data['students']->count();
+      $data['classcampus'] = $campus1;
+      $data['classcode'] = $classcode;
+      $data['semester'] = $request->semester;
+      $data['academic_yr'] = $singlestudent->academicyear_id;
+      $data['title'] = 'Class List for Exam Numbers';
+      
+      if($data['students']->isNotEmpty())
+      {
+        $data['singleStudent'] = $data['students']->first();
+        //dd($data['students']);
+        return view('admin.registration.class_list_for_exam_numbers', $data);
+      }
+      else
+      {
+        return redirect()->back()->with('invalid', 'Currently no students found');
+      }
+
+}
+
+
+
   }
 }

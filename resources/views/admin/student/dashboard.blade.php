@@ -160,10 +160,10 @@
                                                         <th style="width: 10px;">#</th>
                                                         <th>Code</th>
                                                         <th>Course Name</th>
-                                                        <th>CA1</th>
-                                                        <th>Mid-Sem</th>
-                                                        <th>Exam</th>
-                                                        <th style="width: 120px;">Final Grade</th>
+                                                        <th>CA1(%)</th>
+                                                        <th>Mid-Sem(%)</th>
+                                                        <th>End-Sem-Exam(%)</th>
+                                                        <th style="width: 120px;">Final Grade(%)</th>
                                                         <th style="width: 120px;">Remark</th>
                                                     </tr>
                                                 </thead><!-- end thead -->
@@ -189,28 +189,30 @@
                                                         </td>
                                                         <td>
                                                             
-                                                        @if(!empty($subject->assessment1))
+                                                        @if($subject->access_assessment1==1)
                                                         {{$subject->assessment1}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->access_level==1))
+                                                        @if($subject->access_assessment2==1)
                                                         {{$subject->assessment2}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->access_level==1))     
+                                                        @if($subject->access_exam_grade==1)   
                                                         {{$subject->exam_grade}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->access_level==1))
+                                                        @if($subject->access_final_grade==1)
                                                         {{$subject->final_grade}}
                                                         @endif
                                                         </td>
                                                         <td>
-                                                        @if(!empty($subject->access_level==1))
-                                                         <b>Pass</b>
+                                                        @if($subject->remark)
+                                                        <b>Pass</b>
+                                                        @else
+                                                         <b></b>
                                                          @endif
                                                         </tr>
                                                        

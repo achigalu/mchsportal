@@ -46,8 +46,9 @@ class AdmissionImport implements ToModel
                 'entry_level'    => $row[5], 
                 'gender'    => $row[6],
                 'semester'  => $row[7],
-                'reference_code'    => $row[8],  
-                'reg_num'    => $row[9] ?? null,
+                'reference_code'    => $row[8],  // reference number i.e 1000/4000
+                'reg_num'    => $row[9] ?? null, // registration numbers for students who joined college before system and for alumnis
+                'role'    => $row[10] ?? 'student',  // alumni if completed studies/null if student
 
             ]);
         

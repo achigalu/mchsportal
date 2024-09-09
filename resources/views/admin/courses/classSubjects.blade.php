@@ -102,8 +102,12 @@
                         
 @php
 $class = App\Models\Programclass::where('id', $class)->first();
+@endphp
+
+@php
 $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id)
-->where('academicyear_id', $ay)
+->where('semester', $semester)
+->whereNull('academicyear_id')
 ->get()
 @endphp
 
@@ -134,19 +138,17 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                             @csrf
                                         <div class="table-responsive input-group">
                                         <input type="text" name="class_id" value="{{$class->id}}" hidden>
-                                        <input type="text" name="ay" value="{{$ay}}" hidden>
+                                        <input type="text" name="semester" value="{{$semester}}" hidden>
                                        <h4>
                                        Assign Subjects to: <span style="color: red;">
 
-                                        @php 
-                                        $myay = App\Models\Academicyear::find($ay)
-                                        @endphp
 
                                         {{$class->classcode}} 
                                         - @if($class->campus_id ==1) LL @endif
                                           @if($class->campus_id ==2) BT @endif
                                           @if($class->campus_id ==3) ZA @endif
-                                        | {{$myay->ayear}} - {{$myay->month}} {{$myay->description}}
+                                          - Semester : <span class="badge rounded-pill bg-warning float-end">{{$semester}}</span>
+                                        
                                         </span>
                                        </h4> 
                                        @error('subject_id') <span class="text-danger">{{$message}}</span> @enderror 

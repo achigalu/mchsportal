@@ -129,6 +129,7 @@
                                             <input type="text" name="gender[]" value="{{$admission->gender}}" hidden>
                                             <input type="text" name="semester[]" value="{{$admission->semester}}" hidden>
                                             <input type="text" name="reg_num[]" value="{{$admission->reg_num}}" hidden>
+                                            <input type="text" name="role[]" value="{{$admission->role}}" hidden>
                                             <td>{{$admission->lname}}</td>
                                             <input type="text" name="lname[]" value="{{$admission->lname}}" hidden>
                                             <td>{{$admission->fname}}</td>

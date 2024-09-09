@@ -106,13 +106,11 @@
                       @php
                       $campus = App\Models\Campus::all()
                       @endphp 
-                      @php
-                      $academic = App\Models\Academicyear::where('status',1)->get()
-                      @endphp 
+
                       <form action="{{route('modules.to.students')}}" method="post">
                      @csrf
                     <div class="row">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-6">
                     <label for="">Class</label>
                     <div class="card bg-light text-dark">
                      
@@ -130,25 +128,10 @@
                     </div>
                     </div>
 
-                    <div class="form-group col-md-4">
-                    <label for="">Intake</label>
-                    <div class="card bg-light text-dark">
-                     
-                    <div class="card-body" >
-                    <select class="form-control select2" name="ay" aria-label="Default select example">
-                    <option value="" selected="">-- select intake--</option>
-                    @foreach($academic as $myacademic)
-                  
-                    <option value="{{$myacademic->id}}">{{$myacademic->ayear}} - {{$myacademic->month}} {{$myacademic->description}}</option>
-                    @endforeach
-                    </select>
-                    </div>
-                    </div>
-                    </div>
 
                    
 
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-4">
                     <label for="">Semester</label>
                         <div class="card bg-light text-dark">
                         
@@ -164,12 +147,12 @@
                     </div>
                     </div>
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                     <label for="" ></label>
                         <div class="card bg-light text-dark">
                         
                     <div class="card-body">
-                    <button class="btn btn-info" type="submit" style="margin-top: 8px;">Show subjects</button>
+                    <button class="btn btn-warning" type="submit" style="margin-top: 8px;">Show subjects</button>
                     </div>
                     </div>
                     </div>

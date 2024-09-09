@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Add Program</title>
+        <title>MCHS Portal | Add Subjects</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -132,13 +132,13 @@
             </div>
 
             <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label">Program Level</label>
+                    <label class="col-sm-2 col-form-label">Under combined BASIC</label>
                     <div class="col-sm-12">
                     @error('level') <span class="text-danger">{{$message}}</span> @enderror
                         <select class="form-select" name="level" aria-label="Default select example">
                             <option value="" selected="">-- select --</option>
-                            <option value="1">Basic</option>
-                            <option value="2">Post Basic</option>
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
                             
                             </select>
                     </div>

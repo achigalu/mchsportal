@@ -167,7 +167,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <td>
                                                 @if($students>0)
 
-                                                    <a href="{{route('students.grading', ['id' => $id, $assessmentlist1->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                    <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist1->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
                                                 @endif
@@ -190,7 +190,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 <td>
                                                 @if($students>0)
-                                                    <a href="{{route('students.grading', ['id' => $id, $assessmentlist2->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                    <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist2->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
                                                 @endif
@@ -215,7 +215,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                               
                                                 <td>
                                                 @if($students>0)
-                                                        <a href="{{route('students.grading', ['id' => $id, $assessmentlist3->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                        <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist3->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
 
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>

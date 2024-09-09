@@ -205,7 +205,7 @@ Route::controller(coursesController::class)->group(function(){
     Route::get('/configured/courses', 'configuredCourse')->name('configured.courses');
     Route::get('/add/subject/class', 'addSubjectToClass')->name('add.subject.to.class');
     Route::post('/class/subjects','classSubjects')->name('class.subjects');
-    Route::get('/class/subjects/{class_id}/{ay}','classSubjectsWithId')->name('class.subjects.withID');
+    Route::get('/class/subjects/{class_id}/{semester}','classSubjectsWithId')->name('class.subjects.withID');
     Route::post('/config/class/subjects','configClassSubjects')->name('config.class.subjects');
     Route::post('/configured/subject', 'configuredSubject')->name('configured.subject');
     Route::get('/add/subject/to/students', 'addSubjectToStudent')->name('add.subject.to.students');
@@ -229,23 +229,24 @@ Route::controller(campusController::class)->group(function(){
 
 Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/class/list', 'classList')->name('class.list');
-    Route::get('/search/students/', 'searchStudents')->name('search.student');
+    Route::post('/search/students/', 'searchStudents')->name('search.student');
+    Route::post('/exam/search/students/', 'ExamSearchStudents')->name('exam.search.student');
     Route::get('/module/register', 'moduleRegister')->name('module.register');
     Route::get('/students/confirmation', 'studentsConfirmation')->name('students.confirmation');
     Route::post('/modules/to/students', 'modulesToStudents')->name('modules.to.students');
-    Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}/{ay}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
+    Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
     Route::post('/modules/to/lecturers', 'ModulesToLecturers')->name('modules.to.lecturers');
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
     Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer'); 
-    Route::get('/student/exam/number', 'classList')->name('student.exam.numbers'); 
+    Route::get('/student/exam/number', 'examClassList')->name('student.exam.numbers'); 
 });
 
 Route::controller(assessmentsController::class)->group(function(){
     Route::get('/list/assessments/{id}', 'listAssessments')->name('list.assessments');
-    Route::get('/students/grading/{id}/{assessment}', 'studentsGrading')->name('students.grading');
-    Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1');
-    Route::get('/students/graded/{id}/{assessment}','studentsGraded2')->name('students.graded2');
-    Route::get('/submit/hod/{id}', 'submitHod')->name('submit.hod');
+    Route::get('/students/grading/{id}/{assessment}', 'studentsGradingAssessment1')->name('students.grading');
+    Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1'); //graded and saved only
+    Route::get('/students/graded/{id}/{assessment}','studentsGradedSubmitedToHOD')->name('submited.HOD');//graded saved and submitted to HOD
+    Route::get('/submit/hod/{id}/{assessment}', 'submitHodAssessment1')->name('submit.hod'); //saving to HOD, logic if HOD basic or NOT, then redirect to submited.HOD
 
 });
 
@@ -280,7 +281,13 @@ Route::controller(gradeController::class)->group(function(){
 });
 
 Route::controller(examnumbersController::class)->group(function(){
-    Route::get('/get/exam/numbers/{pclass}/{pcampus}/{psemester}', 'getExamNumbers')->name('get.exam.numbers');
+    Route::get('/get/exam/numbers/{pclass}/{pcampus}/{semester}/{count}', 'getExamNumbers')->name('get.exam.numbers');
+    Route::post('/generate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'generateExamNumbers')->name('generate.exam.numbers');
+    Route::get('/view/class/examnumbers/{pcode}/{pcampus}/{semester}/{count}/{saved}', 'viewClassExamNumbers')->name('view.class.examnumbers');
+    Route::get('/save/class/generated/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'saveClassGenerateExamNumbers')->name('save.class.regenerated.exam.numbers');
+    
+    Route::get('/regenerate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'regenerateExamNumbers')->name('regenerate.exam.numbers');
+    
     
     
 });

@@ -5,7 +5,7 @@
     <head>
         
     <meta charset="utf-8" />
-        <title>MCHS Portal | College Faculties</title>
+        <title>MCHS Portal | Students List</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -99,15 +99,16 @@
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-<form action="{{route('search.student')}}" method="get" enctype="" >
+<form action="{{route('search.student')}}" method="post" enctype="" >
+@csrf
                     <div class="row">
                     <div class="form-group col-md-4">
                     <label for="">Class</label>
-                        <div class="card bg-light text-dark">
+                    <div class="card bg-light text-dark">
                         
                     <div class="card-body" >
                     <select class="form-control select2" aria-label="Default select example" name="classID" required>
-                    <option selected="">-- selects --</option>
+                    <option value="">-- selects --</option>
                     @if($classes->isNotEmpty())
                     @foreach($classes as $class)
                     <option value="{{$class->id}}">{{$class->classcode}} - 
@@ -129,7 +130,7 @@
                         
                     <div class="card-body">
                     <select class="form-select" aria-label="Default select example" name="semester" required>
-                    <option selected="">-- select --</option>
+                    <option value="">-- select --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     </select>

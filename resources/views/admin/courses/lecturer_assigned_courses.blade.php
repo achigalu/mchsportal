@@ -133,9 +133,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 $class = App\Models\Programclass::where('id' ,$course->classid)->first() 
                                                 @endphp
                                                 {{$class->classcode}} - 
-                                                @if($course->campus_id==1) LL @endif
-                                                @if($course->campus_id==2) BT @endif 
-                                                @if($course->campus_id==3) ZA @endif
+                                                @if($class->campus_id==1) LL @endif
+                                                @if($class->campus_id==2) BT @endif 
+                                                @if($class->campus_id==3) ZA @endif
                                                 </td>
                                                 <td style="width: 12px;">{{$course->semester}}</td>
                                                 <td style="width: 30px;">

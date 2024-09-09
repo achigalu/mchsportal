@@ -99,14 +99,53 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                         </div>
                         <!-- end page title -->
                         
-                                                @php 
-                                                $assess = App\Models\Assessmentlist::find($assessment)
-                                                @endphp
+                        @php 
+                        $assess = App\Models\Assessmentlist::find($assessment)
+                        @endphp
+                              
+                        
+                            @if($assessment==1)
 
-                          @if($assess->assessment_name=='End-of-semester Exam')  
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level1);
+                            @endphp
+
+                            @elseif($assessment==2)
+
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level2);
+                            @endphp
+
+                            @elseif($assessment==3)
+
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level3);
+                            @endphp
+
+                            @else
+                            @php
+                            $role = '';
+                            @endphp
+
+                            @endif
+                           
+
+                           
+
+
+                          @if($role)  
                           <div class="row">
                             <div class="col-12">
-                          Currently Grades are with: <b style="color:orange">{{$a_level}}</b> <p>
+                            
+                          Currently Grades are with: <b style="color:orange">{{$role->role}}</b> <p>
+                            </div>
+                          </div>
+  
+                          @else
+                          <div class="row">
+                            <div class="col-12">
+                            
+                          Currently Grades are with: <b style="color:orange">none</b> <p>
                             </div>
                           </div>
                           @endif  
@@ -117,11 +156,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                         <div class="row">
                             <div class="col-12">
-                            @php 
-                            $role = App\Models\User::find($lectSub->access_level);
-                            @endphp
-                            
-                            Grades are now with: {{$role->role}};
+                          
 
                             @if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -225,7 +260,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                        <button type="submit" class="btn btn-outline-info btn-lg" style="float: right; width: 200px"><i class="fas fa-save"></i>&nbsp;&nbsp; Save grades</button>
+                                                    
 
                                             </td>
                                         </tr>

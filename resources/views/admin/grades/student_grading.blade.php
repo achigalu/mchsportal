@@ -89,13 +89,13 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 </div>
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('list.assessments',$id)}}">
-                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <li class="btn btn-outline-primary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
 
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('submit.hod',$id)}}">
-                                        <li class="btn btn-outline-warning"><i class="fas fa-arrow-circle-left"></i>&nbsp; Submit to HOD</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="{{route('submit.hod', ['id' => $id, 'assessment' => $assessment])}}">
+                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp; Submit to HOD</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -110,7 +110,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 @endphp
 
                                                 
-                                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.<br><h5>ClassCoordinator: {{$mycoursename->coordinator}}</h5></h5>
+                                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.<br></h5>
                               
      
 

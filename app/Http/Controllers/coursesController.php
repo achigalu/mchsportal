@@ -10,6 +10,7 @@ use App\Models\Course;
 use App\Models\Studentsubject;
 use App\Models\Myclasssubject;
 use App\Models\Program;
+use Illuminate\Support\Carbon;
 use App\Models\Programclass;
 use App\Models\User;
 use App\Models\Campus;
@@ -117,9 +118,29 @@ class coursesController extends Controller
 
     public function addSubjectToClass()
     {
+        // get classes that are valid 
+
         $data['title'] = 'Allocate Subjects to Class';
         $data['classes'] = Programclass::all();
-        $data['ay'] = Academicyear::all();
+        // Fetch distinct combinations of class and semester which has students only.
+        // $data['classCampuses'] = User::select('programclass', 'campus')
+        // ->whereNotNull('programclass')
+        // ->distinct()
+        // ->get()
+        // ->groupBy(['programclass', 'campus'])
+        // ->map(function($group) {
+        //     return $group->first();
+        // })
+        // ->values();
+
+        // $data['classCampus'] = json_decode($data['classCampuses'], true); // Decode JSON to PHP associative array
+
+        //dd($data['classCampus']);
+
+
+        // $currentYear = Carbon::now()->year;
+        // $data['ay'] = Academicyear::where('ayear',$currentYear)->get();
+        
         return view('admin.courses.add_subject_to_class', $data);
     }
 
@@ -127,16 +148,18 @@ class coursesController extends Controller
     {
         $validated = $request->validate([
             'class_id' => 'required',
-            'ay' => 'required',
+            'semester' => 'required',
         ]);
         if(!empty($validated))
         {
         $data['class'] = $request->class_id;
-        $data['ay'] = $request->ay;
+        $data['semester'] = $request->semester;
         $data['title'] = 'Subjects configurations';
        
         $data['classes'] = Programclass::all();
         $data['subjects'] = Course::all();
+
+       // dd($data);
         return view('admin.courses.classSubjects', $data);
         }
        // dd($request->class_id);
@@ -149,7 +172,7 @@ class coursesController extends Controller
     public function classSubjectsWithId(Request $request)
     {
         $data['class'] = $request->route('class_id');
-        $data['ay'] = $request->route('ay');
+        $data['semester'] = $request->route('semester');
         if(!empty($data['class']))
         {
         
@@ -172,7 +195,7 @@ class coursesController extends Controller
     {
         $data['class'] = Programclass::find($request->class_id);
         $data['subject'] = Course::find($request->subject_id);
-        $data['ay'] = $request->ay;
+        $data['semester'] = $request->semester;
         $data['title'] = 'Subject configurations';
         
         return view('admin.courses.configClassSubjects', $data);
@@ -181,14 +204,13 @@ class coursesController extends Controller
     public function configuredSubject(Request $request)
     {
         $validated = $request->validate([
-             'semester' => 'required',
              'exam_weight' => 'required',
              'ca_weight' => 'required',
              'pass_mark' => 'required',
              'is_major' => 'required',
              'is_project' => 'required',
              'category' => 'required',
-             'campus'   => 'required'
+             
         
          ]);
 
@@ -196,16 +218,19 @@ class coursesController extends Controller
         $already = Myclasssubject::where('programclass_id',$request->class_id)
         ->where('course_id',$request->subject_id)
         ->where('semester', $request->semester)
-        ->where('academicyear_id', $request->ay)->first();
+        ->whereNull('academicyear_id')
+        ->first();
+
+        $subject = Course::find($request->subject_id);
         if($already)
         {
-        return redirect(route('class.subjects.withID',$request->class_id))->with('invalid', 'This Subject already assigned to this class');
+        return redirect(route('class.subjects.withID', ['class_id'=>$request->class_id, 'semester'=>$request->semester]))
+        ->with('invalid', 'This Subject'.' '.$subject->name .' '.'already assigned to this class');
         }
         else{
         $myClass = Programclass::find($request->class_id);
        Myclasssubject::create([
         'programclass_id' => $request->class_id,
-        'academicyear_id' => $request->ay,
         'classcode' => $myClass->classcode,
         'course_id' => $request->subject_id,
         'semester' => $request->semester,
@@ -218,8 +243,8 @@ class coursesController extends Controller
        
        ]);
     }
-       $academic = $request->ay;
-       return redirect(route('class.subjects.withID', ['class_id' => $request->class_id, 'ay' => $academic]))->with('message', 'Subject configured successfully');
+       
+       return redirect(route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester]))->with('message', 'Subject'.' '.$subject->name .' '.'configured successfully');
     }
 
     public function addSubjectToStudent()
@@ -239,7 +264,6 @@ class coursesController extends Controller
             $data['mystudents'] = User::where('programclass',$classCode)
             ->where('semester',$data['semester'])
             ->where('campus',$myclass->campus->campus)
-            ->whereNull('academicyear_id')
             ->count();
     
     
@@ -476,7 +500,7 @@ public function soreOldClassSubjects(Request $request)
        // dd($request->subject_id);
         if($already)
         {
-        $data['invalid'] = 'This Subject already assigned to this class';
+        $data['invalid'] = 'This Subject already assigned to this old class';
         return view('admin.grades.assign_modules_to_oldclass', $data);
         //return redirect(route('store.old.class.subjects',$data))->with('invalid', 'This Subject already assigned to this class');
         }

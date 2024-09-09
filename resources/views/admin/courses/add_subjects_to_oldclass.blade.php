@@ -5,7 +5,7 @@
     <head>
         
     <meta charset="utf-8" />
-        <title>MCHS Portal | College Faculties</title>
+        <title>MCHS Portal | Add subjects to old class</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -82,7 +82,7 @@
 <div class="card">
 <div class="card-body">
 
-<h4 class="card-title"><b>Search Class List</b></h4><br>
+<h4 class="card-title"><b>Add Subjects to old class</b></h4><br>
 
 @if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -5,10 +5,10 @@
     <head>
         
     <meta charset="utf-8" />
-        <title>MCHS Portal | Attach subjects to students</title>
+        <title>MCHS Portal | Generate Examination Numbers</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesdesign" name="Andy Chigalu" />
+        <meta content="Themesdesign" name="author" />
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}">
         
@@ -76,149 +76,105 @@
 <!-- start page title -->
 
 
-
-
 <div class="row">
 <div class="col-lg-12">
 
 <div class="card">
-@php 
-$myclass = App\Models\Programclass::find($class)
-@endphp
-
-
-@php
-$mystudents = App\Models\User::where('programclass',$myclass->classcode)
-->where('semester',$semester)
-->where('campus',$myclass->campus->campus)
-->count()
-@endphp
-
-@php
-       $classsubjects = App\Models\Myclasssubject::where('programclass_id', $class)
-      ->where('semester', $semester)
-      ->whereNull('academicyear_id')->get();
-@endphp
-
-
-</div>
-</div>
-</div>
-<!-- end select2 -->
-
-</div>
-
-
-
-
-
-<div class="row">
-<div class="col-lg-12">
-
-<div class="card">
-    
 <div class="card-body">
 
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+<h4 class="mb-sm-0">Examination Numbers</h4>
 
-
-<h4 class="mb-sm-0"></h4>
-
-<div class="page-title-right" style="margin-right: 25px; float: right;">
-
-<div class="btn-group">
-<a href="{{route('add.subject.to.students')}}">
-<button type="button" class="btn btn-secondary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back&nbsp;&nbsp;</button> 
-</a>
-</div>
-
-@if ($classsubjects->isEmpty())
-&nbsp;&nbsp;<i style="color: red;">No subjects assigned to this class yet.</i>
-@else
-
+<div class="page-title-right">
 <div class="btn-group">
 <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
-aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
-</button>&nbsp;&nbsp;&nbsp;&nbsp;
+aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+</button>&nbsp;&nbsp;
 <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Exel</a>
-    <a class="dropdown-item" href="#">PDF</a>
-   
+<a class="dropdown-item" href="#">Exel</a>
+<a class="dropdown-item" href="#">PDF</a>
 </div>
-<a href="{{ route('allocate.subjects.to.students', ['class' =>$myclass->id, 'semester' =>$semester, 'campus' =>$myclass->campus_id ]) }}">
-<button type="button" class="btn btn-warning"><i class="fas fa-users" data-bs-toggle="dropdown"></i>&nbsp;&nbsp;Assign Subjects to Students&nbsp;&nbsp;</button>
-</a>
 
+<ul class="breadcrumb m-0">
+<a href="{{route('student.exam.numbers')}}">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+</ul>
+
+
+
+
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+<h4 class="card-title">Generate Examination Numbers for:&nbsp;<b>{{$pcode}}</b>&nbsp;Campus: <b>{{$pcampus}}</b> Semester: <b>{{$semester}}</b></h4><br>
+
+<span class="badge rounded-pill bg-info fs-5"> Total number of students: &nbsp;{{$count}} &nbsp;</span>
+<br><br>
+@if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 @endif
 
+@if(session()->has('invalid'))
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<br><br>
+@endif
+<form action="{{route('generate.exam.numbers', ['pcode'=>$pcode, 'pcampus'=>$pcampus, 'semester'=>$semester, 'count'=>$count, 'already'=>10])}}" method="post" enctype="" >
+@csrf
 
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <!-- end page title -->
-           
+                    <div class="row">
+                    <div class="form-group col-md-4">
+                    <label for=""><b>&nbsp;&nbsp;Examination Number Range From:</b></label>
+                    <div class="card bg-light text-dark">
+                        
+                    <div class="card-body" >
+                   <input type="text" name="min" class="form-control" min="1" required value="{{ old('min') }}">
+                    </div>
+                    </div>
+                    </div>
 
 
+                    <div class="form-group col-md-4">
+                    <label for=""><b>&nbsp;&nbsp;Examination Number Range to:</b></label>
+                        <div class="card bg-light text-dark">
+                        
+                    <div class="card-body">
+                    <input type="text" name="max" class="form-control" min="1" required value="{{ old('max') }}">
+                    </div>
+                    </div>
+                    </div>
 
-<div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                           
-                                
- <div class="page-title-right" style="margin-left: 20px; float: right;">
+                    
+                    <div class="form-group col-md-4">
+                    <label for="" ></label>
+                        <div class="card bg-light text-dark">
+                        
+                    <div class="card-body">
+                    <button class="btn btn-info w-100" type="submit" style="margin-top: 8px;">Generate</button>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
 
-<h4> @if(!empty($myclass->classcode))
-                    <h4 class="card-title"><b style="color: #69514B;">{{$myclass->classcode}} - @if($myclass->campus_id==1) LL @endif 
-                            @if($myclass->campus_id==2) BT @endif
-                            @if($myclass->campus_id==3) ZA @endif | Semester: </b>{{$semester}}</h4>
-                    @endif</h4>
+</form>
 
- </div>
-
-                                    <div class="card-body">
- 
-                                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                            <thead>
-                                            <tr style="background-color:#e6e6e6;">
-                                                <th>#</th>
-                                                <th>Class</th>
-                                                <th>Code</th>
-                                                <th>Subject Name</th>
-                                                <th>Semester</th>
-                                                <th>Students</th>
-                                                
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>         
-                                            @if(!empty($classsubjects ))    
-                                            @php $id = 0 @endphp <!-- Move the initialization outside of the loop -->
-                                                            @foreach($classsubjects as $subjects)
-                                                            <tr>
-                                                              
-                                                                <td>{{ ++$id }}</td>
-                                                                <td>{{$subjects->programclass->classcode}}</td>
-                                                                <td>{{$subjects->course->code}}</td>
-                                                                <td>{{$subjects->course->name}}</td>
-                                                                @if(!empty($semester))
-                                                                <td>{{$semester}}</td>
-                                                                @endif
-                                                                <td><span class="badge rounded-pill bg-success">{{$mystudents}}</span></td>
-
-                                                            </tr>
-
-                                            @endforeach
-                                            @endif
-                                            </tbody>
-                                        </table>
-        
-                                    </div>
-                                </div>
-                            </div> <!-- end col -->
-                        </div> <!-- end row -->
 
 
 </div>
@@ -232,7 +188,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
 
 
-</div>
+
 <!-- end row -->
 
 <!-- end row -->
@@ -273,7 +229,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
         <!-- Right bar overlay-->
         <div class="rightbar-overlay"></div>
   <!-- JAVASCRIPT -->
-        <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
+  <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
         <script src="{{asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{asset('assets/libs/metismenu/metisMenu.min.js')}}"></script>
         <script src="{{asset('assets/libs/simplebar/simplebar.min.js')}}"></script>

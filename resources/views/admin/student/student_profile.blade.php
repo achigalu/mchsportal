@@ -514,7 +514,7 @@
 
     <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Phone(If you have two)</label>
+                <label class="form-label">Phone (Optional)</label>
                 <input class="form-control" name="student_phone2" type="text" placeholder="" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
             </div>   
@@ -522,7 +522,7 @@
 
     <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Email(If you have one)</label>
+                <label class="form-label">Email (Optional)</label>
                 <input class="form-control" name="student_email" type="email" placeholder="" id="validationCustom01">
                 @error('fname') <span class="text-danger">{{$message}}</span> @enderror
             </div>   
