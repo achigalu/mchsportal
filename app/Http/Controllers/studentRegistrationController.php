@@ -384,11 +384,14 @@ if($classcode)
                   ->where('campus', $campus)
                   ->where('semester', $request->semester)->get();
 
+if($data['students']->isEmpty())
+{
+  return redirect()->route('student.exam.numbers')
+  ->with('invalid', 'Currently no students found for:'.' ' .$classcode.' | '.$campus. ' '.'Semester:'.$request->semester );
+}
+
 
   $singleStu = $data['students']->first();
-
-     
-      
       
       if($data['students']->isNotEmpty())
       {
