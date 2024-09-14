@@ -82,16 +82,21 @@
                                     </div>
                                 </div>
     
-                                <div class="form-group mb-0 row mt-2">
-                                    <div class="col-sm-7 mt-3">
+                                <div class="form-group mb-0 row mt-0">
+                                    <div class="col-sm-7 mt-1">
                                     @if (Route::has('password.request'))
-                                        <a href="{{ route('password.request') }}" class="text-muted"><i class="mdi mdi-lock"></i> Forgot your password?</a>
+                                        <a href="{{ route('password.request') }}" class="text-muted"><i class="mdi mdi-lock text-info"></i> Forgot your password?</a>
                                     @endif
                                     </div>
-                                    <div class="col-sm-5 mt-3">
-                                        <a href="{{route('register')}}" class="text-muted"><i class="mdi mdi-account-circle"></i> Apply for a Course</a>
+                                    <div class="col-sm-5 mt-1">
+                                        <a href="{{route('register')}}" class="text-muted"><i class="mdi mdi-account-circle text-info"></i> Apply for a Course</a>
                                     </div>
                                 </div>
+
+                                <br>
+                            <div class="col-sm-8 text-center">
+                            <i class="mdi mdi-view-dashboard text-primary text-center"></i> Crafted with <i class="mdi mdi-heart text-danger text-center"></i> by MCHS ICT Team.
+                            </div>
 
                             </form>
                         </div>

@@ -10,6 +10,8 @@ use App\Models\Course;
 use App\Models\lecturerSubjects;
 use App\Models\Studentsubject;
 use Illuminate\Http\Request;
+use App\Models\savedExamNumbers;
+use App\Models\classExaMNumbers;
 
 class studentRegistrationController extends Controller
 {
@@ -382,19 +384,97 @@ if($classcode)
                   ->where('campus', $campus)
                   ->where('semester', $request->semester)->get();
 
-      $singlestudent = $data['students']->first();          
-      $data['count'] = $data['students']->count();
-      $data['classcampus'] = $campus1;
-      $data['classcode'] = $classcode;
-      $data['semester'] = $request->semester;
-      $data['academic_yr'] = $singlestudent->academicyear_id;
-      $data['title'] = 'Class List for Exam Numbers';
+
+  $singleStu = $data['students']->first();
+
+     
+      
       
       if($data['students']->isNotEmpty())
       {
-        $data['singleStudent'] = $data['students']->first();
-        //dd($data['students']);
-        return view('admin.registration.class_list_for_exam_numbers', $data);
+
+        $singlestudent = $data['students']->first();          
+        $data['count'] = $data['students']->count();
+        $data['classcampus'] = $campus1;
+        $data['campus'] = $campus;
+        $data['classcode'] = $classcode;
+        $data['semester'] = $request->semester;
+        $data['academic_yr'] = $singlestudent->academicyear_id;
+        $data['title'] = 'Class List for Exam Numbers';
+
+       // return view('admin.registration.class_list_for_exam_numbers', $data);
+
+        $already = savedExamNumbers::where('pcode', $classcode)
+        ->where('campus', $campus)
+        ->where('semester', $request->semester)
+        ->where('acdyear', $singleStu->academicyear_id)
+        ->get();
+
+        $data['alreadySaved'] = $already;
+
+        if($already->isNotEmpty())
+        {
+          
+          $data['title']='Students exam numbers.';
+          $data['singleStudent'] = $singleStu;
+          return view('admin.examnumbers.saved_exam_numbers', $data);
+          
+          
+          /// Exam numbers already saved no need to regenerate JUST VIEW REG NUMBERS
+          //return view('admin.registration.class_list_for_exam_numbers', $data);
+        }
+
+        $generated = classExaMNumbers::where('pcode',$classcode)
+        ->where('pcampus', $campus)
+        ->where('semester', $request->semester)
+
+
+          // ->where('academic_yr', $academic_yr) // no need content to be deleted at every end of semester and insered into
+          // another table for references
+        ->get(); // academic year.
+
+
+        if($generated->isNotEmpty())
+        {
+          $examNumbers = classExaMNumbers::where('pcode',$classcode)
+            ->where('pcampus', $campus)
+            ->where('semester', $request->semester)
+              // ->where('academic_yr', $academic_yr) // no need content to be deleted at every end of semester and insered into
+              // another table for references
+            ->get(); // academic year.
+
+            $data['students'] = User::where('programclass', $classcode)
+            ->where('campus', $campus)
+            ->where('semester',$request->semester)->get();
+
+            $data['singleStudent'] = $data['students']->first();
+
+            if($examNumbers->isNotEmpty())
+            {
+                $data['title']='Class exam numbers';
+                $data['pcode']=$classcode;
+                $data['pcampus']=$campus;
+                $data['semester']=$request->semester;
+               // $data['count']=$count;
+                $data['stuWithExamNumbers']=$examNumbers;
+                
+              
+
+                return view('admin.registration.class_list_for_exam_numbers', $data);
+            }
+          /// regenerate numbers
+          //return view('admin.registration.class_list_for_exam_numbers', $data);
+        }
+        else
+        {
+          return redirect()->route(
+        'get.exam.numbers', ['pclass'=>$classcode, 'pcampus'=>$campus, 
+        'semester'=>$request->semester,
+        'count'=>$data['count']]
+        ); // redirect to generate exam numbers
+          
+        }
+
       }
       else
       {
@@ -406,4 +486,56 @@ if($classcode)
 
 
   }
+
+//   public function ExamSearchStudents2($pcode, $campus, $semester, $count, $saved)
+//   {
+ 
+// if($pcode) 
+// {
+//   $data['students'] = User::where('programclass', $pcode)
+//                   ->where('campus', $campus)
+//                   ->where('semester', $semester)->get();
+
+
+//   $singleStu = $data['students']->first();
+
+//       $singlestudent = $data['students']->first(); 
+
+//       $data['count'] = $data['students']->count();
+//       $data['classcampus'] = $campus;
+//       $data['classcode'] = $pcode;
+//       $data['semester'] = $semester;
+//       $data['academic_yr'] = $singleStu->academicyear_id;
+//       $data['title'] = 'Class List for Exam Numbers';
+      
+//       if($data['students']->isNotEmpty())
+//       {
+
+       
+
+//         $notSaved = classExaMNumbers::where('pcode',$pcode)
+//         ->where('pcampus', $campus)
+//         ->where('semester', $semester)
+//           // ->where('academic_yr', $academic_yr) // no need content to be deleted at every end of semester and insered into
+//           // another table for references
+//         ->get(); // academic year.
+
+// //dd($pcode, $campus, $semester, $singleStu->academicyear_id);
+
+//        $data['NotSavedNum'] = $notSaved;
+
+//         $data['singleStudent'] = $data['students']->first();
+//         //dd($data['students']);
+//         return view('admin.registration.class_list_for_exam_numbers', $data);
+//       }
+//       else
+//       {
+//         return redirect()->back()->with('invalid', 'Currently no students found');
+//       }
+
+// }
+
+
+
+//   }
 }

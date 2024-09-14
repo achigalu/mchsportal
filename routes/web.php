@@ -231,6 +231,7 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/class/list', 'classList')->name('class.list');
     Route::post('/search/students/', 'searchStudents')->name('search.student');
     Route::post('/exam/search/students/', 'ExamSearchStudents')->name('exam.search.student');
+    Route::get('/examination/search/students/{pcode}/{pcampus}/{semester}/{count}/{saved}', 'ExamSearchStudents2')->name('examination.search.student');
     Route::get('/module/register', 'moduleRegister')->name('module.register');
     Route::get('/students/confirmation', 'studentsConfirmation')->name('students.confirmation');
     Route::post('/modules/to/students', 'modulesToStudents')->name('modules.to.students');
@@ -284,7 +285,8 @@ Route::controller(examnumbersController::class)->group(function(){
     Route::get('/get/exam/numbers/{pclass}/{pcampus}/{semester}/{count}', 'getExamNumbers')->name('get.exam.numbers');
     Route::post('/generate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'generateExamNumbers')->name('generate.exam.numbers');
     Route::get('/view/class/examnumbers/{pcode}/{pcampus}/{semester}/{count}/{saved}', 'viewClassExamNumbers')->name('view.class.examnumbers');
-    Route::get('/save/class/generated/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'saveClassGenerateExamNumbers')->name('save.class.regenerated.exam.numbers');
+    Route::get('/save/class/generated/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'saveClassGeneratedExamNumbers')->name('save.class.regenerated.exam.numbers');
+    Route::get('/delete/exam/numbers/list/{pclass}/{pcampus}/{semester}/{count}', 'deleteExamNumbersList')->name('delete.exam.numbers.list');
     
     Route::get('/regenerate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'regenerateExamNumbers')->name('regenerate.exam.numbers');
     

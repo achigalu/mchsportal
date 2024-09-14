@@ -83,7 +83,7 @@
 $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 @endphp
 
-
+@endif
 
 <div class="row">
 <div class="col-lg-12">
@@ -99,19 +99,23 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 <div class="page-title-right">
 <div class="btn-group">
 
-
 <ul class="breadcrumb m-0">
 
-<a href="{{route('get.exam.numbers', ['pclass'=>$singleStudent->programclass, 'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
-<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Generate Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{{route('student.exam.numbers')}}">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
+
+<a href="{{route('regenerate.exam.numbers', ['pcode'=>$singleStudent->programclass,
+'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Re-generate Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+<a href="{{route('save.class.regenerated.exam.numbers', ['pcode'=>$singleStudent->programclass,
+'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
+<li class="btn btn-info"><i class="mdi mdi-content-save-all"></i>&nbsp;&nbsp;Save</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+
 </ul>
 
-<ul class="breadcrumb m-0">
-<a href="#">
-<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Exam Numbers for Current Semester</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</a>
-</ul>
 
 </div>
 
@@ -119,6 +123,7 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 </div>
 </div>
 </div>
+
 
                         <!-- end page title -->
 
@@ -136,7 +141,7 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
                                         
                                          Semester: &nbsp;
                                         <span class="badge rounded-pill bg-info fs-5"> {{$singleStudent->semester}} &nbsp;</span></h4><br>
-                                    @endif
+                                    
         
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
@@ -146,25 +151,43 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
                                                 <th>Full Name</th>
                                                 <th>Gender</th>
                                                 <th>Status</th>
-                                                <th>Student Details</th>
+                                                <th>Exam Numbers</th>
                                             </tr>
                                             </thead>
-        
+
+                  @php
+                  $studentWithNumber = App\Models\User::where('programclass', $pcode)
+                  ->where('campus', $pcampus)
+                  ->where('semester', $semester)->get();
+                  @endphp
+
         
                                             <tbody>
                                         
-                                          @foreach($students as $student)
-                                            <tr>
-                                                <td>
-                                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/2.jpg')}}">
-                                                </td>
-                                                <td>{{$student->reg_num}}</td>
-                                                <td>{{$student->fname}} {{$student->lname}}</td>
-                                                <td>{{$student->gender}}</td>
-                                                <td>Active</td>
-                                                <td><a href="#"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a></td> 
-                                            </tr>
-                                            @endforeach
+                                            @foreach($stuWithExamNumbers as $studentExam)
+    <tr>
+        <td>
+            <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/2.jpg')}}">
+        </td>
+        <td>{{ $studentExam->reg_num }}</td>
+
+        @php
+            // Find the matching student from $studentWithNumber based on reg_num
+            $matchingStudent = $studentWithNumber->firstWhere('reg_num', $studentExam->reg_num);
+        @endphp
+
+        @if($matchingStudent)
+            <td>{{ $matchingStudent->fname }} {{ $matchingStudent->lname }}</td>
+            <td>{{ $matchingStudent->gender }}</td>
+        @else
+            <td>Not found</td>
+            <td>Not found</td>
+        @endif
+
+        <td>Active</td>
+        <td>{{ $studentExam->exam_number }}</td>
+    </tr>
+@endforeach
                                             
                                             </tbody>
                                         </table>

@@ -4,7 +4,7 @@
 
     <head>
         
-        <meta charset="utf-8" />
+    <meta charset="utf-8" />
         <title>MCHS Portal | {{$title}}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
@@ -17,6 +17,14 @@
         <link href="{{asset('assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
         <link href="{{asset('assets/libs/datatables.net-select-bs4/css//select.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
 
+        <!-- Plugins -->
+        <link href="{{asset('assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css">
+
+        <link href="{{asset('assets/libs/bootstrap-datepicker/css/bootstrap-datepicker.min.css')}}" rel="stylesheet">
+
+        <link href="{{asset('assets/libs/spectrum-colorpicker2/spectrum.min.css')}}" rel="stylesheet" type="text/css">
+
+        <link href="{{asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet">
         <!-- Responsive datatable examples -->
         <link href="{{asset('assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />     
 
@@ -26,7 +34,7 @@
         <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="{{asset('assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
-    </head>
+            </head>
 
     <body data-topbar="dark">
     
@@ -63,102 +71,122 @@
             <div class="main-content">
 
             <div class="page-content">
-                    <div class="container-fluid">
+            <div class="container-fluid">
 
-                        <!-- start page title -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Lecturer Modules</h4>
+<!-- start page title -->
 
-                                    <div class="page-title-right">
-                                    <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
-aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;</button>
-</button>&nbsp;&nbsp;
-<div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Exel</a>
-    <a class="dropdown-item" href="#">PDF</a>
-   
+
+
+
+@if(!empty($singleStudent))
+@php 
+$acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
+@endphp
+@endif
+
+
+<div class="row">
+<div class="col-lg-12">
+
+<div class="card">
+    
+<div class="card-body">
+<div class="row">
+<div class="col-12">
+<div class="page-title-box d-sm-flex align-items-center justify-content-between">
+<h4 class="mb-sm-0">{{$title}}</h4>
+
+<div class="page-title-right">
+<div class="btn-group">
+
+<ul class="breadcrumb m-0">
+
+<a href="{{route('student.exam.numbers')}}">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+
+<a href="{{route('get.exam.numbers', ['pclass'=>$singleStudent->programclass,
+'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
+<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Download List</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+
+<a href="{{route('delete.exam.numbers.list', ['pclass'=>$singleStudent->programclass,
+'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
+<li class="btn btn-outline-danger"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Delete Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</a>
+
+</ul>
+
+
 </div>
-                                        <ul class="breadcrumb m-0">
-                                        <a href="{{route('myhome')}}">
-                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </a>
-                                        </ul>
-                                    </div>
 
-                                </div>
-                            </div>
-                        </div>
+</div>
+</div>
+</div>
+</div>
+
                         <!-- end page title -->
-                        
-                        <div class="row">
+
+
+
+
+<div class="row">
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-        
+                                   
+
+                                    
+                                        <h4 class="card-title">Result for Class: &nbsp;<span class="badge rounded-pill bg-info fs-5"> {{$singleStudent->programclass}} - {{$singleStudent->campus}} &nbsp;</span>
                                         
+                                         Semester: &nbsp;
+                                        <span class="badge rounded-pill bg-info fs-5"> {{$singleStudent->semester}} &nbsp;</span></h4><br>
+                              
+        
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
-                                            <tr style="background-color: #f0f0f0;">
-                                                <th>#</th>
-                                                <th>Code</th>
-                                                <th>Module Name</th>
-                                                <th>Class</th>
-                                                <th>Semester</th>
-                                                <th># of students</th>
-                                                <th style="float: right;">Actions</th>
-                                                
+                                            <tr style="background-color:#e6e6e6;">
+                                                <th>Photo</th>
+                                                <th>Student#</th>
+                                                <th>Full Name</th>
+                                                <th>Gender</th>
+                                                <th>Status</th>
+                                                <th>Exam Numbers</th>
                                             </tr>
                                             </thead>
         
-        
+                 @php
+                  $studentWithNumber = App\Models\User::where('programclass', $classcode)
+                  ->where('campus', $campus)
+                  ->where('semester', $semester)->get();
+                  @endphp
                                             <tbody>
-                                            
-                                            @php
-                                            $count = 0
-                                            @endphp
-                                    @if(!empty($lecturerCourses))
-                                            @foreach($lecturerCourses as $course)
-                                            <tr>
-                                                <td style="width: 5px;">{{++$count}}</td>
-                                                @php 
-                                                $lcourse = App\Models\Course::find($course->courseid)
-                                                @endphp
-                                                <td style="width: 20px;">{{$lcourse->code}} </td>
-                                                <td>{{$lcourse->name}}</td>
-                                                <td style="width: 12px;">
-                                                @php
-                                                $class = App\Models\Programclass::where('id' ,$course->classid)->first() 
-                                                @endphp
-                                                {{$class->classcode}} - 
-                                                @if($class->campus_id==1) LL @endif
-                                                @if($class->campus_id==2) BT @endif 
-                                                @if($class->campus_id==3) ZA @endif
-                                                </td>
-                                                <td style="width: 12px;">{{$course->semester}}</td>
-                                                <td style="width: 30px;">
-                                               
-                                                @php 
-                                                $students = App\Models\Studentsubject::where('programclass_id', $course->classid)
-                                                ->where('semester', $course->semester)
-                                                ->where('campus_id', $course->campus_id)
-                                                ->where('course_code', $lcourse->code)->count()
-                                                @endphp
-                                                {{$students}}
-                                                </td>
-                                                
-                                                <td style="width: 30px;">
-                                                <a href=""><button class="btn btn-outline-warning" style="float: right;">Notices</button></a><br><br>
-                                                <a href="{{route('list.assessments', $course->id)}}"><button class="btn btn-outline-info" style="float: right;">Assessments</button></a>
-                                                </td>
-                                            </tr>
-                                            @endforeach 
-                                    @endif   
-                                            
-                                           
-                                     
+                                        
+     @foreach($alreadySaved as $student)
+    <tr>
+        <td>
+            <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/2.jpg')}}">
+        </td>
+        <td>{{ $student->reg_num }}</td>
+
+        @php
+            // Find the matching student from $studentWithNumber
+            $matchingStudent = $studentWithNumber->firstWhere('reg_num', $student->reg_num);
+        @endphp
+
+        @if($matchingStudent)
+            <td>{{ $matchingStudent->fname }} {{ $matchingStudent->lname }}</td>
+            <td>{{ $matchingStudent->gender }}</td>
+        @else
+            <td>Not found</td>
+            <td>Not found</td>
+        @endif
+
+        <td>Active</td>
+        <td>{{ $student->exam_number }}</td>
+    </tr>
+@endforeach
+
                                             
                                             </tbody>
                                         </table>
@@ -168,11 +196,43 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                             </div> <!-- end col -->
                         </div> <!-- end row -->
 
-                        <!-- end row-->
-                        
-                    </div> <!-- container-fluid -->
-                </div>
+
+</div>
+</div>
+</div>
+<!-- end select2 -->
+
+</div>
+
+
+
+
+
+</div>
+<!-- end row -->
+
+<!-- end row -->
+
+
+
+
+
+
+
+
+
+
+   <!-- start page title -->
+
+
+<!-- end row -->
+
+</div> <!-- container-fluid -->
+                    
+            </div>
                     <!-- End Page-content -->
+
+                    
                     @include('admin.layout.footer')
 
                     </div>
@@ -188,12 +248,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
         <!-- Right bar overlay-->
         <div class="rightbar-overlay"></div>
-
-        <!-- JAVASCRIPT -->
-
-
-        <!-- JAVASCRIPT -->
-        <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
+  <!-- JAVASCRIPT -->
+  <script src="{{asset('assets/libs/jquery/jquery.min.js')}}"></script>
         <script src="{{asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{asset('assets/libs/metismenu/metisMenu.min.js')}}"></script>
         <script src="{{asset('assets/libs/simplebar/simplebar.min.js')}}"></script>
@@ -202,6 +258,15 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
         <!-- Required datatable js -->
         <script src="{{asset('assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+        <script src="{{asset('assets/libs/select2/js/select2.min.js')}}"></script>
+        <script src="{{asset('assets/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js')}}"></script>
+        <script src="{{asset('assets/libs/spectrum-colorpicker2/spectrum.min.js')}}"></script>
+        <script src="{{asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js')}}"></script>
+        <script src="{{asset('assets/libs/admin-resources/bootstrap-filestyle/bootstrap-filestyle.min.js')}}"></script>
+        <script src="{{asset('assets/libs/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+
+        <script src="{{asset('assets/js/pages/form-advanced.init.js')}}"></script>
         <!-- Buttons examples -->
         <script src="{{asset('assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
         <script src="{{asset('assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js')}}"></script>
@@ -218,11 +283,15 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
         <!-- Responsive examples -->
         <script src="{{asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
         <script src="{{asset('assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js')}}"></script>
+        
 
         <!-- Datatable init js -->
         <script src="{{asset('assets/js/pages/datatables.init.js')}}"></script>
 
         <script src="{{asset('assets/js/app.js')}}"></script>
+
+
+        
 
     </body>
 
