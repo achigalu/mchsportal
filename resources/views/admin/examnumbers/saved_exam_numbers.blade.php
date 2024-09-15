@@ -97,7 +97,17 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 <h4 class="mb-sm-0">{{$title}}</h4>
 
 <div class="page-title-right">
+
 <div class="btn-group">
+<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
+aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+</button>&nbsp;&nbsp;
+<div class="dropdown-menu">
+<a class="dropdown-item" href="{{route('view.exam.numbers.inexcel', ['pclass'=>$singleStudent->programclass,
+'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count, 'acdyear'=>$singleStudent->academicyear_id])}}"><span class="mdi mdi-file-excel" style="color: green;"></span>&nbsp; Exel</a>
+<a class="dropdown-item" href="{{route('view.exam.numbers.inpdf', ['pclass'=>$singleStudent->programclass,
+'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count, 'acdyear'=>$singleStudent->academicyear_id])}}"><span class="mdi mdi-file-pdf-box" style="color: red;"></span>&nbsp; PDF</a>
+</div>
 
 <ul class="breadcrumb m-0">
 
@@ -105,15 +115,9 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 <li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 
-<a href="{{route('get.exam.numbers', ['pclass'=>$singleStudent->programclass,
-'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
-<li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Download List</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</a>
 
-<a href="{{route('delete.exam.numbers.list', ['pclass'=>$singleStudent->programclass,
-'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
-<li class="btn btn-outline-danger"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Delete Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</a>
+<li class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteExamNumbers"><span class="mdi mdi-delete-circle"></span>&nbsp;&nbsp;Delete Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 </ul>
 
@@ -213,7 +217,46 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 
 <!-- end row -->
 
+<!-- MODAL START -->
 
+
+<div class="col-sm-6 col-md-4 col-xl-3">
+                                                <div class="my-4 text-center">
+                                                   
+                                                </div>
+        
+                                                <div class="modal fade" id="deleteExamNumbers" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Examination Numbers.</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                           
+                                                            <div class="modal-body">
+                                                               Are you sure you want to delete Exam Numbers for class: <br>
+                                                               <span class="badge rounded-pill bg-info fs-5">{{$singleStudent->programclass}}&nbsp;</span>
+                                                               <span class="badge rounded-pill bg-info fs-5">{{$singleStudent->campus}}&nbsp;</span> Semester: 
+                                                               <span class="badge rounded-pill bg-info fs-5">{{$singleStudent->semester}}&nbsp;</span>
+                                                               
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">No</button>
+
+                                                                <a href="{{route('delete.exam.numbers.list', ['pclass'=>$singleStudent->programclass,
+                                                                'pcampus'=>$singleStudent->campus, 'semester'=>$singleStudent->semester, 'count'=>$count])}}">
+
+                                                                <button type="submit" class="btn btn-danger waves-effect waves-light">Delete</button>
+                                                                </a>
+                                                                
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
+                                            </div>
+
+
+<!-- MODAL END -->
 
 
 

@@ -1,0 +1,70 @@
+/* Headings and General Styles */
+h4 {
+    margin: 0;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.w-half {
+    width: 50%;
+}
+
+.margin-top {
+    margin-top: 1.25rem;
+}
+
+/* Footer Styling */
+.footer {
+    font-size: 0.875rem;
+    padding: 1rem;
+    background-color: rgb(241, 245, 249);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse; /* Improved to remove spacing between borders */
+}
+
+/* Product Table Styling */
+table.products {
+    font-size: 0.875rem;
+    border: 1px solid #e5e7eb; /* Add a light border for better visibility */
+}
+
+table.products tr {
+    background-color: rgb(96, 165, 250);
+}
+
+table.products th {
+    color: #ffffff;
+    padding: 0.75rem; /* Increased padding for better readability */
+    text-align: center; /* Align text for better structure */
+    border-bottom: 2px solid #ffffff; /* Added bottom border for header */
+}
+
+/* Alternating Row Colors for Items */
+table tr.items:nth-child(odd) {
+    background-color: rgb(241, 245, 249); /* Light background for odd rows */
+}
+
+table tr.items:nth-child(even) {
+    background-color: rgb(255, 255, 255); /* Slightly darker background for even rows */
+}
+
+/* Cell Padding */
+table tr.items td {
+    padding: 0.75rem; /* Increased padding for better cell structure */
+    border-bottom: 1px solid #e5e7eb; /* Light border between rows */
+}
+
+/* Total Section Styling */
+.total {
+    text-align: right;
+    margin-top: 1rem;
+    font-size: 1rem; /* Slightly larger font size for emphasis */
+    font-weight: bold; /* Bold text to highlight total */
+}

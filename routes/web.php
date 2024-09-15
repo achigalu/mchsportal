@@ -25,7 +25,8 @@ use App\Http\Controllers\permissionController;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\roleController;
 use App\Http\Controllers\gradeController;
-
+use  App\Http\Controllers\pdfController;
+use App\Http\Controllers\excelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -289,9 +290,16 @@ Route::controller(examnumbersController::class)->group(function(){
     Route::get('/delete/exam/numbers/list/{pclass}/{pcampus}/{semester}/{count}', 'deleteExamNumbersList')->name('delete.exam.numbers.list');
     
     Route::get('/regenerate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'regenerateExamNumbers')->name('regenerate.exam.numbers');
-    
-    
-    
+
+});
+
+Route::controller(pdfController::class)->group(function(){
+    Route::get('/view/examnumbers/in-pdf/{pclass}/{pcampus}/{semester}/{count}/{acdyear}', 'viewExamNumbersPDF')->name('view.exam.numbers.inpdf');
+
+});
+Route::controller(excelController::class)->group(function(){
+    Route::get('/view/examnumbers/in-excel/{pclass}/{pcampus}/{semester}/{count}/{acdyear}', 'viewExamNumbersEXCEL')->name('view.exam.numbers.inexcel');
+
 });
 
 
