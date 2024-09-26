@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | Add Faculty</title>
+        <title>MCHS Portal | Edit Faculty</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="MCHS>COM, add faculty" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -88,10 +88,27 @@
 <div class="card">
 <div class="card-body">
 
+@if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session()->has('invalid'))
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 <h4 class="card-title">EDit Faculty</h4>
 <p class="card-title-desc">Every program supposed to be attached to a faculty</p>
 
-<form>
+<form action="{{route('update.faculty')}}" method="POST">
+    @csrf
     <div class="row">
         <div class="col-lg-12">
 
@@ -99,13 +116,14 @@
             <label class="form-label">Faculty Name</label>
                     
                     <div class="col-sm-12">
-                        <input class="form-control" type="text" value="{{$faculty->faculty_name}}" id="example-text-input">
+                        <input class="form-control" type="text" name="facultyname" value="{{$faculty->faculty_name}}" id="example-text-input">
+                        <input type="text" name="facultyID" value="{{$faculty->id}}" hidden />
                     </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Dean of Faculty</label>
-                <select class="form-control select2">
+                <select class="form-control select2" name="userID">
                     
                     @foreach($allUsers as $user)
                         <option {{($faculty->user->id == $user->id)? 'selected' : ""}} value="{{$user->id}}">{{$user->fname}} {{$user->lname}}</option>
@@ -131,7 +149,7 @@
         
     </div>
 
-</form>
+
 
 </div>
 </div>
@@ -144,12 +162,13 @@
 <!-- end row -->
 
 &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Submit</button> &nbsp;&nbsp;
+</form>     
 <a href="{{route('view.faculty')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
 
 <!-- end row -->
 
 </div> <!-- container-fluid -->
-                    
+             
             </div>
                     <!-- End Page-content -->
                     @include('admin.layout.footer')

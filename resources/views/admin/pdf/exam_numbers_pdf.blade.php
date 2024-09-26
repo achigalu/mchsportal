@@ -14,7 +14,7 @@
             <img src="{{ public_path('assets/images/users/3.jpg') }}" alt="Examination Number PDF" height="90" width="90" />
             </td>
             <td class="w-half">
-                <h2>Invoice ID: 834847473</h2>
+                <h2>MCHS Invoice ID: 834847473</h2>
             </td>
         </tr>
     </table>
@@ -24,13 +24,13 @@
             <tr>
                 <td class="w-half">
                     <div><h4>To:</h4></div>
-                    <div>John Doe</div>
-                    <div>123 Acme Str.</div>
+                    <div>Mike Banda</div>
+                    <div>C/O Masintha CCAP. BOX 87, LILONGWE</div>
                 </td>
                 <td class="w-half">
                     <div><h4>From:</h4></div>
-                    <div>Laravel Daily</div>
-                    <div>London</div>
+                    <div>MCHS</div>
+                    <div>Cental Office</div>
                 </td>
             </tr>
         </table>
@@ -39,9 +39,9 @@
     <div class="margin-top">
         <table class="products">
             <tr>
-                <th>Qty</th>
-                <th>Description</th>
-                <th>Price</th>
+                <th>CLASS</th>
+                <th>CAMPUS</th>
+                <th>NO of Students</th>
             </tr>
             <tr class="items">
                 
@@ -88,12 +88,12 @@
     </div>
  
     <div class="total">
-        Total: $129.00 USD
+        Total: MK 800,000
     </div>
  
     <div class="footer margin-top">
         <div>Thank you</div>
-        <div>&copy; Laravel Daily</div>
+        <div>&copy; MCHS Accounts</div>
     </div>
 </body>
 </html>

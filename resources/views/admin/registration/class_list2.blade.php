@@ -162,7 +162,10 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                                                 <td>{{$student->fname}} {{$student->lname}}</td>
                                                 <td>{{$student->gender}}</td>
                                                 <td>Active</td>
-                                                <td><a href="#"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a></td> 
+
+                                                <td><a href="#"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a> &nbsp;
+                                                
+                                            </td> 
                                             </tr>
                                             @endforeach
                                             

@@ -141,12 +141,13 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                                    
 
                                     
-                                        <h4 class="card-title">Result for Class: &nbsp;<span class="badge rounded-pill bg-info fs-5"> {{$singleStudent->programclass}} - {{$singleStudent->campus}} &nbsp;</span>
+                                        <h4 class="card-title">Exam Numbers for Class: &nbsp;<span class="badge rounded-pill bg-info fs-6"> {{$singleStudent->programclass}} - {{$singleStudent->campus}} &nbsp;</span>
                                         
                                          Semester: &nbsp;
-                                        <span class="badge rounded-pill bg-info fs-5"> {{$singleStudent->semester}} &nbsp;</span></h4><br>
+                                        <span class="badge rounded-pill bg-info fs-6"> {{$singleStudent->semester}} &nbsp;</span></h4><br>
                               
-        
+                     <form action="{{route('student.fee.checkbox')}}" method="POST">
+                                        @csrf
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color:#e6e6e6;">
@@ -154,8 +155,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                                                 <th>Student#</th>
                                                 <th>Full Name</th>
                                                 <th>Gender</th>
-                                                <th>Status</th>
                                                 <th>Exam Numbers</th>
+                                                <th>Fees Status</th>
+                                                
                                             </tr>
                                             </thead>
         
@@ -186,14 +188,19 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
             <td>Not found</td>
         @endif
 
-        <td>Active</td>
         <td>{{ $student->exam_number }}</td>
-    </tr>
-@endforeach
+        <td>
+                    <input type="checkbox" name="students[]" value="{{ $student->id }}" 
+                    {{($student->fee_status==1) ? 'checked' : '' }}/>
+                </td>
+            </tr>
+        @endforeach
+    </table>
+<div class="text-center">
+    <button class="btn btn-outline-info">Submit</button>
+</div>
 
-                                            
-                                            </tbody>
-                                        </table>
+</form>
         
                                     </div>
                                 </div>

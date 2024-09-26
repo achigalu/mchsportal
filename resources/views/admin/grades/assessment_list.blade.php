@@ -85,12 +85,15 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Assessment list: ( {{$coursename->code}} - {{$coursename->name}}) | {{$class->classcode}} - 
+                                    <h4 class="mb-sm-0">Assessment list: 
+                                    &nbsp;<span class="badge rounded-pill bg-info fs-5">
+                                    {{$coursename->code}} - {{$coursename->name}}</span> &nbsp;
+                                    &nbsp;<span class="badge rounded-pill bg-info fs-5">{{$class->classcode}} - 
                                     
                                     @if($class->campus_id==1) LL @endif
                                     @if($class->campus_id==2) BT @endif 
                                     @if($class->campus_id==3) ZA @endif - Semester  {{$lecturerModule->semester}} 
-                                    </h4>
+                                   </span> </h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -143,7 +146,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <td>1</td>
                                                 <td>{{$assessmentlist1->assessment_name}}
                                                 </td>
-                                                <td>
+                                               
                                                 @php 
                                                 $lcourse = App\Models\Course::find($lecturerModule->courseid)
                                                 @endphp
@@ -154,15 +157,21 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 ->where('campus_id', $lecturerModule->campus_id)
                                                 ->where('course_code', $lcourse->code)->count()
                                                 @endphp
+
+                                                <td>
+                                                <span class="badge rounded-pill bg-light fs-5"> 
                                                 {{$students}}
+                                                </span>
                                                 </td>
                                                 <td>
                                                     
-
+                                                <span class="badge rounded-pill bg-light fs-5">
                                                     {{$class->classcode}} - 
                                                     @if($class->campus_id==1) LL @endif
                                                     @if($class->campus_id==2) BT @endif 
-                                                    @if($class->campus_id==3) ZA @endif - Sem | {{$lecturerModule->semester}} 
+                                                    @if($class->campus_id==3) ZA @endif - Sem  {{$lecturerModule->semester}} 
+                                                </span>
+
                                                 </td>
                                                 <td>
                                                 @if($students>0)
@@ -181,12 +190,19 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                                                 {{$assessmentlist2->assessment_name}}
                                                 </td>
-                                                <td>{{$students}}</td>
                                                 <td>
+                                                <span class="badge rounded-pill bg-light fs-5">  
+                                                {{$students}}
+                                                </span>
+
+                                                </td>
+                                                <td>
+                                                <span class="badge rounded-pill bg-light fs-5">
                                                 {{$class->classcode}} - 
                                                     @if($class->campus_id==1) LL @endif
                                                     @if($class->campus_id==2) BT @endif 
-                                                    @if($class->campus_id==3) ZA @endif - Sem | {{$lecturerModule->semester}}
+                                                    @if($class->campus_id==3) ZA @endif - Sem  {{$lecturerModule->semester}}
+                                                </span>
                                                 </td>
                                                 <td>
                                                 @if($students>0)
@@ -205,12 +221,18 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                                                 {{$assessmentlist3->assessment_name}}
                                                 </td>
-                                                <td>{{$students}}</td>
                                                 <td>
+                                                <span class="badge rounded-pill bg-light fs-5">
+                                                    {{$students}}
+                                                </span>
+                                                </td>
+                                                <td>
+                                                <span class="badge rounded-pill bg-light fs-5">
                                                 {{$class->classcode}} - 
                                                     @if($class->campus_id==1) LL @endif
                                                     @if($class->campus_id==2) BT @endif 
-                                                    @if($class->campus_id==3) ZA @endif - Sem | {{$lecturerModule->semester}}
+                                                    @if($class->campus_id==3) ZA @endif - Sem  {{$lecturerModule->semester}}
+                                                </span>
                                                 </td>
                                               
                                                 <td>

@@ -126,6 +126,8 @@
                                             
                                             <input type="text" name="acy[]" value="{{$admission->academicyear}}" hidden>
                                             <input type="text" name="fname[]" value="{{$admission->fname}}" hidden>
+                                            <input type="text" name="dob[]" value="{{$admission->dob}}" hidden>
+                                            <input type="text" name="initials[]" value="{{$admission->initials}}" hidden>
                                             <input type="text" name="gender[]" value="{{$admission->gender}}" hidden>
                                             <input type="text" name="semester[]" value="{{$admission->semester}}" hidden>
                                             <input type="text" name="reg_num[]" value="{{$admission->reg_num}}" hidden>

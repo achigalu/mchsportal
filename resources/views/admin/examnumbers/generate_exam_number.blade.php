@@ -118,7 +118,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 
 <h4 class="card-title">Generate Examination Numbers for:&nbsp;<b>{{$pcode}}</b>&nbsp;Campus: <b>{{$pcampus}}</b> Semester: <b>{{$semester}}</b></h4><br>
 
-<span class="badge rounded-pill bg-info fs-5"> Total number of students: &nbsp;{{$count}} &nbsp;</span>
+<span class="badge rounded-pill bg-info fs-4"> Total number of students: &nbsp;
+<span class="badge rounded-pill bg-warning fs-6">{{$count}}</span> &nbsp;</span>
 <br><br>
 @if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">

@@ -70,23 +70,37 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Assessment list: ( {{$courseID->code}} - {{$courseID->name}} {{$mycoursename->classcode}}  {{$courseID->classcode}} - 
+                                
+                                    <h4 class="mb-sm-0">
+                                    
+                                    Assessment list: 
+                                    <span class="badge rounded-pill bg-secondary fs-6"> 
+                                    {{$courseID->code}} - {{$courseID->name}} 
+                                    
+                                    <span class="badge rounded-pill bg-info fs-6"> 
+                                    {{$mycoursename->classcode}}  
+                                    {{$courseID->classcode}} - 
                                      @if( $lectSub->campus_id==1) LL @endif
                                      @if( $lectSub->campus_id==2) BT @endif
-                                     @if( $lectSub->campus_id==3) ZA @endif |
+                                     @if( $lectSub->campus_id==3) ZA @endif 
+
+                                     
                                         
-                                    Semester {{$lectSub->semester}} ) </h4>
+                                    Semester {{$lectSub->semester}}
+                                     </span>
+                                    </span>
+                                    </h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
                                     <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
-aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
-</button>&nbsp;&nbsp;
-<div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Exel</a>
-    <a class="dropdown-item" href="#">PDF</a>
-   
-</div>
+                                    aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+                                    </button>&nbsp;&nbsp;
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Exel</a>
+                                        <a class="dropdown-item" href="#">PDF</a>
+                                    
+                                    </div>
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('list.assessments',$id)}}">
                                         <li class="btn btn-outline-primary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -110,7 +124,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 @endphp
 
                                                 
-                                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.<br></h5>
+                                    <h5 style="color:#F57152;">
+                                    <span class="badge rounded-pill bg-info fs-6"> 
+                                    {{$assess->assessment_name}} grades.
+                                    </span> 
+                                    <br></h5>
                               
      
 

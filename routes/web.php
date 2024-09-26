@@ -156,6 +156,7 @@ Route::controller(facultyController::class)->group(function(){
     Route::post('/create/faculty', 'createFaculty')->name('create.faculty');
     Route::get('/view/faculty', 'viewFaculty')->name('view.faculty');
     Route::get('/edit/faculty/{id}', 'editFaculty')->name('edit.faculty');
+    Route::post('/update/faculty', 'updateFaculty')->name('update.faculty');
 });
 
 Route::controller(programsController::class)->group(function(){
@@ -219,6 +220,10 @@ Route::controller(coursesController::class)->group(function(){
     Route::post('/add/subject/to/old/studentss', 'storeSubjectToOldStudents')->name('add.subject.to.old.studentss');
     Route::post('/store/old/class/subjects', 'soreOldClassSubjects')->name('store.old.class.subjects');
     Route::get('/allocate/subjects/to/oldstudents/{class}/{semester}/{campus}/{ay}', 'allocateSubjectToOldStudents')->name('allocate.subjects.to.old.students');
+    Route::get('/edit/class/assigned/subject/{subj_id}/{class_id}/{semester}','editClassAssignedSubjects')->name('edit.assigned.subject');
+    Route::post('/update/class/assigned/subject','editConfiguredSubject')->name('edit.configured.subject');
+    Route::get('/delete/class/assigned/subject/{subj_id}/{class_id}/{semester}/{campus_id}', 'deleteClassAssignedSubjects')->name('delete.assigned.subject');
+    
 
 });
 
@@ -241,6 +246,7 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
     Route::post('/detach/module/from/lecturer/{userid}', 'deleteModuleLecturer')->name('delete.moduleLecturer'); 
     Route::get('/student/exam/number', 'examClassList')->name('student.exam.numbers'); 
+    Route::get('/reset/student/password/{stuID}', 'resetStudentPassword')->name('reset.student.password');
 });
 
 Route::controller(assessmentsController::class)->group(function(){
@@ -288,6 +294,7 @@ Route::controller(examnumbersController::class)->group(function(){
     Route::get('/view/class/examnumbers/{pcode}/{pcampus}/{semester}/{count}/{saved}', 'viewClassExamNumbers')->name('view.class.examnumbers');
     Route::get('/save/class/generated/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'saveClassGeneratedExamNumbers')->name('save.class.regenerated.exam.numbers');
     Route::get('/delete/exam/numbers/list/{pclass}/{pcampus}/{semester}/{count}', 'deleteExamNumbersList')->name('delete.exam.numbers.list');
+    Route::post('/student/fees/checkbox', 'studentFeesCheckbox')->name('student.fee.checkbox');
     
     Route::get('/regenerate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'regenerateExamNumbers')->name('regenerate.exam.numbers');
 

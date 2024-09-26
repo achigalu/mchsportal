@@ -70,7 +70,7 @@
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-<h4 class="mb-sm-0"></h4>
+
 
 <div class="page-title-right">
 
@@ -87,15 +87,16 @@
 <div class="col-lg-12">
 <div class="card">
 <div class="card-body">
-@php
-$ccampus = App\Models\Campus::find($pcampus)
-@endphp
-<h4 class="card-title">Add Program Class for: {{$program_class->program_name}} - {{$ccampus->campus}}</h4>
-<p class="card-title-desc"></p>
-@if(session()->has('status'))
+
+<h4 class="card-title">Subject Configurations. <br>
+<br> Class: {{$class->classcode}} | @if($class->campus_id==1)Lilongwe  @elseif($class->campus_id==2)Blantyre
+@elseif($class->campus_id==3)Zomba @endif</h4>Subject: {{$subject->code}} | {{$subject->name}} <br><br>
+
+
+@if(session()->has('message'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
 <i class="mdi mdi-check-all me-2"></i>
-{{session()->get('status')}}
+{{session()->get('message')}}
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
@@ -107,93 +108,95 @@ $ccampus = App\Models\Campus::find($pcampus)
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-<form action="{{route('create.programclass', $program_class->id)}}" method="post">
+
+<form action="{{route('edit.configured.subject')}}" method="POST">
     @csrf
     <div class="row">
         <div class="col-lg-12">
+        <input class="form-control" type="text" value="{{$class->id}}" name="class_id" id="example-text-input" hidden>
+        <input class="form-control" type="text" value="{{$class->campus_id}}" name="campus" id="example-text-input" hidden>
+        <input class="form-control" type="text" value="{{$subject->id}}" name="subject_id" id="example-text-input" hidden>
+        <input class="form-control" type="text" value="{{$semester}}" name="semester" id="example-text-input" hidden>
+        <input class="form-control" type="text" value="{{$subj_class->id}}" name="MyclassSubID" id="example-text-input" hidden>
 
+            
         <div class="row mb-3">
-            <label class="form-label">Class Code</label>
+            <label class="form-label">Exam Weight(%)</label>
                     
                     <div class="col-sm-12">
-                    <input class="form-control" value="{{$ccampus->id}}" name="ccampus" type="text" hidden>
-                    <input class="form-control" value="{{$ccampus->id}}" name="ccampus" type="text" hidden>
-                    @error('classcode') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="classcode" type="text" placeholder="i.e CCM1" id="example-text-input">
+                    @error('exam_weight') <span class="text-danger">{{$message}}</span> @enderror
+                        <input class="form-control" type="number" name="exam_weight" value="{{$subj_class->exam_weight}}" required>
                     </div>
             </div>
 
             <div class="row mb-3">
-            <label class="form-label">Class Name</label>
+            <label class="form-label">CA Weight(%)</label>
                     
                     <div class="col-sm-12">
-                    @error('classname') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="classname" type="text" placeholder="i.e  Certificate in Clinical Medicine 1" id="example-text-input">
+                    @error('ca_weight') <span class="text-danger">{{$message}}</span> @enderror
+                        <input class="form-control" type="number" value="{{$subj_class->ca_weight}}" name="ca_weight" id="example-text-input" required>
                     </div>
             </div>
 
             <div class="row mb-3">
-            <label class="form-label">Year</label>
+            <label class="form-label">Pass Mark(%)</label>
                     
                     <div class="col-sm-12">
-                    @error('classyear') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="classyear" type="number" value="1" id="example-text-input">
+                    @error('pass_mark') <span class="text-danger">{{$message}}</span> @enderror
+                        <input class="form-control" type="number" value="{{$subj_class->pass_mark}}" name="pass_mark" id="example-text-input" required>
                     </div>
             </div>
-            @php 
-            $lecturers = App\Models\User::whereIn('role', ['lecturer','Dean','HOD', 'Principal'])->get();
-            @endphp
-            <div class="mb-3">
-                <label class="form-label">Class coordinator</label><br>
-                @error('class_coordinator') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-control select2" name="class_coordinator">
-                <option value="" selected>-- Select --</option>
-                @if($lecturers)
-                    @foreach($lecturers as $coordinator)
-                        <option value="{{$coordinator->id}}">{{$coordinator->fname}} {{$coordinator->lname}}
-                        </option>
-                    @endforeach
-                @endif
-                </select>
 
-            </div>
+
 
             <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Under Basic Department?</label>
+                    <label class="col-sm-2 col-form-label">Is Major</label>
                     <div class="col-sm-12">
-                    @error('basic') <span class="text-danger">{{$message}}</span> @enderror
-                        <select class="form-select" name="basic" aria-label="Default select example">
+                    @error('is_major') <span class="text-danger">{{$message}}</span> @enderror
+                        <select class="form-select" name="is_major" aria-label="Default select example" required>
                             <option value="" selected="">-- select --</option>
                             <option value="1">Yes</option>
-                            <option value="0">No</option>
+                            <option value="2">No</option>
+                            
                             </select>
                     </div>
 
                 </div>
-            <input type="text" name="campus" value="{{$pcampus}}" hidden>
 
-               
-
+                
             <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Fee Category</label>
+                    <label class="col-sm-2 col-form-label">Is Project</label>
                     <div class="col-sm-12">
-                    @error('feecategory') <span class="text-danger">{{$message}}</span> @enderror
-                        <select class="form-select" name="feecategory" aria-label="Default select example">
+                    @error('is_project') <span class="text-danger">{{$message}}</span> @enderror
+                        <select class="form-select" name="is_project" aria-label="Default select example" required>
                             <option value="" selected="">-- select --</option>
-                            @foreach($feecategory as $fees)
-                            <option value="{{$fees->id}}">{{$fees->feename}}</option>
-                            @endforeach
-                          
+                            <option value="1">Yes</option>
+                            <option value="2">No</option>
+                            
                             </select>
                     </div>
 
                 </div>
 
+                
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Category</label>
+                    <div class="col-sm-12">
+                    @error('category') <span class="text-danger">{{$message}}</span> @enderror
+                        <select class="form-select" name="category" aria-label="Default select example" required>
+                            <option value="" selected="">-- select --</option>
+                            <option value="1">Active</option>
+                            <option value="2">Archieved</option>
+                            
+                            </select>
+                    </div>
+
+                </div>
+            
 
             
 
-           
-
+            
         </div>
 
         
@@ -204,12 +207,28 @@ $ccampus = App\Models\Campus::find($pcampus)
 </div>
 </div>
 <!-- end select2 -->
-</div>
 
 </div>
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Submit</button> &nbsp;&nbsp;
+
+
+</div>
+<!-- end row -->
+
+<!-- end row -->
+
+
+
+
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Update</button> &nbsp;&nbsp;
 </form>
-<a href="{{url('view/program')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
+<a href="{{route('class.subjects.withID', ['class_id' => $class->id, 'semester' => $semester])}}">
+    <button class="btn btn-outline-secondary">Cancel</button></a><br><br>
 
 <!-- end row -->
 

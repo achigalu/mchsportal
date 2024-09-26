@@ -31,6 +31,11 @@
                     @php
                     $student = Auth::user()
                     @endphp
+
+                    @php 
+                    $myExamNO = App\Models\savedExamNumbers::where('reg_num', $student->reg_num)->first()
+                    @endphp
+
                     @php 
                     $ay = App\Models\Academicyear::find($student->academicyear_id)
                     @endphp
@@ -44,7 +49,7 @@
         </div>
         <!-- end page title -->
        @php 
-       $stuCourses = App\Models\Studentsubject::where('registration_no', $student->reg_num)->get()
+       $stuCourses = App\Models\Studentsubject::where('registration_no', $student->reg_num  )->get()
        @endphp
         </div>
 
@@ -69,13 +74,26 @@
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
+                           
                             <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
-                                                <p class="text-truncate font-size-14 mb-2">School Opening Dates</p>
-                                                <h4 class="mb-2">12 July 2024</h4>
+                                                <p class="text-truncate font-size-14 mb-2">Examination#:</p>
+                                                @if($myExamNO->fee_status==1)
+                                                <span class="text-danger fw-bold fs-5 me-2">
+                                                {{$myExamNO->exam_number}}
+                                                </span>
+                                                   
+
+                                                    @else
+                                                    <span class="text-danger fw-bold fs-5 me-2">
+                                                    Not eligible
+                                                     </span>
+                                                    
+                                                   
+                                                @endif  
                                                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>View more details</span></p>
                                             </div>
                                             <div class="avatar-sm">
@@ -84,10 +102,12 @@
                                                 
                                                 </span>
                                             </div>
-                                        </div>                                              
+                                        </div> 
+                                                                                   
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
                             </div><!-- end col -->
+                            
                             <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">

@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | View Programs</title>
+        <title>MCHS Portal | View Tuition Fees</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -113,10 +113,10 @@
         
                                             <tbody>
                                             <tr>
-                                                <td>750 000</td>
-                                                <td>0</td>
-                                                <td>ODL</td>
-                                                <td>Certificate in Clinical Medicine Year 1</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 <td>
                                                 <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                 <a href=""><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  

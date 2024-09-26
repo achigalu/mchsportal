@@ -231,11 +231,14 @@ class studentRegistrationController extends Controller
 
     public function deleteModuleLecturer(Request $request, $userID)
     {
+      //dd($userID,$request->class_id,$request->semester);
       $myClassSubjects = Myclasssubject::ClassSubject($request->class_id, $request->semester);
       
       $data['myclassSubjects'] = $myClassSubjects;
       $data['class_id'] = $request->class_id;
       $data['semester'] = $request->semester;
+
+      //dd($userID,$request->class_id,$request->course_id, $request->semester,$request->campus_id);
       if(!empty($userID))
       {
         $delete = lecturerSubjects::where('userid', $userID)
@@ -244,6 +247,7 @@ class studentRegistrationController extends Controller
         ->where('semester', $request->semester)
         ->where('campus_id', $request->campus_id)->delete();
       }
+      
       if($delete)
       {
        
@@ -304,16 +308,21 @@ class studentRegistrationController extends Controller
        }
   if($classcode) 
   {
-    $data['students'] = User::where('programclass', $classcode)
+
+         $data['students'] = User::where('programclass', $classcode)
                     ->where('campus', $campus)
                     ->where('semester', $request->semester)->get();
 
-        $singlestudent = $data['students']->first();          
-        $data['count'] = $data['students']->count();
-        $data['classcampus'] = $campus1;
-        $data['classcode'] = $classcode;
-        $data['semester'] = $request->semester;
-        $data['academic_yr'] = $singlestudent->academicyear_id;
+        $singlestudent = $data['students']->first(); 
+        if(!empty($singlestudent->academicyear_id)) 
+        {
+          $data['count'] = $data['students']->count();
+          $data['classcampus'] = $campus1;
+          $data['classcode'] = $classcode;
+          $data['semester'] = $request->semester;
+          $data['academic_yr'] = $singlestudent->academicyear_id;
+        }        
+       
         
         if($data['students']->isNotEmpty())
         {
@@ -488,7 +497,18 @@ if($data['students']->isEmpty())
 
 
 
+  }  // End function
+
+  public function resetStudentPassword($studentID)
+  {
+    $studentReset = User::findOrfail($studentID);
+    if($studentReset)
+    {
+        return view('admin.users.reset_student_password', compact('studentReset'));
+    }
   }
+
+
 
 //   public function ExamSearchStudents2($pcode, $campus, $semester, $count, $saved)
 //   {

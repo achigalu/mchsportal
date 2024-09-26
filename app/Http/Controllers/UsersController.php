@@ -33,26 +33,7 @@ class UsersController extends Controller
            {
                 return redirect(route('applicant.dashboard'));
            }
-           elseif($role == 'Executive Director')
-           {
-                //return redirect(route('admin.dashboard'));
-           }
-           elseif($role == 'College Registrar')
-           {
-                //return redirect(route('admin.dashboard'));
-           }
-           elseif($role == 'Dean')
-           {
-                //return redirect(route('admin.dashboard'));
-           }
-           elseif($role == 'HOD')
-           {
-                //return redirect(route('admin.dashboard'));
-           }
-           elseif($role == 'lecturer')
-           {
-                return redirect(route('admin.dashboard'));
-           }
+           
            else
            {
                 return redirect(route('admin.dashboard'));

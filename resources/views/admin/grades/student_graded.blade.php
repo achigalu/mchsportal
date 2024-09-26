@@ -70,12 +70,24 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Assessment list: ( {{$courseID->code}} - {{$courseID->name}} {{$mycoursename->classcode}}  {{$courseID->classcode}} - 
+                                    <h4 class="mb-sm-0">
+                               
+                                   
+                                    Assessment list: 
+                                    
+                                    <span class="badge rounded-pill bg-secondary fs-6"> 
+                                    {{$courseID->code}} - {{$courseID->name}} 
+                                    </span>
+                                    <span class="badge rounded-pill bg-secondary fs-6"> 
+                                    {{$mycoursename->classcode}}  {{$courseID->classcode}} - 
                                      @if( $lectSub->campus_id==1) LL @endif
                                      @if( $lectSub->campus_id==2) BT @endif
                                      @if( $lectSub->campus_id==3) ZA @endif |
                                         
-                                    Semester {{$lectSub->semester}} )</h4>
+                                    Semester {{$lectSub->semester}} 
+                                    </span>
+                                   
+                                    </h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -137,20 +149,31 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                           <div class="row">
                             <div class="col-12">
                             
-                          Currently Grades are with: <b style="color:orange">{{$role->role}}</b> <p>
+                         <h5> Currently Grades are with:
+                          <span class="badge rounded-pill bg-info fs-6"> 
+                          <b>{{$role->role}}</b> </h5>
+                          </span>
+                          <p>
                             </div>
                           </div>
   
                           @else
                           <div class="row">
                             <div class="col-12">
-                            
-                          Currently Grades are with: <b style="color:orange">none</b> <p>
+                            <span class="badge rounded-pill bg-info fs-6"> 
+                          Currently Grades are with: <b style="color:orange">none</b> 
+                            </span>
+                            <p>
                             </div>
                           </div>
                           @endif  
-                                           
-                    <h5 style="color:#F57152;">{{$assess->assessment_name}} grades.</h5>
+                            
+                          
+                    <h5 style="color:#F57152;">
+                    <span class="badge rounded-pill bg-info fs-5"> 
+                        {{$assess->assessment_name}} grades.
+                    </span>
+                    </h5><p>
                               
      
 

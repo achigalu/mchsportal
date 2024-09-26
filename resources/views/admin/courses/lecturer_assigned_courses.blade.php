@@ -129,6 +129,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <td style="width: 20px;">{{$lcourse->code}} </td>
                                                 <td>{{$lcourse->name}}</td>
                                                 <td style="width: 12px;">
+                                                <span class="badge rounded-pill bg-light fs-5"> 
                                                 @php
                                                 $class = App\Models\Programclass::where('id' ,$course->classid)->first() 
                                                 @endphp
@@ -136,8 +137,15 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 @if($class->campus_id==1) LL @endif
                                                 @if($class->campus_id==2) BT @endif 
                                                 @if($class->campus_id==3) ZA @endif
+                                                </span>
                                                 </td>
-                                                <td style="width: 12px;">{{$course->semester}}</td>
+                                                
+                                                <td> 
+                                                <span class="badge rounded-pill bg-light fs-5"> 
+                                                {{$course->semester}}
+                                                </span>
+                                                </td>
+                                               
                                                 <td style="width: 30px;">
                                                
                                                 @php 
@@ -146,7 +154,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 ->where('campus_id', $course->campus_id)
                                                 ->where('course_code', $lcourse->code)->count()
                                                 @endphp
+                                                <span class="badge rounded-pill bg-light fs-5"> 
                                                 {{$students}}
+                                                </span>
                                                 </td>
                                                 
                                                 <td style="width: 30px;">

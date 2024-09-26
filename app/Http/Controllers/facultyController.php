@@ -49,4 +49,23 @@ class facultyController extends Controller
         $data['allUsers'] = User::allUsers();
         return view('admin.faculty.editFaculty', $data);
     }
+
+    public function updateFaculty(Request $request)
+    {
+        $validated = $request->validate([
+            'facultyname' => 'required|max:255',
+            'userID' => 'required'
+        ]);
+        
+        $deanID = Faculty::find($request->facultyID);
+
+        if($deanID)
+        {
+            $deanID->update([
+                'user_id' => $request->userID,
+                'faculty_name' => $request->facultyname
+            ]);
+        }
+        return redirect()->back()->with('status' , 'Faculty Updated Successfully');
+    }
 }

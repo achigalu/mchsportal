@@ -99,10 +99,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                 </div>
                             </div>
                         </div>
-                        <!-- end page title -->
+<!-- end page title -->
 
 <!-- start page title -->
-
 
 <div class="row">
 <div class="col-lg-12">
@@ -313,7 +312,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                                 <input type="hidden" value="{{$class_id}}" name="class_id">
                                                                 <input type="hidden" value="{{$semester}}" name="semester">
                                                                 <input type="hidden" value="{{$coursecode->id}}" name="course_id">
-                                                                <input type="hidden" value="{{$subject->campus_id}}" name="campus_id">
+                                                                <input type="hidden" value="{{$mycampus->campus_id}}" name="campus_id">
                                                                 @endif
                                                            
                                                             <div class="modal-footer">

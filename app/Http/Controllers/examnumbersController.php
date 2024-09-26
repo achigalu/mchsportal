@@ -110,7 +110,7 @@ class examnumbersController extends Controller
                                         if($pcampus=='Lilongwe'){$classCampus='LL';}
                                         if($pcampus=='Blantyre'){$classCampus='BT';}
                                         if($pcampus=='Zomba'){$classCampus='ZA';}
-                                        $examNum = $pcode . '/' . $classCampus . '/0' . $semester . '/' . $number;
+                                        $examNum = 'EN/'.$pcode . '/' . $classCampus . '/0' . $semester . '/' . $number;
                                 
                                         // Output the student's number
                                        
@@ -306,6 +306,38 @@ class examnumbersController extends Controller
                 
             return redirect()->route('student.exam.numbers')
             ->with('status', 'Examination numbers for: '.$pclass.' |'.$pcampus.'| Semester: ' .$semester.' deleted successfully');
+            }
+
+            public function studentFeesCheckbox(Request $request)
+            {
+                 // Get the array of student IDs from the request
+                 $studentWithFees = $request->input('students');
+
+                 $stuWithExamNumbers = savedExamNumbers::all(); // Fetch all variables from the database
+
+                 if(!empty($studentWithFees))
+                 {
+                        foreach ($stuWithExamNumbers as $stu) {
+                            // Check if the variable is in the selected array
+                            if (in_array($stu->id, $studentWithFees)) {
+                                // Set to 1 if selected
+                                $stu->fee_status = 1;
+                            } else {
+                                // Set to 0 if not selected
+                                $stu->fee_status = 0;
+                            }
+
+                            // Save the updated status
+                            $stu->save();
+                        }
+
+                return redirect()->route('student.exam.numbers')->with('status', 'Students fees status updated successfully');
+                }
+                else
+                {
+                    return redirect()->route('student.exam.numbers')->with('status', 'Students fees status updated successfully');
+                }
+
             }
 
        

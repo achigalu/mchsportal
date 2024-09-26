@@ -108,13 +108,13 @@ class studentController extends Controller
                     $import = new AdmissionImport($request->academic_yr_id, $id,);
                     Excel::import($import, request()->file('students_upload'));
         
-                    $checkedReferenceCode = Admission::where('academicyear', $request->academic_yr_id)->where('uploadlist_id', $id)->first();
-                    if(!empty($checkedReferenceCode))
+                    $checkedReferenceCode = Admission::where('uploadlist_id', $id)->first();
+                    if($checkedReferenceCode)
                     {
                         return redirect(route('confirm.students.lists', $id));
                         
                     }else{
-                        return redirect(route('confirm.students.lists', $id))->with('invalid', 'Reference numbers already exist in the system.');
+                        return redirect(route('confirm.students.lists', $id))->with('invalid', 'Reference or Registration numbers already exist in the system.');
                     }
                    
             }
@@ -158,7 +158,12 @@ class studentController extends Controller
     }
 
     // same as above function only different views
-    public function confirmStudentsLists($id){
+
+    //List of students to be uploaded in Users table.
+
+    public function confirmStudentsLists($id) // upload_list id.
+
+        {
         $admissions = Uploadlist::find($id);
         if(!empty($admissions))
         {
@@ -169,6 +174,7 @@ class studentController extends Controller
                 $data['stu'] = User::where('programclass',$class_students->class)
                 ->where('academicyear_id', $class_students->academicyear)
                 ->first();
+                $data['upload_id'] = $id;
                 $data['academicyear'] = Academicyear::find($data['stu']->academicyear_id);
                 return view('admin.intake.allAdmittedClassList', $data);
             }
@@ -198,9 +204,9 @@ class studentController extends Controller
         echo $id;
     }
 
-    public function saveConfirmedStudents(Request $request, $id)
+    public function saveConfirmedStudents(Request $request, $id) // $id == upload-list id
     {
-        
+        set_time_limit(180); // Allow the script to run for 120 seconds
         switch($request->input('action')) 
         {
             
@@ -212,15 +218,17 @@ class studentController extends Controller
                         break;
 
                             case 'savelist':
+
+                        $alreadyUpload = Admission::where('uploadlist_id', $id)->first();
                                
                                 // check if some students are already uploaded - count to add extra
                                 // check if 
-                         $class = Programclass::where('classcode' , $request->class[0])
+                         $class = Programclass::where('classcode' , $alreadyUpload->class)
                          ->first();
                             
                          if (!$class)
                                 {
-                                    return redirect()->route('confirm.students.lists', $id)->with('invalid', 'This'.' '.$request->class[0].' '.' class not defined in this system.');
+                                    return redirect()->route('confirm.students.lists', $id)->with('invalid', 'The specified class is not defined in this system.');
                                 }
                               
                          else{ 
@@ -228,10 +236,8 @@ class studentController extends Controller
                                // $data['reference_code'] = Admission::where('reference_code', )->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();   
                                // program code like CCM
 
-                                $oldStudents = Admission::where('academicyear', $request->acy[0])
-                                ->where('uploadlist_id', $id)
-                                ->where('campus',  $request->campus[0])
-                                ->get();
+                                $oldStudents = Admission::where('uploadlist_id', $id)->get();
+                                
 
                                 if ($oldStudents->isNotEmpty()) {
                                     $firstStudent = $oldStudents->first();
@@ -257,40 +263,43 @@ class studentController extends Controller
                                      // Replace 'attribute_name' with the actual attribute you want to access
                                     // Do something with $attribute
                                 }
+
                                 // Check if any of the old students have a non-empty reg_num
 
                                                 $hasRegNum = $oldStudents->pluck('reg_num')->filter()->isNotEmpty();
 
                                                 if ($hasRegNum) {
                                                 // There are students with non-empty reg_num values
-                                                foreach ($request->lname as $key => $lname) {
+                                                foreach ($oldStudents as $oldStu) {
                                                    
-                                                    $reg_num = $request->reg_num[$key];
+                                                    $reg_num = $oldStu->reg_num;
                                                     $formatted_reg_num = str_replace('/', '', $reg_num);
                                                     $formatted_reg_num = strtolower($formatted_reg_num);
                                                    // echo $formatted_reg_num;  // Output: dcmll20240803
 
                                                     $email = $formatted_reg_num.'@mchs.mw';
-                                                    $checkOldRegNum = User::where('reg_num', $request->reg_num[$key])->first();
+                                                    $checkOldRegNum = User::where('reg_num', $oldStu->reg_num)->first();
                                                     if ($checkOldRegNum) {
                                                     return redirect()->back()->with('invalid', 'This students list already uploaded in this portal');
                                                     }
                                                     // Continuing or graduated students with regNums already in place
                                                     User::create([
-                                                    'academicyear_id' => $request->acy[$key],
-                                                    'programclass' => $request->class[$key],
+                                                    'academicyear_id' => $oldStu->academicyear,
+                                                    'programclass' => $oldStu->class,
                                                     'uploadlist_id' => $id,
-                                                    'reg_num' => $request->reg_num[$key],
-                                                    'fname' => $request->fname[$key],
-                                                    'lname' => $request->lname[$key],
-                                                    'entry_level' => $request->entry_type[$key],
+                                                    'reg_num' => $oldStu->reg_num,
+                                                    'fname' => $oldStu->fname,
+                                                    'dob' => $oldStu->dob,
+                                                    'initials' => $oldStu->initials,
+                                                    'lname' => $oldStu->lname,
+                                                    'entry_level' => $oldStu->entry_level,
                                                     'email' => $email, // Convert email to lowercase
-                                                    'campus' => $request->campus[$key],
+                                                    'campus' => $oldStu->campus,
                                                     'program_id' => $programID,
-                                                    'password' => Hash::make(strtolower($request->lname[$key])),
-                                                    'role' => $request->role[$key],
-                                                    'semester' => $request->semester[$key],
-                                                    'gender' => $request->gender[$key],
+                                                    'password' => Hash::make($oldStu->dob),
+                                                    'role' => $oldStu->role,
+                                                    'semester' => $oldStu->semester,
+                                                    'gender' => $oldStu->gender,
                                                     
                                                     ]);
                                                     
@@ -394,23 +403,44 @@ class studentController extends Controller
                                                         if (!empty($checked_email)) {
                                                         return redirect()->back()->with('invalid', 'This students list was already uploaded in this mchs system.');
                                                         }
+                                                        dd(
+                                                            $request->acy[$key],
+                                                            $request->class[$key],
+                                                            $id,
+                                                            $request->class[$key],
+                                                            $reg_number . $formatted_counter,
+                                                            $request->fname[$key],
+                                                            $request->lname[$key],
+                                                            $request->dob[$key],
+                                                            $request->initials[$key],
+                                                            $request->entry_type[$key],
+                                                            $email,
+                                                            $campus,
+                                                            Hash::make(strtolower($request->dob[$key])),
+                                                            $request->role[$key],
+                                                            $programID,
+                                                            $request->semester[$key],
+                                                            $request->gender[$key],
+                                                        );
                                                        // Adding to the existing list of new students
-                                                        User::create([
-                                                        'academicyear_id' => $request->acy[$key],
-                                                        'programclass' => $request->class[$key],
-                                                        'uploadlist_id' => $id,
-                                                        'reg_num' => $reg_number . $formatted_counter,
-                                                        'fname' => $request->fname[$key],
-                                                        'lname' => $request->lname[$key],
-                                                        'entry_level' => $request->entry_type[$key],
-                                                        'email' => $email, // Convert email to lowercase
-                                                        'campus' => $campus,
-                                                        'password' => Hash::make(strtolower($request->lname[$key])),
-                                                        'role' => $request->role[$key],
-                                                        'program_id' => $programID,
-                                                        'semester' => $request->semester[$key],
-                                                        'gender' => $request->gender[$key],
-                                                        ]);
+                                                        // User::create([
+                                                        // 'academicyear_id' => $request->acy[$key],
+                                                        // 'programclass' => $request->class[$key],
+                                                        // 'uploadlist_id' => $id,
+                                                        // 'reg_num' => $reg_number . $formatted_counter,
+                                                        // 'fname' => $request->fname[$key],
+                                                        // 'lname' => $request->lname[$key],
+                                                        // 'dob' => $request->dob[$key],
+                                                        // 'initials' => $request->initials[$key],
+                                                        // 'entry_level' => $request->entry_type[$key],
+                                                        // 'email' => $email, // Convert email to lowercase
+                                                        // 'campus' => $campus,
+                                                        // 'password' => Hash::make(strtolower($request->dob[$key])),
+                                                        // 'role' => $request->role[$key],
+                                                        // 'program_id' => $programID,
+                                                        // 'semester' => $request->semester[$key],
+                                                        // 'gender' => $request->gender[$key],
+                                                        // ]);
                                                         }
                                                         $process = Uploadlist::find($id);
                                                         if(!empty($process))
@@ -443,10 +473,12 @@ class studentController extends Controller
                 'reg_num' => $reg_number . $formatted_counter,
                 'fname' => $request->fname[$key],
                 'lname' => $request->lname[$key],
+                'dob' => $request->dob[$key],
+                'initials' => $request->initials[$key],
                 'entry_level' => $request->entry_type[$key],
                 'email' => $email, // Convert email to lowercase
                 'campus' => $campus,
-                'password' => Hash::make(strtolower($request->lname[$key])),
+                'password' => Hash::make(strtolower($request->dob[$key])),
                 'program_id' => $programID,
                 'role' => $request->role[$key],
                 'semester' => 1,

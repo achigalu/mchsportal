@@ -147,7 +147,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         - @if($class->campus_id ==1) LL @endif
                                           @if($class->campus_id ==2) BT @endif
                                           @if($class->campus_id ==3) ZA @endif
-                                          - Semester : <span class="badge rounded-pill bg-warning float-end">{{$semester}}</span>
+                                          - Semester : <span class="badge rounded-pill bg-info float-end">{{$semester}}</span>
                                         
                                         </span>
                                        </h4> 
@@ -205,9 +205,9 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                             <td>{{($subjects->is_major ==1)? 'Yes' : 'No'}}</td>
                                             <td>-------</td>
                                             <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                <a href="{{route('edit.assigned.subject', ['subj_id'=>$subjects->id, 'class_id'=>$class->id,'semester'=>$semester] )}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                   
-                                                <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button></td>
+                                                <a href="{{route('delete.assigned.subject', ['subj_id'=>$subjects->id, 'class_id'=>$class->id,'semester'=>$semester, 'campus_id'=>$class->campus_id] )}}"> <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button></a></td>
                                             @empty
                                             <p>No data to show</p>
                                            </tr>

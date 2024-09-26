@@ -530,4 +530,118 @@ public function soreOldClassSubjects(Request $request)
         //////
 }
 
+public function editClassAssignedSubjects($subjectID, $classID, $semester)
+{
+    
+    $data['class'] = Programclass::find($classID);
+    $data['subj_class'] = Myclasssubject::find($subjectID);
+    $data['subject'] = Course::find($data['subj_class']->course_id);
+    $data['semester'] = $semester;
+    $data['title'] = 'Edit Subject configurations';
+    
+    return view('admin.courses.editConfigClassSubjects', $data);
+}
+
+
+
+public function editConfiguredSubject(Request $request)
+{
+ 
+    $validated = $request->validate([
+        'exam_weight' => 'required',
+        'ca_weight' => 'required',
+        'pass_mark' => 'required',
+        'is_major' => 'required',
+        'is_project' => 'required',
+        'category' => 'required',
+        
+   
+    ]);
+
+   //dd($request->all());
+   $updateSubj = Myclasssubject::find($request->MyclassSubID);
+
+   $subject = Course::find($request->subject_id);
+   if($updateSubj)
+   {
+    $myClass = Programclass::find($request->class_id);
+    $updateSubj->update([
+   'programclass_id' => $request->class_id,
+   'classcode' => $myClass->classcode,
+   'course_id' => $request->subject_id,
+   'semester' => $request->semester,
+   'exam_weight' =>$request->exam_weight,
+   'ca_weight' =>$request->ca_weight,
+   'pass_mark' =>$request->pass_mark,
+   'is_major' =>$request->is_major,
+   'is_project' =>$request->is_project,
+   'category' => $request->category,
+  
+  ]);
+
+  return redirect(route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester]))->with('message', 'Subject'.' '.$subject->name .' '.'updated successfully');
+
+   }
+   else
+   {
+   
+    return redirect(route('class.subjects.withID', ['class_id'=>$request->class_id, 'semester'=>$request->semester]))
+    ->with('invalid', 'This Subject'.' '.$subject->name .' '.'can not be updated.');
+   }
+  
+  
+}
+
+public function deleteClassAssignedSubjects($subjectID, $classID, $semester, $campus_id)
+{       
+   // dd($subjectID, $classID, $semester, $campus_id);
+
+                $studentsClass = Programclass::find($classID);
+                $campus = Campus::find($campus_id);
+
+                $studentsClassCode = $studentsClass->classcode;
+
+                $stuAsUser = User::where('programclass',$studentsClassCode)
+                            ->where('semester',$semester)
+                            ->where('campus',$campus->campus)
+                            ->first();
+
+                $myClassSubject = Myclasssubject::find($subjectID); // delete
+                $studentSubj = $myClassSubject->course_id;
+                $stuCourse = Course::find($studentSubj);
+
+               //dd($myClassSubject->course_code);
+
+                if($myClassSubject)
+                {
+                  $studentSubjects = Studentsubject::where('programclass_id',$classID)
+                  ->where('semester',$semester)
+                  ->where('campus_id',$campus_id) 
+                  ->where('course_code',$stuCourse->code)
+                  ->where('academicyr_id',$stuAsUser->academicyear_id)
+                  ->get();
+
+                  if($studentSubjects->isNotEmpty())
+                  {
+                    foreach($studentSubjects as $studSubjects)
+                    {
+                        $studSubjects->delete();   
+                    }
+                    $myClassSubject = Myclasssubject::find($subjectID); // delete
+                    $myClassSubject->delete();
+
+                    return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
+                    ->with('message', 'Subject: '.' '.$stuCourse->name .' '.'deleted successfully');
+
+                  }else{
+                   
+                    return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
+                    ->with('message', 'Nothing deleted.');
+                  }
+
+                  
+                }
+}
+
+
 }

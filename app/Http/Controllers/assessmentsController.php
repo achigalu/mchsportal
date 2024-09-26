@@ -183,7 +183,7 @@ class assessmentsController extends Controller
     {
         $submitted = lecturerSubjects::find($id); // id of a subject in LecturerSubjects table
        // $submitted->classid;
-       $lecturerSubjBasic = $submitted->basic; // 1 basic, 2 post basic
+       $lecturerSubjBasic = $submitted->basic; // 1 basic, 2 (post basic) or (not under basic HOD)
         
        // dd($pclass->classcode, $pclass->classname, $pclass->under_basic);
 
@@ -245,9 +245,9 @@ class assessmentsController extends Controller
                             {
                                 $pclass = Programclass::where('id', $submitted->classid)->where('campus_id', $submitted->campus_id)->first();
                                 //dd($pclass->under_basic);
-                                if($pclass->campus_id==1){$campus = 'Lilongwe';};
-                                if($pclass->campus_id==2){$campus = 'Blantyre';};
-                                if($pclass->campus_id==3){$campus = 'Zomba';};
+                                if($pclass->campus_id==1){$pcampus = 'Lilongwe';};
+                                if($pclass->campus_id==2){$pcampus = 'Blantyre';};
+                                if($pclass->campus_id==3){$pcampus = 'Zomba';};
 
                                 $classProgramId = $pclass->program_id;
                                 //dd($classCoordinator);
@@ -271,7 +271,7 @@ class assessmentsController extends Controller
                                     // }
                                     
                                 }
-                                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Assessment submitted to Head, ' .$departmentID->department_name.' '. $campus. '.');
+                                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Assessment submitted to Head, ' .$departmentID->department_name.' '. $pcampus. '.');
                          }
             }// End of assessment 1
 

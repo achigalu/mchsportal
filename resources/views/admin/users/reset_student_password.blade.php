@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | {{$title}}</title>
+        <title>MCHS Portal | Edit Student Password</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -70,7 +70,7 @@
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-<h4 class="mb-sm-0"></h4>
+
 
 <div class="page-title-right">
 
@@ -81,17 +81,13 @@
 </div>
 </div>
 </div>
-<!-- end page title -->
+<!--- start row -->
 
 <div class="row">
-<div class="col-lg-12">
+<div class="col-lg-10">
 <div class="card">
 <div class="card-body">
-@php
-$ccampus = App\Models\Campus::find($pcampus)
-@endphp
-<h4 class="card-title">Add Program Class for: {{$program_class->program_name}} - {{$ccampus->campus}}</h4>
-<p class="card-title-desc"></p>
+
 @if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
 <i class="mdi mdi-check-all me-2"></i>
@@ -107,109 +103,61 @@ $ccampus = App\Models\Campus::find($pcampus)
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif
-<form action="{{route('create.programclass', $program_class->id)}}" method="post">
+<form action="{{route('admin.update.user.password', $studentReset->id)}}" method="POST" class="custom-validation">
     @csrf
+    <h5>Reset password for: {{$studentReset->fname}} {{$studentReset->lname}} | {{$studentReset->reg_num}}</h5><p></p><hr>
+
+
     <div class="row">
-        <div class="col-lg-12">
-
-        <div class="row mb-3">
-            <label class="form-label">Class Code</label>
-                    
-                    <div class="col-sm-12">
-                    <input class="form-control" value="{{$ccampus->id}}" name="ccampus" type="text" hidden>
-                    <input class="form-control" value="{{$ccampus->id}}" name="ccampus" type="text" hidden>
-                    @error('classcode') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="classcode" type="text" placeholder="i.e CCM1" id="example-text-input">
-                    </div>
-            </div>
-
-            <div class="row mb-3">
-            <label class="form-label">Class Name</label>
-                    
-                    <div class="col-sm-12">
-                    @error('classname') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="classname" type="text" placeholder="i.e  Certificate in Clinical Medicine 1" id="example-text-input">
-                    </div>
-            </div>
-
-            <div class="row mb-3">
-            <label class="form-label">Year</label>
-                    
-                    <div class="col-sm-12">
-                    @error('classyear') <span class="text-danger">{{$message}}</span> @enderror
-                        <input class="form-control" name="classyear" type="number" value="1" id="example-text-input">
-                    </div>
-            </div>
-            @php 
-            $lecturers = App\Models\User::whereIn('role', ['lecturer','Dean','HOD', 'Principal'])->get();
-            @endphp
-            <div class="mb-3">
-                <label class="form-label">Class coordinator</label><br>
-                @error('class_coordinator') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-control select2" name="class_coordinator">
-                <option value="" selected>-- Select --</option>
-                @if($lecturers)
-                    @foreach($lecturers as $coordinator)
-                        <option value="{{$coordinator->id}}">{{$coordinator->fname}} {{$coordinator->lname}}
-                        </option>
-                    @endforeach
-                @endif
-                </select>
-
-            </div>
-
-            <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Under Basic Department?</label>
-                    <div class="col-sm-12">
-                    @error('basic') <span class="text-danger">{{$message}}</span> @enderror
-                        <select class="form-select" name="basic" aria-label="Default select example">
-                            <option value="" selected="">-- select --</option>
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                            </select>
-                    </div>
-
-                </div>
-            <input type="text" name="campus" value="{{$pcampus}}" hidden>
-
-               
-
-            <div class="row mb-3">
-                    <label class="col-sm-4 col-form-label">Fee Category</label>
-                    <div class="col-sm-12">
-                    @error('feecategory') <span class="text-danger">{{$message}}</span> @enderror
-                        <select class="form-select" name="feecategory" aria-label="Default select example">
-                            <option value="" selected="">-- select --</option>
-                            @foreach($feecategory as $fees)
-                            <option value="{{$fees->id}}">{{$fees->feename}}</option>
-                            @endforeach
-                          
-                            </select>
-                    </div>
-
-                </div>
-
-
-            
-
-           
+    <div class="col-lg-12">
+        
+        <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input class="form-control" name="new_password" type="password" aria-label="Default select example">
+                       
+            @error('new_password') <span class="text-danger">{{$message}}</span> @enderror
 
         </div>
-
         
+</div>
+<br>
+</div>
+
+<div class="col-lg-12">
+        
+        <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input class="form-control" name="confirm_password" type="password" aria-label="Default select example">
+                       
+            @error('confirm_password') <span class="text-danger">{{$message}}</span> @enderror
+
+        </div>
+        
+</div>
+
+        <p>
+
+        <hr>
+
+
     </div>
-
-
-
-</div>
-</div>
-<!-- end select2 -->
-</div>
-
-</div>
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Submit</button> &nbsp;&nbsp;
+  <div class="form-group">
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update my password</button> &nbsp;&nbsp;
 </form>
-<a href="{{url('view/program')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
+<a href="{{route('list.users')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
+</div>  
+
+
+</div>
+</div>
+
+
+<!-- end page title -->
+
+<!-- end row -->
+
+<!-- end row -->
+
 
 <!-- end row -->
 
@@ -251,7 +199,10 @@ $ccampus = App\Models\Campus::find($pcampus)
 
         <script src="{{asset('assets/js/app.js')}}"></script>
 
-        
+        <!-- validation -->
+        <script src="{{asset('assets/libs/parsleyjs/parsley.min.js')}}"></script>
+
+        <script src="{{asset('assets/js/pages/form-validation.init.js')}}"></script>
 
     </body>
 
