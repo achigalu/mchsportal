@@ -313,7 +313,13 @@ class examnumbersController extends Controller
                  // Get the array of student IDs from the request
                  $studentWithFees = $request->input('students');
 
-                 $stuWithExamNumbers = savedExamNumbers::all(); // Fetch all variables from the database
+                 $stuWithExamNumbers = savedExamNumbers::where('pcode', $request->pcode)
+                ->where('campus', $request->campus)
+                ->where('semester', $request->semester)
+                ->where('acdyear', $request->acdyear)
+                ->get();
+
+                // $stuWithExamNumbers = savedExamNumbers::all(); // Fetch all variables from the database
 
                  if(!empty($studentWithFees))
                  {

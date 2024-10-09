@@ -697,6 +697,86 @@ class studentController extends Controller
         return redirect()->back()->with('status', 'Password updated successfully');
     }
 
+    public function editStudent($studentid)
+     {
+        $student = User::findOrfail($studentid);
+        if(!empty($student))
+        {
+            return view('admin.users.edit_student', compact('student'));
+        }
+     }
+
+     public function updateStudentDetails(Request $request, $stuID)
+        {
+            $validated = $request->validate([
+                'fname' => 'required',
+                'initials' => '',
+                'lname' => 'required',
+                'reg_num' => 'required',
+                'phone' => 'required',
+                'email' => 'required|email',
+                'dbirth' => 'required|date'
+            ]);
+
+            if($validated)
+            {
+                if($stuID)
+                {
+                    $student = User::findOrfail($stuID);
+                    $stuinfo = User::where('id',$stuID)->where('reg_num',$request->reg_num)->first();
+                    $already = User::where('reg_num', $request->reg_num)->first();
+                    
+                    if($stuinfo)
+                    {
+                        $student->update([
+                            'fname' => $request->fname,
+                            'initials' => $request->initials,
+                            'lname' => $request->lname,
+                            'phone' => $request->phone,
+                            'email' => $request->email,
+                            'dob' => $request->dbirth
+                        ]);
+
+                        return redirect()->back()->with([
+                            'status' => $student->fname.' '.$student->lname.'\'s '.'personal details updated successfully1',
+                            'student' => $student
+    
+                        ]);
+                    }
+
+                    elseif(empty($already))
+                    {
+                        $student->update([
+                            'fname' => $request->fname,
+                            'initials' => $request->initials,
+                            'reg_num' => $request->reg_num,
+                            'lname' => $request->lname,
+                            'phone' => $request->phone,
+                            'email' => $request->email,
+                            'dob' => $request->dbirth
+                        ]); 
+
+                        return redirect()->back()->with([
+                            'status' => $student->fname.' '.$student->lname.'\'s '.'personal details updated successfully2',
+                            'student' => $student
+    
+                        ]);
+                    }
+                    else
+                    {
+                        return redirect()->back()->with([
+                            'status' => 'Registration number'. ' '.$request->reg_num.' ' .'is for'.' '.$already->fname .' '.$already->lname,
+                            'student' => $student
+    
+                        ]);
+                    }
+                    
+                }
+
+            }
+
+        }
+
    
 
 

@@ -107,7 +107,7 @@
                       $campus = App\Models\Campus::all()
                       @endphp 
 
-                      <form action="{{route('modules.to.students')}}" method="post">
+                    <form action="{{route('modules.to.students')}}" method="post">
                      @csrf
                     <div class="row">
                     <div class="form-group col-md-6">

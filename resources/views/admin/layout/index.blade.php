@@ -188,10 +188,16 @@ $campus = App\Models\Campus::all()
                                 </div>
                            
 
-                            @if($user->role=='lecturer' || $user->role=='Principal' || $user->role=='Dean' || 
-                            $user->role=='HOD' )
+                            @if($user->role=='Lecturer')
+                            
+                            @if($lecturer)
+                            @php 
+                            $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
+                            @endphp
                             <div class="row">
+                           
                                 <div class="col-xl-3 col-md-6">
+                                @if($lecturerCourses > 0)
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex">
@@ -204,20 +210,22 @@ $campus = App\Models\Campus::all()
                                             <div class="avatar-sm">
                                                 
 
-                                                @if($lecturer)
-                                                @php 
-                                                $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
-                                                @endphp
+
+                                                
                                                 <a href="{{route('lecturer.courses', $lecturer)}}">
                                                 <span class="avatar-title bg-light text-success rounded-3">
                                                 {{$lecturerCourses}}
                                                 </span>
                                                 </a>
+                                                @else
+
                                                 @endif
+                                               
                                             </div>
                                         </div>                                              
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
+                                @endif
                             </div><!-- end col -->
                         @endif
                         @if($user->role=='HOD' )

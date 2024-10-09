@@ -149,10 +149,24 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <td style="width: 30px;">
                                                
                                                 @php 
+                                                if($class->campus_id==1){$campus='Lilongwe';}
+                                                if($class->campus_id==2){$campus='Blantyre';}
+                                                if($class->campus_id==3){$campus='Zomba';}
+                                                
+
+                                                $classStudents = App\Models\User::where('programclass',$class->classcode)
+                                                ->where('campus', $campus)
+                                                ->where('semester', $course->semester)->get();
+
+                                                $acyr = $classStudents->first();
+                                                $ay = $acyr->academicyear_id;
+
                                                 $students = App\Models\Studentsubject::where('programclass_id', $course->classid)
                                                 ->where('semester', $course->semester)
                                                 ->where('campus_id', $course->campus_id)
-                                                ->where('course_code', $lcourse->code)->count()
+                                                ->where('academicyr_id', $ay)
+                                                ->where('course_code', $lcourse->code)->count();
+
                                                 @endphp
                                                 <span class="badge rounded-pill bg-light fs-5"> 
                                                 {{$students}}
@@ -160,8 +174,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 
                                                 <td style="width: 30px;">
-                                                <a href=""><button class="btn btn-outline-warning" style="float: right;">Notices</button></a><br><br>
-                                                <a href="{{route('list.assessments', $course->id)}}"><button class="btn btn-outline-info" style="float: right;">Assessments</button></a>
+                                                <a href="#"><button class="btn btn-outline-warning" style="float: right;">Notices</button></a><br><br>
+                                                <a href="{{route('list.assessments', ['courseid'=>$course->id, 'ay'=>$ay])}}"><button class="btn btn-outline-info" style="float: right;">Assessments</button></a>
                                                 </td>
                                             </tr>
                                             @endforeach 

@@ -13,23 +13,27 @@ use App\Models\Program;
 
 class assessmentsController extends Controller
 {
-    public function listAssessments($id) // id of course in leturer_subjects table.
+    public function listAssessments($id, $ay) // id of course in leturer_subjects table.
     {
         $data['title'] = 'list of Assessments';
         $data['id'] = $id;
+        $data['ay'] = $ay;
+      
         return view('admin.grades.assessment_list', $data);
     }
 
-    public function studentsGradingAssessment1($id, $assessment)
+    public function studentsGradingAssessment1($id, $assessment, $ay)
     {
         $data['title'] = 'Students grading';
-        $data['id'] = $id;
+        $data['id'] = $id; // lecturer subject id
+        $data['ay'] = $ay;
         $data['assessment'] = $assessment;
 
         $data['lectSub'] = lecturerSubjects::find($id); //id in the lecturer table ie 12, not courseid.
         $access_level1 = $data['lectSub']->access_level1;
         $access_level2 = $data['lectSub']->access_level2;
         $access_level3 = $data['lectSub']->access_level3;
+        $access_level4 = $data['lectSub']->access_level4;
         $a_level = $data['lectSub']->access_level1;
       
 
@@ -45,8 +49,9 @@ class assessmentsController extends Controller
         $data['stu'] = Studentsubject::where('programclass_id', $data['lectSub']->classid)
                 ->where('semester', $data['lectSub']->semester)
                 ->where('campus_id', $data['lectSub']->campus_id)
+                ->where('academicyr_id', $ay)
                 ->where('course_code', $data['courseID']->code)
-                ->get(); 
+                ->get(); // developed@AndyChigalu
 
         // retrieve data from db if table has grades.
         $mylecturerID = Auth()->user()->id;
@@ -86,6 +91,18 @@ class assessmentsController extends Controller
             }
         }
 
+        elseif($assessment==4)
+        {
+            if($access_level4 == $mylecturerID)// dont change here
+            {
+             return view('admin.grades.student_grading', $data);
+            }
+            elseif($access_level4 != $mylecturerID)
+            {
+             return view('admin.grades.student_graded', $data);
+            }
+        }
+
         
 
       
@@ -107,6 +124,7 @@ class assessmentsController extends Controller
         $data['title'] = 'Students Grading';
 
         if (!empty($request->registration)) {
+            
             if ($request->assessment_id == '1') {
                 foreach ($request->registration as $key => $registration) {
                     $student = Studentsubject::where('registration_no', $registration)->where('course_code', $data['courseID']->code)->first();
@@ -120,7 +138,7 @@ class assessmentsController extends Controller
                 }
 
                
-                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))
+                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$request->ay]))
                 ->with('status', 'Students assessment 1 graded successfully');
                 //return view('admin.grades.student_grading', $data)->with('status', 'Students graded successfully!');
 
@@ -133,7 +151,7 @@ class assessmentsController extends Controller
                        
                     }
                 }
-                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))
+                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$request->ay]))
                 ->with('status', 'Students Mid-semester graded successfully');
 
             } elseif ($request->assessment_id == '3') {
@@ -147,10 +165,25 @@ class assessmentsController extends Controller
                     }
                 }
              
-                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))
+                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$request->ay]))
                 ->with('status', 'Students End of Semester exam graded successfully');
 
+            } elseif ($request->assessment_id == '4') {
+                foreach ($request->registration as $key => $registration) {
+                    $student = Studentsubject::where('registration_no', $registration)->where('course_code', $data['courseID']->code)->first();
+                    if (!empty($student)) {
+                        $student->final_grade = $request->assessment[$key] ?? null;
+                        $student->save();
+
+                        // Now select from lecturer subjects and compute final grade..
+                    }
+                }
+             
+                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$request->ay]))
+                ->with('status', 'Students final grade graded successfully');
+
             } 
+
             
             else {
                 return view('admin.grades.student_grading', $data)->with('invalid', 'Something went wrong');

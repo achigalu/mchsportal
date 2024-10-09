@@ -151,6 +151,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         
                                         </span>
                                        </h4> 
+                                    
                                        @error('subject_id') <span class="text-danger">{{$message}}</span> @enderror 
                                         </div>
             
@@ -198,7 +199,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                            <tr>
                                             <td>{{$subjects->semester}}</td>
                                            
-                                            <td>{{$subjects->course->code}}</td>
+                                            <td>{{$subjects->course->code}}{{$subjects->id}}</td>
                                             <td>{{$subjects->course->name}}</td>
                                             <td>{{$subjects->exam_weight}}</td>
                                             <td>{{$subjects->ca_weight}}</td>
@@ -207,7 +208,57 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                             <td>
                                                 <a href="{{route('edit.assigned.subject', ['subj_id'=>$subjects->id, 'class_id'=>$class->id,'semester'=>$semester] )}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                   
-                                                <a href="{{route('delete.assigned.subject', ['subj_id'=>$subjects->id, 'class_id'=>$class->id,'semester'=>$semester, 'campus_id'=>$class->campus_id] )}}"> <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button></a></td>
+                                                <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#deleteClassSubject{{$subjects->id}}-{{$classAY}}"><i class="fas fa-trash"></i></button></td>
+
+ <!-- MODAL START -->
+
+
+<div class="col-sm-6 col-md-4 col-xl-3">
+<div class="my-4 text-center">
+    
+</div>
+
+<div class="modal fade" id="deleteClassSubject{{$subjects->id}}-{{$classAY}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Class Subject.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                Are you sure you want to delete 
+                <span class="badge rounded-pill bg-info fs-5">
+                {{$subjects->course->code}} | {{$subjects->course->name}}
+                &nbsp;</span>
+                <br><br>
+                for class: 
+                    <span class="badge rounded-pill bg-warning" style="font-size: 0.9rem;">
+                {{$class->classcode}} 
+                - @if($class->campus_id ==1) LL @endif
+                    @if($class->campus_id ==2) BT @endif
+                    @if($class->campus_id ==3) ZA @endif
+                    - Semester : {{$semester}}</span>
+                                   
+                                        
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">No</button>
+
+                <a href="{{route('delete.assigned.subject', ['subj_id'=>$subjects->id, 'class_id'=>$class->id,'semester'=>$semester, 'ay'=>$classAY])}}">
+
+                <button type="submit" class="btn btn-danger waves-effect waves-light">Delete</button>
+                </a>
+                
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+
+<!-- MODAL END -->
                                             @empty
                                             <p>No data to show</p>
                                            </tr>
@@ -236,6 +287,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
 
         </div>
         <!-- END layout-wrapper -->
+
 
         <!-- Right Sidebar -->
        

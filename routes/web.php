@@ -117,6 +117,8 @@ Route::controller(studentController::class)->group(function(){
     Route::get('/all/students/list', 'allStudentsList')->name('all.students.list');
     Route::get('/student/change/password/{id}', 'studentChangePassword')->name('student.change.password');
     Route::post('admin/update/student/password/{id}', 'adminUpdateStudentPassword')->name('admin.update.student.password');
+    Route::get('/edit/student/{studentID}', 'editStudent')->name('edit.student');
+    Route::post('/update/student/details/{studentID}', 'updateStudentDetails')->name('update.student.details');
     
     
     route::get('/list', 'list');
@@ -222,7 +224,8 @@ Route::controller(coursesController::class)->group(function(){
     Route::get('/allocate/subjects/to/oldstudents/{class}/{semester}/{campus}/{ay}', 'allocateSubjectToOldStudents')->name('allocate.subjects.to.old.students');
     Route::get('/edit/class/assigned/subject/{subj_id}/{class_id}/{semester}','editClassAssignedSubjects')->name('edit.assigned.subject');
     Route::post('/update/class/assigned/subject','editConfiguredSubject')->name('edit.configured.subject');
-    Route::get('/delete/class/assigned/subject/{subj_id}/{class_id}/{semester}/{campus_id}', 'deleteClassAssignedSubjects')->name('delete.assigned.subject');
+    Route::get('/delete/class/assigned/subject/{subj_id}/{class_id}/{semester}/{ay}', 'deleteClassAssignedSubjects')->name('delete.assigned.subject');
+    Route::get('/delete/assigned/subjects/to/students/{ay}/{subj_id}/{class_id}/{semester}', 'deleteClassAndStudentsAssignedSubjects')->name('delete.assigned.subject.to.student');
     
 
 });
@@ -241,6 +244,7 @@ Route::controller(studentRegistrationController::class)->group(function(){
     Route::get('/module/register', 'moduleRegister')->name('module.register');
     Route::get('/students/confirmation', 'studentsConfirmation')->name('students.confirmation');
     Route::post('/modules/to/students', 'modulesToStudents')->name('modules.to.students');
+    Route::get('/modules/to/students', 'modulesToStudents2')->name('modules.to.students2');
     Route::get('/allocate/subjects/to/students/{class}/{semester}/{campus}', 'allocateSubjectToStudents')->name('allocate.subjects.to.students');
     Route::post('/modules/to/lecturers', 'ModulesToLecturers')->name('modules.to.lecturers');
     Route::post('/allocate/modules/to/lecturers', 'AllocateModulesToLecturers')->name('allocate.modules.to.lecturers');
@@ -250,8 +254,8 @@ Route::controller(studentRegistrationController::class)->group(function(){
 });
 
 Route::controller(assessmentsController::class)->group(function(){
-    Route::get('/list/assessments/{id}', 'listAssessments')->name('list.assessments');
-    Route::get('/students/grading/{id}/{assessment}', 'studentsGradingAssessment1')->name('students.grading');
+    Route::get('/list/assessments/{courseid}/{ay}', 'listAssessments')->name('list.assessments');
+    Route::get('/students/grading/{id}/{assessment}/{ay}', 'studentsGradingAssessment1')->name('students.grading');
     Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1'); //graded and saved only
     Route::get('/students/graded/{id}/{assessment}','studentsGradedSubmitedToHOD')->name('submited.HOD');//graded saved and submitted to HOD
     Route::get('/submit/hod/{id}/{assessment}', 'submitHodAssessment1')->name('submit.hod'); //saving to HOD, logic if HOD basic or NOT, then redirect to submited.HOD

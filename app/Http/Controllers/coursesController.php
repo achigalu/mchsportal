@@ -150,6 +150,26 @@ class coursesController extends Controller
             'class_id' => 'required',
             'semester' => 'required',
         ]);
+
+       // dd($request->class_id);
+       $data['myClass'] = Programclass::findOrfail($request->class_id);
+        
+       $classCode = $data['myClass']->classcode;
+       $classCampus = $data['myClass']->campus_id;
+       $classSemester = $request->semester;
+       $data['semester'] = $request->semester;
+
+       if($classCampus==1) { $campus='Lilongwe'; }
+       if($classCampus==2) { $campus='Blantyre'; }
+       if($classCampus==3) { $campus='Zomba'; }
+
+       $ay = User::where('programclass', $classCode)
+            ->where('campus',$campus)
+            ->where('semester',$classSemester)->first();
+
+       $data['classAY'] = $ay->academicyear_id;
+
+
         if(!empty($validated))
         {
         $data['class'] = $request->class_id;
@@ -173,6 +193,22 @@ class coursesController extends Controller
     {
         $data['class'] = $request->route('class_id');
         $data['semester'] = $request->route('semester');
+        $data['myClass'] = Programclass::findOrfail($data['class']);
+        
+        $classCode = $data['myClass']->classcode;
+        $classCampus = $data['myClass']->campus_id;
+        $classSemester = $data['semester'];
+
+        if($classCampus==1) { $campus='Lilongwe'; }
+        if($classCampus==2) { $campus='Blantyre'; }
+        if($classCampus==3) { $campus='Zomba'; }
+
+        $ay = User::where('programclass', $classCode)
+             ->where('campus',$campus)
+             ->where('semester',$classSemester)->first();
+
+        $data['classAY'] = $ay->academicyear_id;
+
         if(!empty($data['class']))
         {
         
@@ -244,7 +280,8 @@ class coursesController extends Controller
        ]);
     }
        
-       return redirect(route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester]))->with('message', 'Subject'.' '.$subject->name .' '.'configured successfully');
+       return redirect(route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester]))
+       ->with('message', 'Subject'.' '.$subject->name .' '.'configured successfully');
     }
 
     public function addSubjectToStudent()
@@ -310,7 +347,7 @@ class coursesController extends Controller
 public function lecturerCourses($id)
 {   
     $data['lecturerCourses'] = lecturerSubjects::where('userid', $id)->get();
-    $data['title'] = 'Lecturer courses';
+    $data['title'] = 'Lecturer Courses';
     return view('admin.courses.lecturer_assigned_courses', $data);
 }
     
@@ -439,10 +476,10 @@ public function allocateSubjectToOldStudents($class, $semester,$campus, $ay)
                'course_code' => $subject->course->code,
            ],
            [
-               'assessment1' => 46,
-               'assessment2' => 50,
-               'exam_grade' => 61,
-               'final_grade' => 66,
+               'assessment1' =>null,
+               'assessment2' =>null,
+               'exam_grade' =>null,
+               'final_grade' =>null ,
            ]
        );
    }
@@ -592,55 +629,145 @@ public function editConfiguredSubject(Request $request)
   
 }
 
-public function deleteClassAssignedSubjects($subjectID, $classID, $semester, $campus_id)
+public function deleteClassAssignedSubjects($subjectID, $classID, $semester, $ay)
 {       
    // dd($subjectID, $classID, $semester, $campus_id);
+   $myClassSubject = Myclasssubject::find($subjectID); // delete
+   $studentSubj = $myClassSubject->course_id;
 
-                $studentsClass = Programclass::find($classID);
-                $campus = Campus::find($campus_id);
+   // dd($subjectID,$studentSubj); same
+   $stuCourse = Course::find($studentSubj);
 
-                $studentsClassCode = $studentsClass->classcode;
+   $studentsClass = Programclass::find($classID);
+   $sclasscampus = $studentsClass->campus_id;
+   if($sclasscampus==1){ $campus = 'Lilongwe'; }
+   if($sclasscampus==2){ $campus = 'Blantyre'; }
+   if($sclasscampus==3){ $campus = 'Zomba'; }
 
-                $stuAsUser = User::where('programclass',$studentsClassCode)
-                            ->where('semester',$semester)
-                            ->where('campus',$campus->campus)
-                            ->first();
 
                 $myClassSubject = Myclasssubject::find($subjectID); // delete
                 $studentSubj = $myClassSubject->course_id;
+
+               // dd($subjectID,$studentSubj); same
                 $stuCourse = Course::find($studentSubj);
 
-               //dd($myClassSubject->course_code);
 
-                if($myClassSubject)
-                {
-                  $studentSubjects = Studentsubject::where('programclass_id',$classID)
-                  ->where('semester',$semester)
-                  ->where('campus_id',$campus_id) 
-                  ->where('course_code',$stuCourse->code)
-                  ->where('academicyr_id',$stuAsUser->academicyear_id)
-                  ->get();
 
-                  if($studentSubjects->isNotEmpty())
-                  {
-                    foreach($studentSubjects as $studSubjects)
-                    {
-                        $studSubjects->delete();   
+     if(!empty($stuCourse))
+        {
+            $studentSubjects = Studentsubject::where('academicyr_id',$ay)
+            ->where('programclass_id',$classID)
+            ->where('semester', $semester)
+            ->where('course_code', $stuCourse->code)
+            ->where('campus_id', $studentsClass->campus_id)->get();
+
+            $subjectsWithGrades = $studentSubjects->filter(function ($subject) {
+                return !empty($subject->assessment1) ||
+                       !empty($subject->assessment2) ||
+                       !empty($subject->exam_grade) ||
+                       !empty($subject->final_grade);   // Filter out subjects with non-empty assessment1
+            });
+
+            if ($subjectsWithGrades->isEmpty()) {
+                        
+                    foreach($studentSubjects as $stuSubjects) 
+                        {
+                            
+                            $stuSubjects->delete();
+                        }
+
+                            if(!empty($myClassSubject))
+                            {
+                                $myClassSubject->delete(); 
+                            }
+
+                            return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
+                            ->with('message', 'Subject: '.' '.$stuCourse->name .' '.'deleted successfully');
                     }
-                    $myClassSubject = Myclasssubject::find($subjectID); // delete
-                    $myClassSubject->delete();
 
-                    return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
-                    ->with('message', 'Subject: '.' '.$stuCourse->name .' '.'deleted successfully');
-
-                  }else{
                    
                     return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
-                    ->with('message', 'Nothing deleted.');
-                  }
+                            ->with('message', 'Nothing deleted, this subject has grades.'); 
+                    
+        }
+      
+        
+        return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
+        ->with('message', 'Nothing deleted, something strange..'); 
+  
+}
 
-                  
-                }
+public function deleteClassAndStudentsAssignedSubjects($ay, $subjectID, $classID, $semester)
+{
+    $myClassSubject = Myclasssubject::find($subjectID); // delete
+    $studentSubj = $myClassSubject->course_id;
+
+    $studentsClass = Programclass::find($classID);
+    $sclasscampus = $studentsClass->campus_id;
+    if($sclasscampus==1){ $campus = 'Lilongwe'; }
+    if($sclasscampus==2){ $campus = 'Blantyre'; }
+    if($sclasscampus==3){ $campus = 'Zomba'; }
+    
+
+    // dd($subjectID,$studentSubj); same
+    $stuCourse = Course::find($studentSubj);
+
+    if(!empty($stuCourse))
+        {
+            $studentSubjects = Studentsubject::where('academicyr_id',$ay)
+            ->where('programclass_id',$classID)
+            ->where('semester', $semester)
+            ->where('course_code', $stuCourse->code)
+            ->where('campus_id', $studentsClass->campus_id)->get();
+
+            $subjectsWithGrades = $studentSubjects->filter(function ($subject) {
+                return !empty($subject->assessment1) ||
+                       !empty($subject->assessment2) ||
+                       !empty($subject->exam_grade) ||
+                       !empty($subject->final_grade);  // Filter out subjects with non-empty assessment1
+            });
+
+            if ($subjectsWithGrades->isEmpty()) {
+                        
+                    foreach($studentSubjects as $stuSubjects) 
+                        {
+                            
+                            $stuSubjects->delete();
+                        }
+
+                            if(!empty($myClassSubject))
+                            {
+                                $myClassSubject->delete(); 
+                            }
+
+                     
+                            return redirect(route('modules.to.students2'))->with([
+                                'status' => 'Subject deleted for students under: ' . $studentsClass->classcode . ' | ' .$campus. '-Campus Semester: ' . $semester,
+                                'class_id' => $classID,
+                                'campus' => $studentsClass->campus_id,
+                                'semester' => $semester
+                                    ]);
+                    }
+
+                   
+                    return redirect(route('modules.to.students2'))->with([
+                        'invalid' => 'There are grades in this subject for: ' . $studentsClass->classcode . ' | ' .$campus. '-Campus Semester: ' . $semester,
+                        'class_id' => $classID,
+                        'campus' => $studentsClass->campus_id,
+                        'semester' => $semester
+                            ]);    
+                    
+        }
+      
+        
+        return redirect(route('modules.to.students2'))->with([
+            'invalid' => 'Something else for: ' . $studentsClass->classcode . ' | ' .$campus. '-Campus Semester: ' . $semester,
+            'class_id' => $classID,
+            'campus' => $studentsClass->campus_id,
+            'semester' => $semester
+                ]);   
+   
+   
 }
 
 

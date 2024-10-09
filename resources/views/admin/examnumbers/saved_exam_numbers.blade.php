@@ -190,10 +190,16 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 
         <td>{{ $student->exam_number }}</td>
         <td>
+            <input type="text" name="pcode" value="{{$student->pcode}}" hidden>
+            <input type="text" name="campus" value="{{$student->campus}}" hidden>
+            <input type="text" name="semester" value="{{$student->semester}}" hidden>
+            <input type="text" name="acdyear" value="{{$student->acdyear}}" hidden>
+            
                     <input type="checkbox" name="students[]" value="{{ $student->id }}" 
                     {{($student->fee_status==1) ? 'checked' : '' }}/>
                 </td>
             </tr>
+
         @endforeach
     </table>
 <div class="text-center">

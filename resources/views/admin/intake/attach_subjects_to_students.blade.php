@@ -7,8 +7,8 @@
     <meta charset="utf-8" />
         <title>MCHS Portal | Attach subjects to students</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesdesign" name="Andy Chigalu" />
+        <meta content="Andy Chigalu" name="description" />
+        <meta content="Andy Chigalu" name="Andy Chigalu" />
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}">
         
@@ -83,15 +83,20 @@
 
 <div class="card">
 @php 
-$myclass = App\Models\Programclass::find($class)
+$myclass = App\Models\Programclass::find($class);
 @endphp
 
 
 @php
-$mystudents = App\Models\User::where('programclass',$myclass->classcode)
+$classstudents = App\Models\User::where('programclass',$myclass->classcode)
 ->where('semester',$semester)
-->where('campus',$myclass->campus->campus)
-->count()
+->where('campus',$myclass->campus->campus)->get();
+
+@endphp
+
+@php
+$mystudents = $classstudents->count();
+$ay = $classstudents->first();
 @endphp
 
 @php
@@ -161,7 +166,21 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                         <!-- end page title -->
            
 
+                        @if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 
+@if(session()->has('invalid'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+<i class="mdi mdi-block-helper me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif 
 
 <div class="row">
                             <div class="col-12">
@@ -187,8 +206,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <th>Class</th>
                                                 <th>Code</th>
                                                 <th>Subject Name</th>
-                                                <th>Semester</th>
                                                 <th>Students</th>
+                                                <th>Actions</th>
                                                 
                                             </tr>
                                             </thead>
@@ -200,15 +219,81 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                             <tr>
                                                               
                                                                 <td>{{ ++$id }}</td>
-                                                                <td>{{$subjects->programclass->classcode}}</td>
+                                                                <td>{{$subjects->programclass->classcode}}
+                                                                <span class="badge rounded-pill bg-warning" style="font-size: 14px;">
+                                                                Sem: {{$semester}} 
+                                                                </span> 
+                                                                </td>
                                                                 <td>{{$subjects->course->code}}</td>
                                                                 <td>{{$subjects->course->name}}</td>
                                                                 @if(!empty($semester))
-                                                                <td>{{$semester}}</td>
+                                                                <td>
+                                                                <span class="badge rounded-pill bg-success">{{$mystudents}}</span>
+                                                                </td>
                                                                 @endif
-                                                                <td><span class="badge rounded-pill bg-success">{{$mystudents}}</span></td>
+                                                                <td>
+                                                                <!-- Edit Button -->
+                                                                <button class="btn btn-outline-primary" >
+                                                                    <i class="mdi mdi-pencil"></i> Edit
+                                                                </button>
+
+                                                                <!-- Delete Button -->
+                                                                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteClassSubject{{$subjects->id}}">
+                                                                <i class="mdi mdi-delete"></i> Delete
+                                                                </button>
+                                                            </td>
 
                                                             </tr>
+
+    <!-- MODAL START -->
+
+
+<div class="col-sm-6 col-md-4 col-xl-3">
+<div class="my-4 text-center">
+    
+</div>
+
+<div class="modal fade" id="deleteClassSubject{{$subjects->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Class Subject.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                Are you sure you want to delete 
+                <span class="badge rounded-pill bg-info fs-5">
+                {{$subjects->course->code}} | {{$subjects->course->name}}
+                &nbsp;</span>
+                <br><br>
+                for class: 
+                    <span class="badge rounded-pill bg-warning" style="font-size: 0.9rem;">
+                {{$myclass->classcode}} 
+                - @if($myclass->campus_id ==1) LL @endif
+                    @if($myclass->campus_id ==2) BT @endif
+                    @if($myclass->campus_id ==3) ZA @endif
+                    - Semester : {{$semester}}</span>
+                                   
+                                        
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">No</button>
+
+                <a href="{{route('delete.assigned.subject.to.student', ['ay'=>$ay->academicyear_id,'subj_id'=>$subjects->id, 'class_id'=>$myclass->id,'semester'=>$semester] )}}">
+
+                <button type="submit" class="btn btn-danger waves-effect waves-light">Delete</button>
+                </a>
+                
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+
+<!-- MODAL END -->
 
                                             @endforeach
                                             @endif

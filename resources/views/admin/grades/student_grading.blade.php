@@ -93,16 +93,11 @@
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
-                                    aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+                                    <button type="button" class="btn btn-outline-danger" ><span class="mdi mdi-publish"></span>&nbsp;&nbsp;Publish to students &nbsp;&nbsp;</button>
                                     </button>&nbsp;&nbsp;
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Exel</a>
-                                        <a class="dropdown-item" href="#">PDF</a>
                                     
-                                    </div>
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('list.assessments',$id)}}">
+                                        <a href="{{route('list.assessments',['courseid'=>$id, 'ay'=>$ay])}}">
                                         <li class="btn btn-outline-primary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
@@ -126,7 +121,7 @@
                                                 
                                     <h5 style="color:#F57152;">
                                     <span class="badge rounded-pill bg-info fs-6"> 
-                                    {{$assess->assessment_name}} grades.
+                                    Assessment: {{$assess->assessment_name}}.
                                     </span> 
                                     <br></h5>
                               
@@ -199,6 +194,7 @@
                                                     <input type="text" name="registration[]" value="{{$student->registration_no}}" hidden>
                                                     <input type="text" name="assessment_id" value="{{$assessment}}" hidden>
                                                     <input type="text" name="coursecode" value="{{$courseID->code}}" hidden>
+                                                    <input type="text" name="ay" value="{{$ay}}" hidden>
                                                 
                                                 </td>
                                                 <td>
@@ -212,6 +208,10 @@
 
                                                     @if($assessment==3)
                                                     <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->exam_grade ?? ''}}" style="width: 100px;">
+                                                    @endif
+
+                                                    @if($assessment==4)
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->final_grade ?? ''}}" style="width: 100px;">
                                                     @endif
                                                             
 

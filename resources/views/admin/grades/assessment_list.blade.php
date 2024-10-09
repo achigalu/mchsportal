@@ -148,13 +148,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                
                                                 @php 
-                                                $lcourse = App\Models\Course::find($lecturerModule->courseid)
-                                                @endphp
-
-                                                @php 
+                                                $lcourse = App\Models\Course::find($lecturerModule->courseid);
+                         
                                                 $students = App\Models\Studentsubject::where('programclass_id', $lecturerModule->classid)
                                                 ->where('semester', $lecturerModule->semester)
                                                 ->where('campus_id', $lecturerModule->campus_id)
+                                                ->where('academicyr_id', $ay)
                                                 ->where('course_code', $lcourse->code)->count()
                                                 @endphp
 
@@ -176,7 +175,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 <td>
                                                 @if($students>0)
 
-                                                    <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist1->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                    <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist1->id, 'ay'=>$ay])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
                                                 @endif
@@ -206,7 +205,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 <td>
                                                 @if($students>0)
-                                                    <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist2->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                    <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist2->id, 'ay'=>$ay])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
                                                 @endif
@@ -237,7 +236,41 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                               
                                                 <td>
                                                 @if($students>0)
-                                                        <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist3->id])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+                                                        <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist3->id, 'ay'=>$ay])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
+
+                                                @else
+                                                <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>
+                                                @endif
+                                             </td>
+                                            </tr>
+
+
+
+                                            <tr>
+                                                <td>4</td>
+                                                <td>@php 
+                                                $assessmentlist4 = App\Models\Assessmentlist::find(4)
+                                                @endphp
+
+                                                {{$assessmentlist4->assessment_name}}
+                                                </td>
+                                                <td>
+                                                <span class="badge rounded-pill bg-light fs-5">
+                                                    {{$students}}
+                                                </span>
+                                                </td>
+                                                <td>
+                                                <span class="badge rounded-pill bg-light fs-5">
+                                                {{$class->classcode}} - 
+                                                    @if($class->campus_id==1) LL @endif
+                                                    @if($class->campus_id==2) BT @endif 
+                                                    @if($class->campus_id==3) ZA @endif - Sem  {{$lecturerModule->semester}}
+                                                </span>
+                                                </td>
+                                              
+                                                <td>
+                                                @if($students>0)
+                                                        <a href="{{route('students.grading', ['id' => $id, 'assessment' => $assessmentlist4->id, 'ay'=>$ay])}}"><button class="btn btn-outline-warning" style="float: right;">Grading</button></a>
 
                                                 @else
                                                 <a href="{{route('lecturer.courses', $lecturer)}}"><button class="btn btn-outline-info" style="float: right;">Back</button></a>

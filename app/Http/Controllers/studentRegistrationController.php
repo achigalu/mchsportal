@@ -12,6 +12,7 @@ use App\Models\Studentsubject;
 use Illuminate\Http\Request;
 use App\Models\savedExamNumbers;
 use App\Models\classExaMNumbers;
+Use Illuminate\Support\Facades\Session;
 
 class studentRegistrationController extends Controller
 {
@@ -74,9 +75,29 @@ class studentRegistrationController extends Controller
     return view('admin.registration.students_confirmation');
   }
 
+  public function modulesToStudents2()
+  {
+    if(!empty(Session::get('class_id')))
+    {   
+      //session()->has('class_id');
+      $data = [
+        'class' => Session::get('class_id'),
+        'semester' => Session::get('semester'),
+      ];
+
+      $data['ourclass'] = Programclass::find($data['class']);
+      $data['class_program'] = $data['ourclass']->program_id;
+      $data['class_code'] = $data['ourclass']->classcode;
+      
+      return view('admin.intake.attach_subjects_to_students', $data)
+      ->with('status','Course for:'.' '.$data['ourclass']->classcode.' '.'deleted successfully');
+    }
+  }
+
   public function modulesToStudents(Request $request)
   {
-   
+     
+      
     $request->validate([
       'class' => 'required',
       'semester' => 'required'
@@ -146,10 +167,10 @@ class studentRegistrationController extends Controller
                 'course_code' => $subject->course->code,
             ],
             [
-                'assessment1' => 46,
-                'assessment2' => 50,
-                'exam_grade' => 61,
-                'final_grade' => 66,
+                'assessment1' => null,
+                'assessment2' => null,
+                'exam_grade' => null,
+                'final_grade' => null,
             ]
         );
     }
@@ -176,6 +197,103 @@ class studentRegistrationController extends Controller
             ]);
         }
   }
+
+  //MODIFIED VERSION OF THE A BOVE CODE...
+
+  public function allocateSubjectToStudentsS($class, $semester, $campus)
+{
+    // Retrieve class information
+    $classID = Programclass::find($class);
+    if (!$classID) {
+        return redirect()->back()->with('error', 'Class not found.');
+    }
+
+    // Retrieve subjects for the class and semester without an academic year
+    $classSubjects = Myclasssubject::where('programclass_id', $class)
+        ->where('semester', $semester)
+        ->whereNull('academicyear_id')
+        ->where('classcode', $classID->classcode)
+        ->get();
+
+    // Retrieve campus information
+    $campus = Campus::find($campus);
+    if (!$campus) {
+        return redirect()->back()->with('error', 'Campus not found.');
+    }
+
+    // Retrieve students in the class, semester, and campus
+    $classStudents = User::where('programclass', $classID->classcode)
+        ->where('semester', $semester)
+        ->where('campus', $campus->campus)
+        ->get();
+
+    if ($classStudents->isEmpty()) {
+        return redirect(route('add.subject.to.students'))->with([
+            'invalid' => 'No Students found in this class and campus',
+            'class_id' => $class,
+            'campus' => $campus->id,
+            'semester' => $semester,
+        ]);
+    }
+
+    // Handle subject removal and syncing
+    foreach ($classStudents as $classStudent) {
+        // 1. Get the old subjects that are currently attached to the student
+        $oldSubjectIds = $classStudent->myclasssubject()->pluck('id')->toArray();
+
+        // 2. Sync new subjects (this will remove old subjects from the pivot table and replace them with new ones)
+        $classStudent->myclasssubject()->sync($classSubjects->pluck('id'));
+
+        // 3. Identify the subjects that were removed
+        $removedSubjectIds = array_diff($oldSubjectIds, $classSubjects->pluck('id')->toArray());
+
+        if (!empty($removedSubjectIds)) {
+            // 4. Remove corresponding entries from Studentsubject table for the removed subjects
+            Studentsubject::where('registration_no', $classStudent->reg_num)
+                ->where('semester', $semester)
+                ->where('programclass_id', $class)
+                ->whereIn('course_code', function($query) use ($removedSubjectIds) {
+                    $query->select('course_code')
+                          ->from('myclasssubjects')
+                          ->whereIn('id', $removedSubjectIds);
+                })
+                ->delete();
+        }
+
+        // 5. Insert or update records in Studentsubject table for the new subjects
+        foreach ($classSubjects as $subject) {
+            Studentsubject::firstOrCreate(
+                [
+                    'academicyr_id' => $classStudent->academicyear_id,
+                    'programclass_id' => $class,
+                    'semester' => $semester,
+                    'campus_id' => $campus->id,
+                    'registration_no' => $classStudent->reg_num,
+                    'course_code' => $subject->course->code,
+                ],
+                [
+                    'assessment1' => null,
+                    'assessment2' => null,
+                    'exam_grade' => null,
+                    'final_grade' => null,
+                ]
+            );
+        }
+    }
+
+    // Redirect with success message
+    return redirect(route('add.subject.to.students'))->with([
+        'status' => 'Subjects assigned to Students under: ' . $classID->classcode . ' | ' . $campus->campus . '-Campus Semester: ' . $semester,
+        'class_id' => $class,
+        'campus' => $campus->id,
+        'semester' => $semester
+    ]);
+}
+ 
+/// END OF MODIFIED VERSION......
+
+
+
 
   public function ModulesToLecturers(Request $request)
   {
@@ -219,6 +337,7 @@ class studentRegistrationController extends Controller
           'access_level1' => $request->lecturer_id,
           'access_level2' => $request->lecturer_id,
           'access_level3' => $request->lecturer_id,
+          'access_level4' => $request->lecturer_id,
           
           ],
           [

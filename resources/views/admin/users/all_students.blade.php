@@ -128,7 +128,7 @@
                                                 
                                                 
                                                 <td>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button> </a>
+                                                <a href="{{route('edit.student',['studentID'=>$student->id])}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button> </a>
                                                 <a href=""><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a>
                                                 <a href="{{route('student.change.password', $student->id)}}"><button class="btn btn-outline-warning"><i class="fas fa-lock"></i></button> </a>
                                             

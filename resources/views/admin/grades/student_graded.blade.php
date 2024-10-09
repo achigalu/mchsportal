@@ -100,7 +100,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
    
 </div>
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('list.assessments',$id)}}">
+                                       
                                         <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
@@ -132,6 +132,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
                             @php
                             $role = App\Models\User::find($lectSub->access_level3);
+                            @endphp
+
+                            @elseif($assessment==4)
+
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level4);
                             @endphp
 
                             @else
@@ -171,7 +177,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                           
                     <h5 style="color:#F57152;">
                     <span class="badge rounded-pill bg-info fs-5"> 
-                        {{$assess->assessment_name}} grades.
+                        Assessment: {{$assess->assessment_name}}.
                     </span>
                     </h5><p>
                               
@@ -200,8 +206,8 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
 
 
-                                <form action="{{route('students.graded1', ['id' => $id, 'assessment' => $assessment])}}" method="post"> 
-                                    @csrf
+                               
+                                    
                                     <div class="card-body">
                                     
                                                 
