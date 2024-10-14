@@ -145,69 +145,78 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                                         
                                          Semester: &nbsp;
                                         <span class="badge rounded-pill bg-info fs-6"> {{$singleStudent->semester}} &nbsp;</span></h4><br>
-                              
-                     <form action="{{route('student.fee.checkbox')}}" method="POST">
-                                        @csrf
-                                        <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                            <thead>
-                                            <tr style="background-color:#e6e6e6;">
-                                                <th>Photo</th>
-                                                <th>Student#</th>
-                                                <th>Full Name</th>
-                                                <th>Gender</th>
-                                                <th>Exam Numbers</th>
-                                                <th>Fees Status</th>
-                                                
-                                            </tr>
-                                            </thead>
-        
-                 @php
-                  $studentWithNumber = App\Models\User::where('programclass', $classcode)
-                  ->where('campus', $campus)
-                  ->where('semester', $semester)->get();
-                  @endphp
-                                            <tbody>
-                                        
-     @foreach($alreadySaved as $student)
-    <tr>
-        <td>
-            <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/2.jpg')}}">
-        </td>
-        <td>{{ $student->reg_num }}</td>
 
-        @php
-            // Find the matching student from $studentWithNumber
-            $matchingStudent = $studentWithNumber->firstWhere('reg_num', $student->reg_num);
-        @endphp
-
-        @if($matchingStudent)
-            <td>{{ $matchingStudent->fname }} {{ $matchingStudent->lname }}</td>
-            <td>{{ $matchingStudent->gender }}</td>
-        @else
-            <td>Not found</td>
-            <td>Not found</td>
-        @endif
-
-        <td>{{ $student->exam_number }}</td>
-        <td>
-            <input type="text" name="pcode" value="{{$student->pcode}}" hidden>
-            <input type="text" name="campus" value="{{$student->campus}}" hidden>
-            <input type="text" name="semester" value="{{$student->semester}}" hidden>
-            <input type="text" name="acdyear" value="{{$student->acdyear}}" hidden>
-            
-                    <input type="checkbox" name="students[]" value="{{ $student->id }}" 
-                    {{($student->fee_status==1) ? 'checked' : '' }}/>
-                </td>
+<form id="checkboxForm">
+    @csrf
+    <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead>
+            <tr style="background-color:#e6e6e6;">
+                <th>Photo</th>
+                <th>Student#</th>
+                <th>Full Name</th>
+                <th>Gender</th>
+                <th>Exam Numbers</th>
+                <th>Fees Status</th>
             </tr>
-
-        @endforeach
+        </thead>
+        <tbody>
+            @foreach($students as $student)
+                <tr>
+                    <td>
+            @php 
+            $fees = App\Models\savedExamNumbers::where('reg_num', $student->reg_num)->first();
+            @endphp
+                        <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/2.jpg') }}">
+                    </td>
+                    <td>{{ $student->reg_num }}</td>
+                    <td>{{ $student->fname }} {{ $student->lname }}</td>
+                    <td>{{ $student->gender }}</td>
+                    <td>{{ $fees->exam_number }}</td>
+                    <td>
+                        <input type="checkbox" class="student-checkbox" data-id="{{ $student->id }}" 
+                            {{ $fees->fee_status == 1 ? 'checked' : '' }}>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
-<div class="text-center">
-    <button class="btn btn-outline-info">Submit</button>
-</div>
-
 </form>
-        
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.student-checkbox').change(function () {
+            const studentId = $(this).data('id');
+            const feeStatus = $(this).is(':checked') ? 1 : 0;
+
+            $.ajax({
+                url: "{{ route('student.fee.checkbox') }}",
+                method: "POST",
+                data: {
+                    _token: $('input[name="_token"]').val(),
+                    student_id: studentId,
+                    fee_status: feeStatus,
+                },
+                success: function (response) {
+                    alert(response.message);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert("An error occurred while updating the fee status.");
+                }
+            });
+        });
+
+        $('#submitBtn').click(function () {
+            // Optionally, you can handle the overall submit if needed
+            alert("All changes have been saved! (This could be extended to submit all checkbox states if necessary.)");
+        });
+    });
+</script>
+
+
+      
                                     </div>
                                 </div>
                             </div> <!-- end col -->

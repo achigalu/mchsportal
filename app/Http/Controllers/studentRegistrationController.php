@@ -272,10 +272,10 @@ class studentRegistrationController extends Controller
                     'course_code' => $subject->course->code,
                 ],
                 [
-                    'assessment1' => null,
-                    'assessment2' => null,
-                    'exam_grade' => null,
-                    'final_grade' => null,
+                    'assessment1' => 0,
+                    'assessment2' => 0,
+                    'exam_grade' => 0,
+                    'final_grade' => 0,
                 ]
             );
         }

@@ -22,7 +22,7 @@ class assessmentsController extends Controller
         return view('admin.grades.assessment_list', $data);
     }
 
-    public function studentsGradingAssessment1($id, $assessment, $ay)
+    public function studentsGradingAssessment1($id, $assessment, $ay) // id from lecturer_subjects
     {
         $data['title'] = 'Students grading';
         $data['id'] = $id; // lecturer subject id
@@ -212,11 +212,12 @@ class assessmentsController extends Controller
         return view('admin.grades.student_grading', $data)->with('status', 'Assessment graded successfully!');
     }
 
-    public function submitHodAssessment1($id, $assessment) // for assessment 1
+
+    public function submitHodAssessment1($id, $assessment, $ay) // for assessment 1
     {
         $submitted = lecturerSubjects::find($id); // id of a subject in LecturerSubjects table
        // $submitted->classid;
-       $lecturerSubjBasic = $submitted->basic; // 1 basic, 2 (post basic) or (not under basic HOD)
+       $lecturerSubjBasic = $submitted->basic; // 1 basic, 2 (post basic) or (not under basic HOD)[taken from courses Basic or Post Basic]
         
        // dd($pclass->classcode, $pclass->classname, $pclass->under_basic);
 
@@ -239,7 +240,7 @@ class assessmentsController extends Controller
                                         'access_level1' => $newhodID,
                                     ]);
                                     
-                                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Assessment Assignment 1 submitted to HOD Basic Lilongwe.');
+                                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Course assessment submitted to HOD Basic Lilongwe.');
                                     
                                     
                                 };
@@ -254,7 +255,7 @@ class assessmentsController extends Controller
                                         'access_level1' => $newhodID,
                                     ]);
                                     
-                                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Assessment Assignment 1 submitted to HOD Basic Blantyre.');
+                                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Course assessment submitted to HOD Basic Blantyre.');
                                 };
                                 if($campus==3) // basic Zomba
                                 {
@@ -267,7 +268,7 @@ class assessmentsController extends Controller
                                         'access_level1' => $newhodID,
                                     ]);
                                     
-                                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Assessment Assignment 1 submitted to HOD Basic Zomba.');
+                                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Course assessment submitted to HOD Basic Zomba.');
                                 };
 
                                 //  return redirect()->back()->with('status', 'Assessment submitted to HOD basic - '.' ' .$mycampus.'.');
@@ -304,7 +305,7 @@ class assessmentsController extends Controller
                                     // }
                                     
                                 }
-                                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Assessment submitted to Head, ' .$departmentID->department_name.' '. $pcampus. '.');
+                                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Assessment submitted to Head, ' .$departmentID->department_name.' | '. $pcampus. '.');
                          }
             }// End of assessment 1
 
@@ -327,7 +328,7 @@ class assessmentsController extends Controller
                             'access_level2' => $newhodID,
                         ]);
                         
-                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Mid-semester submitted to HOD Basic Lilongwe.');
+                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Mid-semester submitted to HOD Basic Lilongwe.');
                         
                         
                     };
@@ -342,7 +343,7 @@ class assessmentsController extends Controller
                             'access_level2' => $newhodID,
                         ]);
                         
-                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Mid-semester submitted to HOD Basic Blantyre.');
+                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Mid-semester submitted to HOD Basic Blantyre.');
                     };
                     if($campus==3) // basic Zomba
                     {
@@ -355,7 +356,7 @@ class assessmentsController extends Controller
                             'access_level2' => $newhodID,
                         ]);
                         
-                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Mid-semester submitted to HOD Basic Zomba.');
+                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Mid-semester submitted to HOD Basic Zomba.');
                     };
 
                     //  return redirect()->back()->with('status', 'Assessment submitted to HOD basic - '.' ' .$mycampus.'.');
@@ -392,7 +393,7 @@ class assessmentsController extends Controller
                         // }
                         
                     }
-                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'Mid-semester submitted to Head, ' .$departmentID->department_name.' '. $campus. '.');
+                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'Mid-semester submitted to Head, ' .$departmentID->department_name.' | '. $campus. '.');
              }
             } // End of Mid-semester examination
 
@@ -415,7 +416,7 @@ elseif($assessment==3) // Start of End-of-semester-exam
                             'access_level3' => $newhodID,
                         ]);
                         
-                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'End of semester results submitted to HOD Basic Lilongwe.');
+                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'End of semester results submitted to HOD Basic Lilongwe.');
                         
                         
                     };
@@ -430,7 +431,7 @@ elseif($assessment==3) // Start of End-of-semester-exam
                             'access_level3' => $newhodID,
                         ]);
                         
-                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'End of semester results submitted to HOD Basic Blantyre.');
+                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'End of semester results submitted to HOD Basic Blantyre.');
                     };
                     if($campus==3) // basic Zomba
                     {
@@ -443,7 +444,7 @@ elseif($assessment==3) // Start of End-of-semester-exam
                             'access_level3' => $newhodID,
                         ]);
                         
-                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'End of semester results submitted to HOD Basic Zomba.');
+                        return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'End of semester results submitted to HOD Basic Zomba.');
                     };
 
                     //  return redirect()->back()->with('status', 'Assessment submitted to HOD basic - '.' ' .$mycampus.'.');
@@ -480,10 +481,16 @@ elseif($assessment==3) // Start of End-of-semester-exam
                         // }
                         
                     }
-                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment]))->with('status', 'End of semester results submitted to Head, ' .$departmentID->department_name.' '. $campus. '.');
+                    return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('status', 'End of semester results submitted to Head, ' .$departmentID->department_name.' | '. $campus. '.');
              }
 
             } // End of End-of-semester-exam
+
+elseif($assessment==4) // Start of End-of-semester-exam
+            {
+                return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))->with('invalid', 'Take note, Final grade will be computed by the system itself, upon discussions
+                with HODs, Deans, Lecturers and the Administration, for now its computed by the Lecturer.'); 
+            }
 
 else
             {
@@ -493,4 +500,103 @@ else
 
        // return back();
     }
+
+    public function submitGradesToStudents($id, $assessment, $ay) // id from lecturer_sub table.
+    {
+        // Retrieve the course information
+        $subjfromlecturerTable = lecturerSubjects::findOrfail($id);
+        $mysubject = $subjfromlecturerTable->courseid;
+        $subjcode = Course::findOrfail($mysubject);
+        $mysubjcode = $subjcode->code;
+    
+        // Retrieve the student access for the specific course and academic year
+        $studentaccess = Studentsubject::where('academicyr_id', $ay)
+            ->where('programclass_id', $subjfromlecturerTable->classid)
+            ->where('course_code', $mysubjcode)
+            ->where('semester', $subjfromlecturerTable->semester)
+            ->where('campus_id', $subjfromlecturerTable->campus_id)
+            ->get();
+    
+        // Check if student access records exist
+        if ($studentaccess->isNotEmpty()) {
+            foreach ($studentaccess as $stu) {
+                switch ($assessment) {
+                    case 1:
+                        $stu->update(['access_assessment1' => 1]);
+                        break;
+                    case 2:
+                        $stu->update(['access_assessment2' => 1]);
+                        break;
+                    case 3:
+                        $stu->update(['access_exam_grade' => 1]);
+                        break;
+                    case 4:
+                        $stu->update(['access_final_grade' => 1]);
+                        break;
+                    default:
+                        // Optional: Log or handle invalid assessment values
+                        // Example: Log::error("Invalid assessment value: $assessment");
+                        break;
+                }
+            }
+
+            return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))
+            ->with('status', 'Results successfully published to students.');
+        } else {
+            // Optional: Handle or log if no students match the criteria
+            // Example: Log::warning("No students found for course code: $mysubjcode, academic year: $ay");
+            return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))
+            ->with('invalid', 'No students found');
+        }
+    }
+
+    public function unpublishGradesToStudents($id, $assessment, $ay) // id from lecturer_sub table.
+    {
+        // Retrieve the course information
+        $subjfromlecturerTable = lecturerSubjects::findOrfail($id);
+        $mysubject = $subjfromlecturerTable->courseid;
+        $subjcode = Course::findOrfail($mysubject);
+        $mysubjcode = $subjcode->code;
+    
+        // Retrieve the student access for the specific course and academic year
+        $studentaccess = Studentsubject::where('academicyr_id', $ay)
+            ->where('programclass_id', $subjfromlecturerTable->classid)
+            ->where('course_code', $mysubjcode)
+            ->where('semester', $subjfromlecturerTable->semester)
+            ->where('campus_id', $subjfromlecturerTable->campus_id)
+            ->get();
+    
+        // Check if student access records exist
+        if ($studentaccess->isNotEmpty()) {
+            foreach ($studentaccess as $stu) {
+                switch ($assessment) {
+                    case 1:
+                        $stu->update(['access_assessment1' => 0]);
+                        break;
+                    case 2:
+                        $stu->update(['access_assessment2' => 0]);
+                        break;
+                    case 3:
+                        $stu->update(['access_exam_grade' => 0]);
+                        break;
+                    case 4:
+                        $stu->update(['access_final_grade' => 0]);
+                        break;
+                    default:
+                        // Optional: Log or handle invalid assessment values
+                        // Example: Log::error("Invalid assessment value: $assessment");
+                        break;
+                }
+            }
+
+            return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))
+            ->with('status', 'Results successfully removed from students.');
+        } else {
+            // Optional: Handle or log if no students match the criteria
+            // Example: Log::warning("No students found for course code: $mysubjcode, academic year: $ay");
+            return redirect(route('students.grading', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay]))
+            ->with('invalid', 'No students found');
+        }
+    }
+    
 }

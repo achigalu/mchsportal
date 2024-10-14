@@ -139,7 +139,7 @@
                                                 @php 
                                                 $my_class = App\Models\Admission::where('campus', $admission->campus)
                                                 @endphp
-                                            <select name="class[]" id="" required>
+                                            <select name="class[]" id="">
                                                 <option value="" >--select--</option>
                                                 @foreach($myclass as $classes)
                                                 <option {{($classes->classcode == $admission->class)? 'selected' : ''}} value="{{$classes->classcode}}">{{$classes->classcode}}

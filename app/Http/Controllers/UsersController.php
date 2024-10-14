@@ -172,8 +172,7 @@ class UsersController extends Controller
             'gender' => 'required',
             'email' => 'required|email',
             'role' => 'required',
-            'password'  => 'required|between:8,255|confirmed',
-            'password_confirmation' => 'required'
+            
         ]);
 
         $updateUser = User::find($id);
@@ -187,7 +186,7 @@ class UsersController extends Controller
                 'role'  => $request->role,
                 'department_id' => $request->department,
                 'campus' => $request->campus_id,
-                'password' => Hash::make($request->password)
+                
             ]);
             if($updateUser)
             {

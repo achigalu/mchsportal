@@ -84,18 +84,57 @@
                                      @if( $lectSub->campus_id==2) BT @endif
                                      @if( $lectSub->campus_id==3) ZA @endif 
 
-                                     
+                                    
                                         
                                     Semester {{$lectSub->semester}}
                                      </span>
                                     </span>
                                     </h4>
 
+                                    @php 
+    $subjfromlecturerTable = App\Models\lecturerSubjects::findOrfail($id);
+    $mysubject = $subjfromlecturerTable->courseid;
+    $subjcode = App\Models\Course::findOrfail($mysubject);
+    $mysubjcode = $subjcode->code;
+
+    // Fetch the first student subject record based on filters
+    $studentaccess = App\Models\Studentsubject::where('academicyr_id', $ay)
+        ->where('programclass_id', $subjfromlecturerTable->classid)
+        ->where('course_code', $mysubjcode)
+        ->where('semester', $subjfromlecturerTable->semester)
+        ->where('campus_id', $subjfromlecturerTable->campus_id)
+        ->first();
+
+    // Determine access based on assessment
+    $access = null;
+    switch($assessment) {
+        case 1:
+            $access = $studentaccess->access_assessment1;
+            break;
+        case 2:
+            $access = $studentaccess->access_assessment2;
+            break;
+        case 3:
+            $access = $studentaccess->access_exam_grade;
+            break;
+        case 4:
+            $access = $studentaccess->access_final_grade;
+            break;
+    }
+@endphp
+
                                     <div class="page-title-right">
                                     <div class="btn-group">
+                                    @if($access == 0)
+                                    <a href="{{route('submit.grades.to.students', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay])}}">
                                     <button type="button" class="btn btn-outline-danger" ><span class="mdi mdi-publish"></span>&nbsp;&nbsp;Publish to students &nbsp;&nbsp;</button>
-                                    </button>&nbsp;&nbsp;
-                                    
+                                    </button></a>&nbsp;&nbsp;
+                                    @else
+
+                                    <a href="{{route('unpublish.grades.to.students', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay])}}">
+                                    <button type="button" class="btn btn-outline-info" ><span class="mdi mdi-publish"></span>&nbsp;&nbsp;UnPublish to students &nbsp;&nbsp;</button>
+                                    </button></a>&nbsp;&nbsp;
+                                    @endif
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('list.assessments',['courseid'=>$id, 'ay'=>$ay])}}">
                                         <li class="btn btn-outline-primary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -103,8 +142,8 @@
                                         </ul>
 
                                         <ul class="breadcrumb m-0">
-                                        <a href="{{route('submit.hod', ['id' => $id, 'assessment' => $assessment])}}">
-                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp; Submit to HOD</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <a href="{{route('submit.hod', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay])}}">
+                                        <li class="btn btn-outline-info"><i class="mdi mdi-publish"></i>&nbsp; Submit to HOD</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -166,6 +205,7 @@
                                                 <th style="width: 100px;">Student Name</th>
                                                 <th style="width: 50px;">Registration #</th>
                                                 <th>Grade</th>
+                                                <th>Current Grades with</th>
                                                 <th></th>
 
                                                
@@ -216,7 +256,92 @@
                                                             
 
                                                 </td>
-                                                <td></td>
+
+                                                <td>
+                                                @if($assessment==1 && $student->access_assessment1==1)
+
+                                                STUDENT
+
+                                                    @else
+                                                     @if($assessment==1 && $student->access_assessment1==0)
+                                                        @php
+                                                            $course = App\Models\Course::where('code',$student->course_code)->first();
+                                                  
+                                                            $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
+                                                                        ->where('semester', $lectSub->semester)
+                                                                        ->where('classid', $student->programclass_id)
+                                                                        ->first();
+
+                                                            $gradesWith = App\Models\User::findOrfail($accessID->access_level1);
+                                                        @endphp
+                                                        {{$gradesWith->role}}
+                                                        
+                                                    @endif
+  
+                                                @endif
+
+                                                @if($assessment==2 && $student->access_assessment2==1)
+                                                STUDENT 
+                                                @else 
+                                                    @if($assessment==2 && $student->access_assessment2==0)
+                                                @php
+                                                    $course = App\Models\Course::where('code',$student->course_code)->first();
+ 
+                                                    $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
+                                                                ->where('semester', $lectSub->semester)
+                                                                ->where('classid', $student->programclass_id)
+                                                                ->first();
+                                                    
+                                                    $gradesWith = App\Models\User::findOrfail($accessID->access_level2);
+
+                                                @endphp
+                                                    {{$gradesWith->role}}
+
+                                                    @endif
+                                                @endif
+
+                                                @if($assessment==3 && $student->access_exam_grade==1)
+                                                STUDENT
+                                                    @else
+                                                         @if($assessment==3 && $student->access_exam_grade==0)
+                                                         @php
+                                                    $course = App\Models\Course::where('code',$student->course_code)->first();
+ 
+                                                    $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
+                                                                ->where('semester', $lectSub->semester)
+                                                                ->where('classid', $student->programclass_id)
+                                                                ->first();
+                                                    
+                                                    $gradesWith = App\Models\User::findOrfail($accessID->access_level3);
+
+                                                @endphp
+                                                    {{$gradesWith->role}}
+
+                                                    @endif
+                                                @endif
+
+
+                                                @if($assessment==4 && $student->access_final_grade==1)
+                                                STUDENT 
+
+                                                @else
+                                                    @if($assessment==4 && $student->access_final_grade==0)
+                                                    @php
+                                                    $course = App\Models\Course::where('code',$student->course_code)->first();
+ 
+                                                    $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
+                                                                ->where('semester', $lectSub->semester)
+                                                                ->where('classid', $student->programclass_id)
+                                                                ->first();
+                                                    
+                                                    $gradesWith = App\Models\User::findOrfail($accessID->access_level4);
+
+                                                    @endphp
+                                                    {{$gradesWith->role}}
+
+                                                    @endif  
+                                                @endif
+                                                </td>
                                             </tr>
                                             @endif
                                             @endforeach

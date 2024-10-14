@@ -9,14 +9,32 @@
         <!-- start page title -->
         <!-- start page title -->
 
-@php 
-$user = Auth::user()
-@endphp
+        @php 
+    $user = Auth::user();
+    $lecturer = $user->id;
+    $userid = $user->id;
+    $myrole = $user->role;  // Corrected to access role from the $user object
+    $myroleID = null;
 
-@php 
-$lecturer = $user->id
-@endphp
+    // Use standard PHP if statement within @php block
+    if ($myrole == 'HOD' || $myrole == 'HOD-BASIC-LL' || $myrole == 'HOD-BASIC-BT' || $myrole == 'HOD-BASIC-ZA') {
+        // Set the myroleID to some meaningful value based on your needs
+        $myroleID = $user->id;  // Assuming you're assigning the user ID as the role ID, this could be changed based on your actual logic
+    }
 
+    $lecturersubj = App\Models\lecturerSubjects::where('userid', $userid)->count();
+
+    // Query for HOD access based on myroleID
+    if ($myroleID) {
+        $HODaccess = App\Models\lecturerSubjects::where('access_level1', $myroleID)
+            ->orWhere('access_level2', $myroleID)
+            ->orWhere('access_level3', $myroleID)
+            ->orWhere('access_level4', $myroleID)
+            ->count();
+    } else {
+        $HODaccess = 0;
+    }
+@endphp
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -188,23 +206,19 @@ $campus = App\Models\Campus::all()
                                 </div>
                            
 
-                            @if($user->role=='Lecturer')
+                            @if($lecturersubj)
                             
-                            @if($lecturer)
-                            @php 
-                            $lecturerCourses = App\Models\lecturerSubjects::where('userid', $lecturer)->count()
-                            @endphp
                             <div class="row">
                            
                                 <div class="col-xl-3 col-md-6">
-                                @if($lecturerCourses > 0)
+                                @if($lecturersubj > 0)
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex">
                                             <div class="flex-grow-1">
                                             <a href="{{route('lecturer.courses', $lecturer)}}"> 
                                                 <p class="text-truncate font-size-14 mb-2">Lecturer</p>
-                                               <h5 class="mb-2">Course Grades</h5></a>
+                                               <h5 class="mb-2">My Subjects</h5></a>
                                                 
                                             </div>
                                             <div class="avatar-sm">
@@ -214,7 +228,7 @@ $campus = App\Models\Campus::all()
                                                 
                                                 <a href="{{route('lecturer.courses', $lecturer)}}">
                                                 <span class="avatar-title bg-light text-success rounded-3">
-                                                {{$lecturerCourses}}
+                                                {{$lecturersubj}}
                                                 </span>
                                                 </a>
                                                 @else
@@ -225,10 +239,11 @@ $campus = App\Models\Campus::all()
                                         </div>                                              
                                     </div><!-- end cardbody -->
                                 </div><!-- end card -->
-                                @endif
+                               
                             </div><!-- end col -->
                         @endif
-                        @if($user->role=='HOD' )
+
+                        @if($HODaccess)
                             <div class="col-xl-3 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
@@ -248,7 +263,7 @@ $campus = App\Models\Campus::all()
                                                 @endphp
                                                 <a href="{{route('lecturer.courses', $lecturer)}}">
                                                 <span class="avatar-title bg-light text-success rounded-3">
-                                                {{$lecturerCourses}}
+                                                {{$HODaccess}}
                                                 </span>
                                                 </a>
                                                 @endif

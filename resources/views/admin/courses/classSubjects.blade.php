@@ -199,7 +199,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                            <tr>
                                             <td>{{$subjects->semester}}</td>
                                            
-                                            <td>{{$subjects->course->code}}{{$subjects->id}}</td>
+                                            <td>{{$subjects->course->code}}</td>
                                             <td>{{$subjects->course->name}}</td>
                                             <td>{{$subjects->exam_weight}}</td>
                                             <td>{{$subjects->ca_weight}}</td>

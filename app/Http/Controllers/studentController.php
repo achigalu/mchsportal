@@ -201,7 +201,20 @@ class studentController extends Controller
 
     public function discardUploadLists($id)
     {
-        echo $id;
+       
+        $uploadlist = Uploadlist::find($id);
+        $wrongAd = Admission::where('uploadlist_id', $id)->get();
+        if($wrongAd->isNotEmpty())
+        {
+            foreach($wrongAd as $ad)
+            {
+                $ad->delete();
+            }
+
+            $uploadlist->delete();
+        }
+        return redirect(route('upload.students'))->with('status', 'Upload List Discarded Successfully');
+
     }
 
     public function saveConfirmedStudents(Request $request, $id) // $id == upload-list id

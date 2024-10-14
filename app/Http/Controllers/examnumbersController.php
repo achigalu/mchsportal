@@ -308,43 +308,59 @@ class examnumbersController extends Controller
             ->with('status', 'Examination numbers for: '.$pclass.' |'.$pcampus.'| Semester: ' .$semester.' deleted successfully');
             }
 
-            public function studentFeesCheckbox(Request $request)
+            // public function studentFeesCheckbox(Request $request)
+            // {
+            //     // Get the selected student IDs from the checkboxes
+            //     $selectedStudents = $request->input('students', []);
+                
+            //     // Store selected student IDs in session to maintain state across pages
+            //     session(['selected_students' => $selectedStudents]);
+            
+            //     if (!empty($selectedStudents)) {
+            //         // Update the fee status for selected students
+            //         foreach ($selectedStudents as $studentId) {
+            //             $student = savedExamNumbers::find($studentId);
+            //             if ($student) {
+            //                 $student->fee_status = 1; // Mark as checked (paid)
+            //                 $student->save();
+            //             }
+            //         }
+            
+            //         // Reset fee_status for students not checked
+            //         $allStudents = savedExamNumbers::all(); // Get all students to reset their fee status
+            //         foreach ($allStudents as $student) {
+            //             if (!in_array($student->id, $selectedStudents)) {
+            //                 $student->fee_status = 0; // Mark as unchecked (not paid)
+            //                 $student->save();
+            //             }
+            //         }
+            
+            //         return redirect()->route('student.exam.numbers')->with('status', 'Students fees status updated successfully.');
+            //     } else {
+            //         // No students selected
+            //         return redirect()->route('student.exam.numbers')->with('status', 'No students selected.');
+            //     }
+            // }
+
+            public function studentFeesCheckbox1(Request $request)
             {
-                 // Get the array of student IDs from the request
-                 $studentWithFees = $request->input('students');
-
-                 $stuWithExamNumbers = savedExamNumbers::where('pcode', $request->pcode)
-                ->where('campus', $request->campus)
-                ->where('semester', $request->semester)
-                ->where('acdyear', $request->acdyear)
-                ->get();
-
-                // $stuWithExamNumbers = savedExamNumbers::all(); // Fetch all variables from the database
-
-                 if(!empty($studentWithFees))
-                 {
-                        foreach ($stuWithExamNumbers as $stu) {
-                            // Check if the variable is in the selected array
-                            if (in_array($stu->id, $studentWithFees)) {
-                                // Set to 1 if selected
-                                $stu->fee_status = 1;
-                            } else {
-                                // Set to 0 if not selected
-                                $stu->fee_status = 0;
-                            }
-
-                            // Save the updated status
-                            $stu->save();
-                        }
-
-                return redirect()->route('student.exam.numbers')->with('status', 'Students fees status updated successfully');
+                //dd($request->all());
+                $request->validate([
+                    'student_id' => 'required',
+                    'fee_status' => 'required|boolean',
+                ]);
+                $user = User::findOrfail($request->student_id);
+                $updateUser = $user->reg_num;
+            
+                $student = savedExamNumbers::where('reg_num',$updateUser)->first();// id from savedExamNumbers not Users table.
+                if ($student) {
+                    $student->fee_status = $request->fee_status;
+                    $student->save();
+            
+                    return response()->json(['message' => 'Fee status updated successfully.']);
                 }
-                else
-                {
-                    return redirect()->route('student.exam.numbers')->with('status', 'Students fees status updated successfully');
-                }
-
-            }
-
+            
+                return response()->json(['message' => 'Student not found.'], 404);
+            }            
        
 }

@@ -687,13 +687,13 @@ public function deleteClassAssignedSubjects($subjectID, $classID, $semester, $ay
 
                    
                     return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
-                            ->with('message', 'Nothing deleted, this subject has grades.'); 
+                            ->with('invalid', 'Nothing deleted, this subject has grades.'); 
                     
         }
       
         
         return redirect(route('class.subjects.withID', ['class_id' => $classID, 'semester' => $semester]))
-        ->with('message', 'Nothing deleted, something strange..'); 
+        ->with('invalid', 'Nothing deleted, something strange..'); 
   
 }
 

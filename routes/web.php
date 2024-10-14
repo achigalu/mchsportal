@@ -255,10 +255,13 @@ Route::controller(studentRegistrationController::class)->group(function(){
 
 Route::controller(assessmentsController::class)->group(function(){
     Route::get('/list/assessments/{courseid}/{ay}', 'listAssessments')->name('list.assessments');
-    Route::get('/students/grading/{id}/{assessment}/{ay}', 'studentsGradingAssessment1')->name('students.grading');
-    Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1'); //graded and saved only
+    Route::get('/students/grading/{id}/{assessment}/{ay}', 'studentsGradingAssessment1')->name('students.grading');// id in lecturer_subjects table [display grading form]
+    Route::post('/students/graded/{id}/{assessment}','studentsGraded1')->name('students.graded1'); //graded and saved only [saving process]
     Route::get('/students/graded/{id}/{assessment}','studentsGradedSubmitedToHOD')->name('submited.HOD');//graded saved and submitted to HOD
-    Route::get('/submit/hod/{id}/{assessment}', 'submitHodAssessment1')->name('submit.hod'); //saving to HOD, logic if HOD basic or NOT, then redirect to submited.HOD
+    Route::get('/submit/hod/{id}/{assessment}/{ay}', 'submitHodAssessment1')->name('submit.hod'); //saving to HOD, logic if HOD basic or NOT, then redirect to submited.HOD
+    Route::get('/publish/grades/to/students/{id}/{assessment}/{ay}', 'submitGradesToStudents')->name('submit.grades.to.students');
+    Route::get('/unpublish/grades/to/students/{id}/{assessment}/{ay}', 'unpublishGradesToStudents')->name('unpublish.grades.to.students');
+
 
 });
 
@@ -298,7 +301,7 @@ Route::controller(examnumbersController::class)->group(function(){
     Route::get('/view/class/examnumbers/{pcode}/{pcampus}/{semester}/{count}/{saved}', 'viewClassExamNumbers')->name('view.class.examnumbers');
     Route::get('/save/class/generated/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'saveClassGeneratedExamNumbers')->name('save.class.regenerated.exam.numbers');
     Route::get('/delete/exam/numbers/list/{pclass}/{pcampus}/{semester}/{count}', 'deleteExamNumbersList')->name('delete.exam.numbers.list');
-    Route::post('/student/fees/checkbox', 'studentFeesCheckbox')->name('student.fee.checkbox');
+    Route::post('/student/fees/checkbox', 'studentFeesCheckbox1')->name('student.fee.checkbox');
     
     Route::get('/regenerate/exam/numbers/{pcode}/{pcampus}/{semester}/{count}', 'regenerateExamNumbers')->name('regenerate.exam.numbers');
 

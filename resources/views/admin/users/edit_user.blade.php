@@ -233,26 +233,6 @@
 
         <hr>
 
-        
-    <div class="col-lg-6">
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                @error('password') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" type="password" name="password" placeholder="" id="example-text-input">
-
-            </div>
-            
-        </div>
- 
-        <div class="col-lg-6">
-            <div class="mb-2">
-                <label class="form-label">Confirm Password</label>
-                @error('password_confirmation') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" type="password" name="password_confirmation" placeholder="" id="example-text-input">
-
-            </div>
-            
-        </div>
     </div>
 <div class="form_group">
 
