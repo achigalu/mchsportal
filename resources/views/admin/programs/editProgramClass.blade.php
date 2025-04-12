@@ -141,7 +141,7 @@
 
            
             @php 
-            $lecturers = App\Models\User::whereIn('role', ['lecturer', 'Principal', 'Dean', 'HOD', 'HOD BASIC BT', 'HOD BASIC LL'])->get();
+            $lecturers = App\Models\User::whereIn('role', ['Lecturer', 'Principal', 'Dean', 'HOD', 'HOD-BASIC'])->get();
             @endphp
             <div class="mb-3">
                 <label class="form-label">Coordinator</label>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\lecturerSubjects;
+use App\Models\Studentsubject;
 use App\Models\Academicyear;
 use App\Imports\AdmissionImport;
 use App\Models\Admission;
@@ -12,11 +14,16 @@ use App\Models\Student;
 use App\Models\Uploadlist;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Studentprofile;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\GD\Driver;
+use App\Models\Myclasssubject;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class studentController extends Controller
 {
@@ -232,11 +239,11 @@ class studentController extends Controller
 
                             case 'savelist':
 
-                        $alreadyUpload = Admission::where('uploadlist_id', $id)->first();
+                        $inAdmission = Admission::where('uploadlist_id', $id)->first();
                                
                                 // check if some students are already uploaded - count to add extra
                                 // check if 
-                         $class = Programclass::where('classcode' , $alreadyUpload->class)
+                         $class = Programclass::where('classcode' , $inAdmission->class)
                          ->first();
                             
                          if (!$class)
@@ -249,41 +256,46 @@ class studentController extends Controller
                                // $data['reference_code'] = Admission::where('reference_code', )->where('uploadlist_id', $upload_id)->orderBy('lname', 'asc') ->get();   
                                // program code like CCM
 
-                                $oldStudents = Admission::where('uploadlist_id', $id)->get();
+                                $thisClassAdmissions = Admission::where('uploadlist_id', $id)->get();
                                 
-
-                                if ($oldStudents->isNotEmpty()) {
-                                    $firstStudent = $oldStudents->first();
-                                    $oldStudentsClass = $firstStudent->class;
-                                    $oldStudentsCampus = $firstStudent->campus;
-                                    if($oldStudentsCampus=="Lilongwe")
+                            // GENERAL LOGIC TO DETERMINE THE PROGRAM FOR NEW AND OLD STUDENTS IN ADIMISSION TABLE
+                                if ($thisClassAdmissions->isNotEmpty()) {
+                                    $firstStudent = $thisClassAdmissions->first();
+                                    $thisClassAdmissionsClass = $firstStudent->class;
+                                    $thisClassAdmissionsCampus = $firstStudent->campus;
+                                    if($thisClassAdmissionsCampus=="Lilongwe")
                                     {
-                                        $oldStudentsCampus=1;
+                                        $thisClassAdmissionsCampus=1;
                                     }
-                                    elseif($oldStudentsCampus=="Blantyre")
+                                    elseif($thisClassAdmissionsCampus=="Blantyre")
                                     {
-                                        $oldStudentsCampus=2;
+                                        $thisClassAdmissionsCampus=2;
                                     }
                                     else
                                     {
-                                        $oldStudentsCampus=3;
+                                        $thisClassAdmissionsCampus=3;
                                     }
 
-                                    $programID = Programclass::where('classcode', $oldStudentsClass)
-                                    ->where('campus_id', $oldStudentsCampus)->first();
-                                    $programID = $programID->program->id;
-                                   // dd($programID);
+                                    $classID = Programclass::where('classcode', $thisClassAdmissionsClass)
+                                    ->where('campus_id', $thisClassAdmissionsCampus)->first();
+
+                                     
+                                    if (!$classID) {
+                                        return redirect()->route('confirm.students.lists', $id)->with('invalid', 'The specified class is not properlydefined in this system - check the class code or campus.');
+                                    }
+
+                                   $programID = $classID->program->id;
                                      // Replace 'attribute_name' with the actual attribute you want to access
                                     // Do something with $attribute
                                 }
 
                                 // Check if any of the old students have a non-empty reg_num
 
-                                                $hasRegNum = $oldStudents->pluck('reg_num')->filter()->isNotEmpty();
+                                                $hasRegNum = $thisClassAdmissions->pluck('reg_num')->filter()->isNotEmpty();
 
                                                 if ($hasRegNum) {
                                                 // There are students with non-empty reg_num values
-                                                foreach ($oldStudents as $oldStu) {
+                                                foreach ($thisClassAdmissions as $oldStu) {
                                                    
                                                     $reg_num = $oldStu->reg_num;
                                                     $formatted_reg_num = str_replace('/', '', $reg_num);
@@ -296,7 +308,7 @@ class studentController extends Controller
                                                     return redirect()->back()->with('invalid', 'This students list already uploaded in this portal');
                                                     }
                                                     // Continuing or graduated students with regNums already in place
-                                                    User::create([
+                                                    $studentsAdded = User::create([
                                                     'academicyear_id' => $oldStu->academicyear,
                                                     'programclass' => $oldStu->class,
                                                     'uploadlist_id' => $id,
@@ -307,9 +319,10 @@ class studentController extends Controller
                                                     'lname' => $oldStu->lname,
                                                     'entry_level' => $oldStu->entry_level,
                                                     'email' => $email, // Convert email to lowercase
+                                                    'campus_id' => $thisClassAdmissionsCampus,
                                                     'campus' => $oldStu->campus,
                                                     'program_id' => $programID,
-                                                    'password' => Hash::make($oldStu->dob),
+                                                    'password' => Hash::make('password'),
                                                     'role' => $oldStu->role,
                                                     'semester' => $oldStu->semester,
                                                     'gender' => $oldStu->gender,
@@ -317,7 +330,7 @@ class studentController extends Controller
                                                     ]);
                                                     
                                                     }
-
+    
                                                     $process = Uploadlist::find($id);
                                                     if(!empty($process))
                                                     {
@@ -387,7 +400,6 @@ class studentController extends Controller
                                                     // Intake month like January = 01
                                                 $month = Uploadlist::where('academic_yr_id', $request->acy[0])->first();
                                                 $intake_month = $month->intake_month;
-                                                
                                               
                                                 $uploadlist_id = $month->id;
                                                 
@@ -416,44 +428,46 @@ class studentController extends Controller
                                                         if (!empty($checked_email)) {
                                                         return redirect()->back()->with('invalid', 'This students list was already uploaded in this mchs system.');
                                                         }
-                                                        dd(
-                                                            $request->acy[$key],
-                                                            $request->class[$key],
-                                                            $id,
-                                                            $request->class[$key],
-                                                            $reg_number . $formatted_counter,
-                                                            $request->fname[$key],
-                                                            $request->lname[$key],
-                                                            $request->dob[$key],
-                                                            $request->initials[$key],
-                                                            $request->entry_type[$key],
-                                                            $email,
-                                                            $campus,
-                                                            Hash::make(strtolower($request->dob[$key])),
-                                                            $request->role[$key],
-                                                            $programID,
-                                                            $request->semester[$key],
-                                                            $request->gender[$key],
-                                                        );
-                                                       // Adding to the existing list of new students
-                                                        // User::create([
-                                                        // 'academicyear_id' => $request->acy[$key],
-                                                        // 'programclass' => $request->class[$key],
-                                                        // 'uploadlist_id' => $id,
-                                                        // 'reg_num' => $reg_number . $formatted_counter,
-                                                        // 'fname' => $request->fname[$key],
-                                                        // 'lname' => $request->lname[$key],
-                                                        // 'dob' => $request->dob[$key],
-                                                        // 'initials' => $request->initials[$key],
-                                                        // 'entry_level' => $request->entry_type[$key],
-                                                        // 'email' => $email, // Convert email to lowercase
-                                                        // 'campus' => $campus,
-                                                        // 'password' => Hash::make(strtolower($request->dob[$key])),
-                                                        // 'role' => $request->role[$key],
-                                                        // 'program_id' => $programID,
-                                                        // 'semester' => $request->semester[$key],
-                                                        // 'gender' => $request->gender[$key],
-                                                        // ]);
+                                                        // dd(
+                                                        //     $request->acy[$key],
+                                                        //     $request->class[$key],
+                                                        //     $id,
+                                                        //     $request->class[$key],
+                                                        //     $reg_number . $formatted_counter,
+                                                        //     $request->fname[$key],
+                                                        //     $request->lname[$key],
+                                                        //     $request->dob[$key],
+                                                        //     $request->initials[$key],
+                                                        //     $request->entry_type[$key],
+                                                        //     $email,
+                                                        //     $campus,
+                                                        //     Hash::make(strtolower($request->dob[$key])),
+                                                        //     $request->role[$key],
+                                                        //     $programID,
+                                                        //     $request->semester[$key],
+                                                        //     $request->gender[$key],
+                                                        // );
+
+                                                             //Adding to the existing list of new students
+                                                        $studentsAdded = User::create([
+                                                        'academicyear_id' => $request->acy[$key],
+                                                        'programclass' => $request->class[$key],
+                                                        'uploadlist_id' => $id,
+                                                        'reg_num' => $reg_number . $formatted_counter,
+                                                        'fname' => $request->fname[$key],
+                                                        'lname' => $request->lname[$key],
+                                                        'dob' => $request->dob[$key],
+                                                        'initials' => $request->initials[$key],
+                                                        'entry_level' => $request->entry_type[$key],
+                                                        'email' => $email, // Convert email to lowercase
+                                                        'campus_id' => $uploadStudentsCampus,
+                                                        'campus' => $campus,
+                                                        'password' => Hash::make(strtolower('password')),
+                                                        'role' => $request->role[$key],
+                                                        'program_id' => $programID,
+                                                        'semester' => $request->semester[$key],
+                                                        'gender' => $request->gender[$key],
+                                                        ]);
                                                         }
                                                         $process = Uploadlist::find($id);
                                                         if(!empty($process))
@@ -476,7 +490,7 @@ class studentController extends Controller
                 $email = strtolower($program_code . $campus_code . $intake_year . $intake_month . $formatted_counter . '@mchs.mw');
                 $checked_email = User::where('email', $email)->first();
                 if (!empty($checked_email)) {
-                return redirect()->back()->with('invalid', 'This students list was already uploaded2');
+                return redirect()->back()->with('invalid', 'This students list was already uploaded in this system');
                 }
                 // new students and assigned regNumbers from 1
                 User::create([
@@ -490,8 +504,9 @@ class studentController extends Controller
                 'initials' => $request->initials[$key],
                 'entry_level' => $request->entry_type[$key],
                 'email' => $email, // Convert email to lowercase
+                'campus_id' => $uploadStudentsCampus,
                 'campus' => $campus,
-                'password' => Hash::make(strtolower($request->dob[$key])),
+                'password' => Hash::make(strtolower('password')),
                 'program_id' => $programID,
                 'role' => $request->role[$key],
                 'semester' => 1,
@@ -554,6 +569,7 @@ class studentController extends Controller
         {
             if(!empty($id))
             {
+                $userList = User::where('uploadlist_id' , $id)->delete();
                 Admission::where('uploadlist_id' , $id)->delete();
                 Uploadlist::where('id' , $id)->delete();
             }
@@ -589,11 +605,11 @@ class studentController extends Controller
         return view('admin.student.student_profile');
     }
 
-    public function storeStudentProfile(Request $request)
+    public function storeStudentProfile(Request $request) 
     {
         $validated = $request->validate([
-            'title' =>'required',
-            'initials' => '',
+            'title' => 'required',
+            'initials' => 'nullable|string',
             'dbirth' => 'required|date',
             'gender' =>'required',
             'marital' =>'required',
@@ -602,22 +618,160 @@ class studentController extends Controller
             'district' =>'required',
             'traditional' =>'required',
             'village' =>'required',
-            'student_phone1' =>'required',
-            'student_phone2' =>'required',
-            'student_email' =>'required|email',
+            'student_phone1' =>'nullable',
+            'student_phone2' =>'nullable',
+            'student_email' =>'nullable|email',
             'student_address' =>'required',
             'kin_fullname' =>'required',
             'relationship' =>'required',
-            'kin_phone' =>'required',
-            'kin_email' =>'required|email',
-            'kin_address' =>'required',
+            'kin_phone' =>'nullable',
+            'kin_email' =>'nullable|email',
+            'kin_address' =>'nullable',
+            'student_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
-        if(!empty($validated))
-        {
+    
+        $dir = 'uploads/students_photo';
+        if (!file_exists(public_path($dir))) {
+            mkdir(public_path($dir), 0777, true);
+        }
+    
+        $imageFields = [
+            'student_photo',
+        ];
+    
+        $imageName = null;
+    
+        // Handle image file upload
+        foreach ($imageFields as $field) {
+            if ($request->hasFile($field)) {
+                // Get the file from the request
+                $image = $request->file($field);
+    
+                // Generate a unique filename
+                $imageName = time() . uniqid('_', true) . '.' . $image->getClientOriginalExtension();
+    
+                // Move the image to the desired directory
+                $image->move(public_path($dir), $imageName);
+            }
+        }
+    
+        // Insert the validated data into the database
+        if (!empty($validated)) {
             $studentprofile = Studentprofile::create([
                 'title' => $request->title,
                 'initials' => $request->initials,
+                'dbirth' => $request->dbirth,
+                'gender' => $request->gender,
+                'marital' => $request->marital,
+                'country' => $request->country,
+                'religion' => $request->religion,
+                'district' => $request->district,
+                'traditional' => $request->traditional,
+                'village' => $request->village,
+                'student_phone1' => $request->student_phone1,
+                'student_phone2' => $request->student_phone2,
+                'student_email' => $request->student_email,
+                'student_address' => $request->student_address,
+                'kin_fullname' => $request->kin_fullname,
+                'relationship' => $request->relationship,
+                'kin_phone' => $request->kin_phone,
+                'kin_email' => $request->kin_email,
+                'kin_address' => $request->kin_address,
+                'photo' => $imageName,  // Save the image filename
+                'user_id' => Auth::user()->id,
+            ]);
+    
+            if ($studentprofile) {
+                return redirect(route('myhome'))->with('status', 'Profile created successfully');
+            } else {
+                return redirect()->route('myhome')->with('invalid', 'Failed to create profile');
+            }
+        }
+    }
+
+    public function editStudentProfile($id)
+    {
+        $auth_user = Studentprofile::where('user_id', $id)->first(); 
+        $user = User::findOrfail($id);
+
+        $data = [
+            'stuProfile' => $auth_user,
+            'stu' => $user
+        ];
+
+        return view('admin.student.edit_student_profile', $data);
+    }
+
+    public function updateStudentProfile(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'title' =>'required',
+                'student_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'initials' => 'nullable|string',
+                'dbirth' => 'required|date',
+                'gender' =>'required',
+                'marital' =>'required',
+                'country' =>'required',
+                'religion' =>'required',
+                'district' =>'required',
+                'traditional' =>'required',
+                'village' =>'required',
+                'student_phone1' =>'required',
+                'student_phone2' =>'nullable',
+                'student_email' =>'required|email',
+                'student_address' =>'required',
+                'kin_fullname' =>'required',
+                'relationship' =>'required',
+                'kin_phone' =>'required',
+                'kin_email' =>'required|email',
+                'kin_address' =>'required',
+            ]);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            dd($e->errors()); // Debug validation errors
+        }
+
+        $profileID = Auth::user()->id;
+        $userProfile = Studentprofile::where('user_id', $profileID)->first();
+    
+        if (!empty($userProfile)) {
+            $dir = 'uploads/students_photo';
+            if (!file_exists(public_path($dir))) {
+                mkdir(public_path($dir), 0777, true);
+            }
+    
+            $imageFields = ['student_photo'];
+            $imageName = $userProfile->photo ?? 'students_photo/3.jpg'; // Default image path
+    
+            foreach ($imageFields as $field) {
+                if ($request->file($field)) {
+                    $manager = new ImageManager(new Driver());
+            
+                    // Delete old photo if it exists and is not the default
+                    if (!empty($userProfile->photo) && file_exists(public_path($userProfile->photo))) {
+                        unlink(public_path($userProfile->photo));
+                    }
+            
+                    // Generate a unique filename
+                    $imageName = time() . uniqid('_', true) . '.' . $request->file($field)->getClientOriginalExtension();
+                    $imagePath = $dir . '/' . $imageName; // Ensure correct path
+            
+                    // Process and save the image
+                    $image = $manager->read($request->file($field));
+                    $image->toJpeg(80)->save(public_path($imagePath));
+            
+                    // Debugging check
+                    if (!file_exists(public_path($imagePath))) {
+                        dd('Image not saved:', public_path($imagePath));
+                    }
+                }
+            }
+            // Update student profile
+            $studentprofile = $userProfile->update([
+                'title' => $request->title,
+                'initials' => $request->initials,
+                'photo' => $imageName, // Always has a value (uploaded image or default)
                 'dbirth' => $request->dbirth,
                 'gender' => $request->gender,
                 'marital' => $request->marital,
@@ -635,15 +789,15 @@ class studentController extends Controller
                 'kin_phone' =>$request->kin_phone,
                 'kin_email' =>$request->kin_email,
                 'kin_address' =>$request->kin_address,
-                'user_id' => Auth::user()->id,
+                'user_id' => $profileID,
             ]);
 
-             if($studentprofile)  
-             {
+            if ($studentprofile) {
                 return redirect()->back()->with('status', 'Profile updated successfully');
-             }
-        };
-
+            } else {
+                return redirect(route('myhome'))->with('invalid', 'Failed to create profile');
+            }
+        }
     }
 
     public function editPassword()
@@ -723,12 +877,13 @@ class studentController extends Controller
         {
             $validated = $request->validate([
                 'fname' => 'required',
-                'initials' => '',
+                'initials' => 'nullable',
                 'lname' => 'required',
                 'reg_num' => 'required',
-                'phone' => 'required',
-                'email' => 'required|email',
-                'dbirth' => 'required|date'
+                'phone' => 'nullable',
+                'email' => 'nullable',
+                'gender' => 'nullable',
+                'dbirth' => 'nullable'
             ]);
 
             if($validated)
@@ -745,6 +900,7 @@ class studentController extends Controller
                             'fname' => $request->fname,
                             'initials' => $request->initials,
                             'lname' => $request->lname,
+                            'gender' =>$request->gender,
                             'phone' => $request->phone,
                             'email' => $request->email,
                             'dob' => $request->dbirth
@@ -789,6 +945,183 @@ class studentController extends Controller
             }
 
         }
+
+        public function studentInfo($id)
+        {
+          $student = User::findOrFail($id);
+          $stuprofile = Studentprofile::where('user_id',$id)->first();
+            return view('admin.student.students_info', compact('student', 'stuprofile'));
+        }
+
+        public function deleteSingleStudent($id)
+        {
+
+            try {
+                $user = User::findOrFail($id); // Will throw an exception if not found
+                $user->delete(); // Delete the user
+        
+                // Redirect back with a success message
+                return redirect()->back()->with('status', 'User ' . $user->fname . ' ' . $user->lname . ' deleted successfully');
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+                // Handle user not found case
+                return redirect()->back()->with('error', 'User not found');
+            } catch (\Exception $e) {
+                // Handle other possible errors
+                return redirect()->back()->with('error', 'An error occurred while deleting the user');
+            }
+        }
+
+
+        public function singleStudentChangeClass(Request $request)
+        {
+            $validated = $request->validate([
+                'class_id' => 'nullable',
+                'semester_id' => 'nullable',
+                'reason' => 'nullable'
+            ]);
+        
+            if ($validated) {
+                $class = $request->class_id;
+                $semester = $request->semester_id;
+                $reason = $request->reason;
+                $stuID = $request->student_id;
+        
+                $stuToChange = User::findOrFail($stuID);
+        
+                $updateData = [];
+        
+                // Only update class if provided
+                if ($class) {
+                    $myclass = Programclass::findOrFail($class);
+                    $updateData['programclass'] = $myclass->classcode; // Use classcode instead of ID
+        
+                    // Determine campus details based on class
+                    $updateData['campus_id'] = $myclass->campus_id;
+                    $updateData['campus'] = match ($myclass->campus_id) {
+                        1 => 'Lilongwe',
+                        2 => 'Blantyre',
+                        3 => 'Zomba',
+                        default => 'Unknown'
+                    };
+                }
+        
+                // Only update semester if provided
+                if ($semester) {
+                    $updateData['semester'] = $semester;
+                }
+        
+                if (!empty($updateData)) {
+                    $stuToChange->update($updateData);
+                }
+        
+                return redirect()->route('student.info', ['id' => $stuID])
+                    ->with('status', 'Student: ' . $stuToChange->fname . ' ' . $stuToChange->lname . ' changed to: ' . 
+                        ($class ? $myclass->classcode : 'No Change') . ' | Semester ' . ($semester ?? 'No Change') . ' - ' . 
+                        ($updateData['campus'] ?? 'No Change'));
+            }
+        
+            return back()->with('error', 'Failed to change student class.');
+        }
+
+        
+public function addClassModulesToSingleStudent($student_id)
+        {
+            $student = User::findOrFail($student_id);
+            $data['singleStudent'] = $student;
+            $data['class'] = $student->programclass;
+            $data['semester'] = $student->semester;
+            $data['ourclass'] = Programclass::where('classcode', $data['class'])->where('campus_id', $student->campus_id)->first();
+            $data['class_program'] = $data['ourclass']->program_id;
+            $data['class_code'] = $data['ourclass']->classcode;
+            
+            return view('admin.intake.attach_subjects_to_single_student', $data); 
+        }
+
+        
+        public function allocateSubjectsToOneStudent($class, $semester, $campus, $student)
+        {
+            // Retrieve class information
+            $classID = Programclass::find($class);
+            if (!$classID) {
+                return redirect()->back()->with('error', 'Class not found.');
+            }
+        
+            // Retrieve subjects for the class and semester without an academic year
+            $classSubjects = Myclasssubject::where('programclass_id', $class)
+                ->where('semester', $semester)
+                ->whereNull('academicyear_id')
+                ->where('classcode', $classID->classcode)
+                ->get();
+        
+            // Retrieve campus information
+            $campus = Campus::find($campus);
+            if (!$campus) {
+                return redirect()->back()->with('invalid', 'Campus not found.');
+            }
+        
+            // Retrieve the student
+            $studentInstance = User::find($student);
+            if (!$studentInstance || 
+                $studentInstance->programclass != $classID->classcode || 
+                $studentInstance->semester != $semester || 
+                $studentInstance->campus_id != $campus->id) {
+                return redirect()->back()->with('error', 'Student not found in the specified class, semester, and campus.');
+            }
+        
+            // 1️⃣ Get the student's currently assigned subjects from Studentsubject
+            $oldSubjects = Studentsubject::where('registration_no', $studentInstance->reg_num)
+                ->where('semester', $semester)
+                ->where('programclass_id', $class)
+                ->where('academicyr_id', $studentInstance->academicyear_id)
+                ->pluck('course_code')
+                ->toArray();
+        
+            // 2️⃣ Get new subjects from Myclasssubject
+            $newSubjects = $classSubjects->pluck('course.code')->toArray();
+        
+            // 3️⃣ Identify removed subjects (old ones that are NOT in the new ones)
+            $removedSubjects = array_diff($oldSubjects, $newSubjects);
+            if (!empty($removedSubjects)) {
+                Studentsubject::where('registration_no', $studentInstance->reg_num)
+                    ->where('semester', $semester)
+                    ->where('programclass_id', $class)
+                    ->where('academicyr_id', $studentInstance->academicyear_id)
+                    ->whereIn('course_code', $removedSubjects)
+                    ->delete();
+        
+                Log::info("Deleted subjects", [
+                    'student' => $studentInstance->reg_num,
+                    'removed_courses' => $removedSubjects
+                ]);
+            }
+        
+            // 4️⃣ Assign new subjects that are missing
+            foreach ($classSubjects as $subject) {
+                Studentsubject::firstOrCreate(
+                    [
+                        'academicyr_id' => $studentInstance->academicyear_id,
+                        'programclass_id' => $class,
+                        'semester' => $semester,
+                        'campus_id' => $campus->id,
+                        'registration_no' => $studentInstance->reg_num,
+                        'course_code' => $subject->course->code,
+                        'user_id' => $studentInstance->id,
+                    ],
+                    [
+                        'assessment1' => null,
+                        'assessment2' => null,
+                        'exam_grade' => null,
+                        'final_grade' => null,
+                    ]
+                );
+            }
+        
+            return redirect(route('add.subject.to.students'))->with([
+                'status' => "Subjects assigned to Student ({$studentInstance->reg_num}) in {$classID->classcode} | {$campus->campus} Campus, Semester: {$semester}.",
+            ]);
+        }
+        
+/// END OF MODIFIED VERSION......
 
    
 

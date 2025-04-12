@@ -69,7 +69,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Lecturer Modules</h4>
+                                    <h4 class="mb-sm-0">Modules for: {{Auth::user()->fname}} {{Auth::user()->lname}}</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -77,7 +77,7 @@
 aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;</button>
 </button>&nbsp;&nbsp;
 <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Exel</a>
+    <a class="dropdown-item" href="#">Exel</a> 
     <a class="dropdown-item" href="#">PDF</a>
    
 </div>
@@ -166,6 +166,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 ->where('campus_id', $course->campus_id)
                                                 ->where('academicyr_id', $ay)
                                                 ->where('course_code', $lcourse->code)->count();
+                                                
 
                                                 @endphp
                                                 <span class="badge rounded-pill bg-light fs-5"> 
@@ -174,7 +175,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </td>
                                                 
                                                 <td style="width: 30px;">
-                                                <a href="#"><button class="btn btn-outline-warning" style="float: right;">Notices</button></a><br><br>
+                                                <button class="btn btn-outline-warning" style="float: right;" data-bs-toggle="modal" data-bs-target="#myModal">Notices</button><br><br>
                                                 <a href="{{route('list.assessments', ['courseid'=>$course->id, 'ay'=>$ay])}}"><button class="btn btn-outline-info" style="float: right;">Assessments</button></a>
                                                 </td>
                                             </tr>
@@ -198,6 +199,33 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                 </div>
                     <!-- End Page-content -->
                     @include('admin.layout.footer')
+
+                    <!-- sample modal content -->
+                    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="myModalLabel">Module Announcements</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="">
+                                                                    <input type="text" class="form-control" placeholder="Enter Module Title"><br>
+                                                                    <textarea name="" rows="4" id="" class="form-control" placeholder="Enter Module Announcement"></textarea>
+                                                                    
+                                                                
+                                                                
+                                                                
+                                                                
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light waves-effect" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-primary waves-effect waves-light">Submit</button>
+                                                            </div>
+                                                            </form>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div><!-- /.modal -->
 
                     </div>
 

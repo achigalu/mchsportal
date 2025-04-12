@@ -89,8 +89,8 @@
 <div class="card-body">
 
 <h4 class="card-title">Subject Configurations. <br>
-<br> Class: {{$class->classcode}} | @if($class->campus_id==1)Lilongwe  @elseif($class->campus_id==2)Blantyre
-@elseif($class->campus_id==3)Zomba @endif</h4>Subject: {{$subject->code}} | {{$subject->name}} <br><br>
+<br> Class: {{$class->classcode}} - Semester: {{$semester}} | @if($class->campus_id==1)Lilongwe  @elseif($class->campus_id==2)Blantyre
+@elseif($class->campus_id==3)Zomba @endif</h4>Module: {{$subject->code}} | {{$subject->name}} <br><br>
 
 
 @if(session()->has('message'))
@@ -224,7 +224,7 @@
 
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Create</button> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Add to Class</button> &nbsp;&nbsp;
 </form>
 <a href="{{route('class.subjects.withID', ['class_id' => $class->id, 'semester' => $semester])}}">
     <button class="btn btn-outline-secondary">Cancel</button></a><br><br>

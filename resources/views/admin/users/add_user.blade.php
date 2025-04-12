@@ -202,6 +202,7 @@
                         <option value="Lilongwe">Lilongwe</option>
                         <option value="Blantyre">Blantyre</option>
                         <option value="Zomba">Zomba</option>
+                        <option value="Central Office"> Central Office</option>
 
                 </select>
             </div>

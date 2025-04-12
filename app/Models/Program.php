@@ -15,7 +15,8 @@ class Program extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class, 'program_id');
+       // return $this->belongsTo(User::class);
     }
 
     public function department()

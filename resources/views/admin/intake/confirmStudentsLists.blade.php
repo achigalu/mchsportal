@@ -139,7 +139,7 @@
                                                 @php 
                                                 $my_class = App\Models\Admission::where('campus', $admission->campus)
                                                 @endphp
-                                            <select name="class[]" id="">
+                                            <select name="class[]" id="" class="form-control select2">
                                                 <option value="" >--select--</option>
                                                 @foreach($myclass as $classes)
                                                 <option {{($classes->classcode == $admission->class)? 'selected' : ''}} value="{{$classes->classcode}}">{{$classes->classcode}}
@@ -148,7 +148,7 @@
                                                 @endforeach
                                             </select></td>
                                             <td>
-                                            <select name="entry_type[]" id="" required>
+                                            <select name="entry_type[]" id="" required class="form-control select2">
                                                 <option value="">--select--</option>
                                                 <option {{ ($admission->entry_level)? 'selected' : '' }} value="{{ $admission->entry_level }}">
                                                 {{ $admission->entry_level }}
@@ -161,7 +161,7 @@
 
                                             </td>
                                             <td>
-                                            <select name="campus[]" id="" required>
+                                            <select name="campus[]" id="" required class="form-control select2">
                                                 <option value="">--select--</option>
                                                 @foreach($campus as $campuses)
                                                 <option {{($campuses->campus==$admission->campus)? 'selected' : ''}} value="{{$campuses->campus}}">{{$campuses->campus}}</option>

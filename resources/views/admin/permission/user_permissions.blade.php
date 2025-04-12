@@ -128,7 +128,7 @@
   <div class="form-group">
 &nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update</button> &nbsp;&nbsp;
 </form>
-<a href="{{route('list.roles')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
+<a href="{{route('list.users')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
 </div>  
 
 

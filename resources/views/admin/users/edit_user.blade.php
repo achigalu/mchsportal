@@ -70,7 +70,7 @@
 <div class="row">
 <div class="col-12">
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-<h4 class="mb-sm-0">Update User</h4>
+<h4 class="mb-sm-0">Update User: {{$user->fname}} {{$user->lname}}</h4>
 
 <div class="page-title-right">
 
@@ -137,19 +137,18 @@
 
     
         <div class="col-lg-6">
-            <div class="mb-2">
+        <div class="mb-2">
                 <label class="form-label">Gender</label>
                 @error('gender') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-select" name="gender" aria-label="Default select example">
                 <option value="M" {{ $user->gender == 'M' ? 'selected' : '' }}>Male</option>
                 <option value="F" {{ $user->gender == 'F' ? 'selected' : '' }}>Female</option>
                             
-                            </select>
-
-
-            </div>
-            
-        </div><br><p><hr>
+        </select>
+        </div>    
+        </div>
+        
+        <br><p><hr>
  
         <div class="col-lg-6">
             <div class="mb-4">
@@ -168,10 +167,11 @@
         @endphp
                 <label class="form-label">Roles</label> 
                 @error('role') <span class="text-danger">{{$message}}</span> @enderror 
+                
                 <select class="form-control select2" name="role">
-                    <option value="{{$user->role}}"> {{$user->role}} </option>
+                    <option value="">-- select --</option>
                     @foreach($roles as $role)
-                        <option value="{{$role->name}}">{{$role->name}}</option>
+                        <option value="{{$role->name}}" {{ $user->role == $role->name ? 'selected' : '' }}>{{$role->name}}</option>
                    @endforeach
                 </select>
              </div>
@@ -193,6 +193,7 @@
                         @if($mydepartment->campus_id==1) LL @endif
                         @if($mydepartment->campus_id==2) BT @endif
                         @if($mydepartment->campus_id==3) ZA @endif
+                        <option value="">-- select --</option>
                        
                     </option>
                     
@@ -223,6 +224,7 @@
                         <option value="Lilongwe">Lilongwe</option>
                         <option value="Blantyre">Blantyre</option>
                         <option value="Zomba">Zomba</option>
+                        <option value="Central Office"> Central Office</option>
 
                 </select>
             </div>

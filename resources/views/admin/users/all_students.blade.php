@@ -75,7 +75,21 @@
 
 <!-- start page title -->
 
+@if(session()->has('status'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 
+@if(session()->has('invalid'))
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 
 
 
@@ -94,18 +108,18 @@
                                 <div class="card">
                                     <div class="card-body">
         
-                                        <h4>Search any student.</h4><br>
+                                        <h4>Search a student.</h4><br>
                                         
         
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color:#e6e6e6;">
                                                 <th>Photo</th>
-                                                <th>Student#</th>
+                                                <th>Registration Number</th>
                                                 <th>Full Name</th>
                                                 <th>Gender</th>
                                                 <th>Campus</th>
-                                                <th>Registration Status</th>
+                                                <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
@@ -121,16 +135,17 @@
                                                 <td>{{$student->fname}} {{$student->lname}}</td>
                                                 <td>{{$student->gender}}</td>
                                                 <td>{{$student->campus}}</td>
-                                                <td>
-                                                    @if($student->registered==0) Not registered @endif
-                                                    @if($student->registered==1) Registered @endif
+                                                <td style="text-align: center;">
+                                                 {{ $student->role == 'student' ? "Student" : $student->role }}
                                                 </td>
                                                 
                                                 
-                                                <td>
-                                                <a href="{{route('edit.student',['studentID'=>$student->id])}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button> </a>
-                                                <a href=""><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a>
-                                                <a href="{{route('student.change.password', $student->id)}}"><button class="btn btn-outline-warning"><i class="fas fa-lock"></i></button> </a>
+                                                <td style="text-align: center;">
+                                                <a href="{{route('edit.student',['studentID'=>$student->id])}}"><button class="btn btn-outline-primary"><i class="fas fa-pencil-alt"></i></button> </a>
+                                                <a href="{{route('student.info', ['id'=>$student->id])}}"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a>
+                                                <a href="{{route('student.change.password', $student->id)}}"><button class="btn btn-outline-secondary"><i class="fas fa-lock"></i></button> </a>
+                                                <button class="btn btn-outline-danger delete-btn" data-id="{{$student->id}}" data-name="{{$student->fname}} {{$student->lname}}"><i class="fas fa-trash-alt"></i></button>
+                                              
                                             
                                             </td> 
                                             </tr>
@@ -163,7 +178,26 @@
 
 
 
-
+<!-- Single Modal (Outside Loop) -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalText"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">No</button>
+                <a id="deleteConfirmLink" href="#">
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Yes, delete</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -238,7 +272,28 @@
 
         <script src="{{asset('assets/js/app.js')}}"></script>
 
+   <!-- JavaScript to Update Modal Content -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            let studentId = this.getAttribute("data-id");
+            let studentName = this.getAttribute("data-name");
 
+            document.getElementById("deleteModalLabel").innerText = `Delete ${studentName}?`;
+            document.getElementById("deleteModalText").innerText = `Are you sure you want to delete ${studentName}?`;
+
+            // Set the delete link dynamically
+            let deleteUrl = `{{ route('delete.single.student', ':id') }}`.replace(':id', studentId);
+            document.getElementById("deleteConfirmLink").setAttribute("href", deleteUrl);
+
+            // Show the modal
+            let modal = new bootstrap.Modal(document.getElementById("deleteModal"));
+            modal.show();
+        });
+    });
+});
+</script>
         
 
     </body>

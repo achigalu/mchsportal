@@ -108,16 +108,36 @@
                         
                     <div class="card-body" >
                     <select class="form-control select2" aria-label="Default select example" name="classID" required>
-                    <option value="">-- selects --</option>
-                    @if($classes->isNotEmpty())
-                    @foreach($classes as $class)
-                    <option value="{{$class->id}}">{{$class->classcode}} - 
-                    @if($class->campus_id==1) LL @endif
-                    @if($class->campus_id==2) BT @endif
-                    @if($class->campus_id==3) ZA @endif
-                    </option>
-                    @endforeach
-                    @endif
+                    <option value="">-- select --</option>
+                    @if(Auth::user()->role=='Campus Registrar')
+                        @if(!empty($cr))
+                        @foreach($cr as $class)
+                        <option value="{{$class->id}}">{{$class->classcode}} - 
+                                @if($class->campus_id==1) LL @endif
+                                @if($class->campus_id==2) BT @endif
+                                @if($class->campus_id==3) ZA @endif
+                                </option>
+                                @endforeach
+                        @endif
+                        @elseif(Auth::user()->role=='Admin' || Auth::user()->role=='Administrator'||
+                        Auth::user()->role=='Accountant' ||
+                        Auth::user()->role=='Finance Manager' ||
+                        Auth::user()->role=='Assistant Accountant' || 
+                        Auth::user()->role=='Accounts Clerk')
+
+                                @if(!empty($admin))
+                                @foreach($admin as $class)
+                                <option value="{{$class->id}}">{{$class->classcode}} - 
+                                        @if($class->campus_id==1) LL @endif
+                                        @if($class->campus_id==2) BT @endif
+                                        @if($class->campus_id==3) ZA @endif
+                                        </option>
+                                        @endforeach
+                                @endif
+                        
+                        @else
+                      
+                        @endif
                     </select>
                     </div>
                     </div>
@@ -144,14 +164,14 @@
                         <div class="card bg-light text-dark">
                         
                     <div class="card-body">
-                    <button class="btn btn-info w-100" type="submit" style="margin-top: 8px;">View students</button>
+                    <button class="btn btn-info w-100" type="submit" style="margin-top: 8px;">Generate exam numbers</button>
                     </div>
                     </div>
                     </div>
                     </div>
 
 </form>
-
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 
 </div>

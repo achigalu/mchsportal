@@ -5,6 +5,10 @@ use App\Models\User;
 use App\Models\Faculty;
 use App\Models\Department;
 use App\Models\Campus;
+use App\Models\Program;
+use App\Models\ProgramClass;
+use Illuminate\Support\Facades\Auth;
+
 
 use Illuminate\Http\Request;
 
@@ -80,9 +84,47 @@ class academicDepartments extends Controller
           }
 
           return redirect()->back()->with('invalid' , 'Something went wrong buddy');  
-          
-
     }
+
+    public function viewAllDepartments()
+        {
+            $departments = Department::all();
+            $total = $departments->count();
+            ////////
+            $userCampus = Auth::user()->campus;
+            $campusMapping = [
+                'Lilongwe' => 1,
+                'Blantyre' => 2,
+                'Zomba' => 3,
+            ];
+            
+            $campus_id = $campusMapping[$userCampus] ?? null; 
+            //////
+
+            if(($userCampus == 'Lilongwe' || $userCampus == 'Blantyre' || $userCampus == 'Zomba') && (Auth::user()->role!='College Registrar' &&
+             Auth::user()->role!='DCR-Academic' &&
+              Auth::user()->role!='DCR-Administration' &&
+               Auth::user()->role!='Executive Director' &&
+                Auth::user()->role!='Admin' &&
+               Auth::user()->role!='Administrator'))
+            {
+                $filteredDepartments = $departments->where('campus_id', $campus_id);
+                $total = $filteredDepartments->count();
+                $data = [
+                    'department' => $filteredDepartments,
+                    'total' => $total
+                ];
+                return view('admin.departments.view_all_departments', $data);
+            }
+
+            else{
+                $data = [
+                    'department' => $departments,
+                    'total' => $total
+                ];
+                return view('admin.departments.view_all_departments', $data);
+            }
+        }
 }
 
 

@@ -115,9 +115,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 <li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 
-
+@can('delete examination numbers')
 <li class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteExamNumbers"><span class="mdi mdi-delete-circle"></span>&nbsp;&nbsp;Delete Exam Numbers</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
+@endcan
 
 </ul>
 
@@ -151,31 +151,39 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
     <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
         <thead>
             <tr style="background-color:#e6e6e6;">
-                <th>Photo</th>
+                <th>#</th>
                 <th>Student#</th>
                 <th>Full Name</th>
                 <th>Gender</th>
                 <th>Exam Numbers</th>
+                 @can('exam num fee checkbox')
                 <th>Fees Status</th>
+                @endcan
             </tr>
         </thead>
         <tbody>
+            @php $i = 1; @endphp
             @foreach($students as $student)
                 <tr>
-                    <td>
+                    <td>{{$i++}}</td>
+                  
             @php 
             $fees = App\Models\savedExamNumbers::where('reg_num', $student->reg_num)->first();
             @endphp
-                        <img class="rounded-circle header-profile-user" src="{{ asset('assets/images/users/2.jpg') }}">
-                    </td>
+                       
                     <td>{{ $student->reg_num }}</td>
                     <td>{{ $student->fname }} {{ $student->lname }}</td>
                     <td>{{ $student->gender }}</td>
-                    <td>{{ $fees->exam_number }}</td>
-                    <td>
-                        <input type="checkbox" class="student-checkbox" data-id="{{ $student->id }}" 
-                            {{ $fees->fee_status == 1 ? 'checked' : '' }}>
-                    </td>
+                    
+                              @if($fees && !empty($fees->exam_number))
+                                <td>{{ $fees->exam_number }}</td>
+                                <td>
+                                    @can('exam num fee checkbox')
+                                    <input type="checkbox" class="student-checkbox" data-id="{{ $student->id }}" 
+                                           {{ $fees->fee_status == 1 ? 'checked' : '' }}>
+                                    @endcan
+                                </td>
+                             @endif
                 </tr>
             @endforeach
         </tbody>

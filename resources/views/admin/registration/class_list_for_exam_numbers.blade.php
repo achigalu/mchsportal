@@ -114,6 +114,7 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 <li class="btn btn-info"><i class="mdi mdi-content-save-all"></i>&nbsp;&nbsp;Save</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 
+
 </ul>
 
 

@@ -158,7 +158,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 
 @endif
 
-
+ 
                                 </div>
                             </div>
                             
@@ -202,12 +202,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color:#e6e6e6;">
-                                                <th>#</th>
-                                                <th>Class</th>
-                                                <th>Code</th>
-                                                <th>Subject Name</th>
-                                                <th>Students</th>
-                                                <th>Actions</th>
+                                                <th>S/N</th>
+                                                <th>PROGRAM CLASS</th>
+                                                <th>MODULE CODE</th>
+                                                <th>MODULE NAME</th>
+                                                <th>NO. OF STUDENTS</th>
+                                                <th>ACTIONS</th>
                                                 
                                             </tr>
                                             </thead>
@@ -219,10 +219,10 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                             <tr>
                                                               
                                                                 <td>{{ ++$id }}</td>
-                                                                <td>{{$subjects->programclass->classcode}}
-                                                                <span class="badge rounded-pill bg-warning" style="font-size: 14px;">
+                                                                <td>{{$subjects->programclass->classcode}} | 
+                                                                
                                                                 Sem: {{$semester}} 
-                                                                </span> 
+                                                                
                                                                 </td>
                                                                 <td>{{$subjects->course->code}}</td>
                                                                 <td>{{$subjects->course->name}}</td>
@@ -234,12 +234,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                                 <td>
                                                                 <!-- Edit Button -->
                                                                 <button class="btn btn-outline-primary" >
-                                                                    <i class="mdi mdi-pencil"></i> Edit
+                                                                    <i class="mdi mdi-pencil"></i>
                                                                 </button>
 
                                                                 <!-- Delete Button -->
                                                                 <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteClassSubject{{$subjects->id}}">
-                                                                <i class="mdi mdi-delete"></i> Delete
+                                                                <i class="mdi mdi-delete"></i>
                                                                 </button>
                                                             </td>
 
@@ -268,7 +268,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                 &nbsp;</span>
                 <br><br>
                 for class: 
-                    <span class="badge rounded-pill bg-warning" style="font-size: 0.9rem;">
+                    <span class="badge rounded-pill bg-success" style="font-size: 0.9rem;">
                 {{$myclass->classcode}} 
                 - @if($myclass->campus_id ==1) LL @endif
                     @if($myclass->campus_id ==2) BT @endif

@@ -18,6 +18,10 @@ class Faculty extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function deputyDean() {
+        return $this->belongsTo(User::class, 'dd_id'); // Deputy Dean
+    }
+
     public function departments()
     {
         return $this->hasMany(Department::class);

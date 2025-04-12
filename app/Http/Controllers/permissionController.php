@@ -87,16 +87,24 @@ class permissionController extends Controller
     public function permissionsToaRole(Request $request, $id)
     {
         $request->validate([
-            'permission' =>'required'
+            'permission' => 'nullable|array',
+            'permission.*' => 'exists:permissions,name' // Ensure each permission exists if provided
         ]);
-
-        $role = Role::find($id);
-        $permissions = $request->permission;
-        //dd($permissions);
-        if(!empty($role))
-        {
+    
+        $role = Role::findOrFail($id);
+    
+        try {
+            $permissions = $request->permission ?? []; // Default to an empty array if no permissions are provided
             $role->syncPermissions($permissions);
-            return redirect()->back()->with('status', 'Permissions for role:'.' ' .$role->name.' ' .'updated successfully');
+    
+            return redirect()->back()->with(
+                'status',
+                'Permissions for role "' . $role->name . '" updated successfully.'
+            );
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(
+                'An error occurred while updating permissions: ' . $e->getMessage()
+            );
         }
     } // end function
 
@@ -114,16 +122,16 @@ class permissionController extends Controller
     public function directUserPermissions(Request $request, $id)
     {
         // Assume $user is an instance of the User model
-            $user = User::find(1);
+            $user = User::findOrFail($id);
 
             // Define the permissions you want to assign
             $permissions = $request->permission;
 
-                if (!empty($permissions)) 
+                if (!empty($id)) 
                 {
                     $user->syncPermissions($permissions);
                 }
             
-            return redirect()->back()->with('status', 'Permissions for user:'.' ' .$user->fname. ' '.'successfully updated');
+            return redirect()->back()->with('status', 'Permissions for user:'.' ' .$user->fname.' '.$user->lname. ' '.'successfully updated');
     }
 }

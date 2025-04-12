@@ -85,19 +85,24 @@
 
 
 <ul class="breadcrumb m-0">
+
 <a href="{{route('all.intake.categories')}}">
 <li class="btn btn-secondary"><i class="fas fa-bars"></i>&nbsp;&nbsp;Intake Categories Description</li> &nbsp;
 </a>
+@can('add academic session')
 <a href="{{route('add.cohort')}}">
 <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Intake/Cohort</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
+@endcan
 </ul>
 </div>
 
 </div>
 </div>
 </div>
-<!-- end page title -->
+<!-- end page title -->@php 
+                        $i = 1;
+                        @endphp
                         
                         <div class="row">
                             <div class="col-12">
@@ -108,6 +113,7 @@
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
+                                                <th>#</th>
                                                 <th>Intake Year</th>
                                                 <th>Start Date</th>
                                                 <th>End Date</th>
@@ -122,6 +128,7 @@
                                             <tbody>
                                                 @foreach($allcohorts as $cohorts)
                                             <tr>
+                                                <td>{{$i++}}</td>
                                                 <td>{{$cohorts->ayear}}</td>
                                                 <td>
                                                 {{ Carbon\Carbon::parse($cohorts->sdate)->toFormattedDateString()}}
@@ -206,9 +213,15 @@
         
                                                 </td>
                                                 <td>
+                                                    @can('edit academic session')
                                                 <a href="{{route('edit.cohort', $cohorts->id )}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                    @endcan
+                                                    
                                                 <a href="{{route('all.cohort.semesters', $cohorts->id )}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                   
+                                                    @can('delete academic session')
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
+                                                 @endcan
                                                 </td>
                                             </tr>
                                                 @endforeach

@@ -14,7 +14,7 @@ class Feecategory extends Model
     /// Relationships
 
     public function programclass(){
-        return $this->hasMany(Programclass::class);
+        return $this->belongsTo(Programclass::class);
     }
 
     /// static public functions

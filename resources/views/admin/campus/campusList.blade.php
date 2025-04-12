@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | View Programs</title>
+        <title>MCHS Portal | View Campuses</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -103,6 +103,7 @@
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color:#f0f0f0;">
+                                                <td>S/N</td>
                                                 <th>Campus Name</th>
                                                 <th>District</th>
                                                 <th>Email</th>
@@ -111,11 +112,14 @@
                                                 <th>Actions</th>
                                             </tr>
                                             </thead>
-        
+                                            @php 
+                                            $i=1;
+                                            @endphp
         
                                             <tbody>
                                                 @foreach($campuses as $campus)
                                             <tr>
+                                                <td>{{$i++}}</td>
                                                 <td>{{$campus->campus}}</td>
                                                 <td>{{$campus->district}}</td>
                                                 <td>{{$campus->email}}</td>
@@ -123,9 +127,11 @@
                                                 
                                              
                                                 <td>
+                                                @can('college setup')
                                                 <a href=""><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                 
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
+                                                @endcan
                                                 </td>
                                             </tr>
                                             @endforeach

@@ -70,80 +70,38 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                
                                     <h4 class="mb-sm-0">
-                                    
+                               
+                                   
                                     Assessment list: 
+                                    
                                     <span class="badge rounded-pill bg-secondary fs-6"> 
                                     {{$courseID->code}} - {{$courseID->name}} 
-                                    
-                                    <span class="badge rounded-pill bg-info fs-6"> 
-                                    {{$mycoursename->classcode}}  
-                                    {{$courseID->classcode}} - 
+                                    </span>
+                                    <span class="badge rounded-pill bg-secondary fs-6"> 
+                                    {{$mycoursename->classcode}}  {{$courseID->classcode}} - 
                                      @if( $lectSub->campus_id==1) LL @endif
                                      @if( $lectSub->campus_id==2) BT @endif
-                                     @if( $lectSub->campus_id==3) ZA @endif 
-
-                                    
+                                     @if( $lectSub->campus_id==3) ZA @endif |
                                         
-                                    Semester {{$lectSub->semester}}
-                                     </span>
+                                    Semester {{$lectSub->semester}} 
                                     </span>
+                                   
                                     </h4>
-
-                                    @php 
-    $subjfromlecturerTable = App\Models\lecturerSubjects::findOrfail($id);
-    $mysubject = $subjfromlecturerTable->courseid;
-    $subjcode = App\Models\Course::findOrfail($mysubject);
-    $mysubjcode = $subjcode->code;
-
-    // Fetch the first student subject record based on filters
-    $studentaccess = App\Models\Studentsubject::where('academicyr_id', $ay)
-        ->where('programclass_id', $subjfromlecturerTable->classid)
-        ->where('course_code', $mysubjcode)
-        ->where('semester', $subjfromlecturerTable->semester)
-        ->where('campus_id', $subjfromlecturerTable->campus_id)
-        ->first();
-
-    // Determine access based on assessment
-    $access = null;
-    switch($assessment) {
-        case 1:
-            $access = $studentaccess->access_assessment1;
-            break;
-        case 2:
-            $access = $studentaccess->access_assessment2;
-            break;
-        case 3:
-            $access = $studentaccess->access_exam_grade;
-            break;
-        case 4:
-            $access = $studentaccess->access_final_grade;
-            break;
-    }
-@endphp
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
-                                    @if($access == 0)
-                                    <a href="{{route('submit.grades.to.students', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay])}}">
-                                    <button type="button" class="btn btn-outline-danger" ><span class="mdi mdi-publish"></span>&nbsp;&nbsp;Publish to students &nbsp;&nbsp;</button>
-                                    </button></a>&nbsp;&nbsp;
-                                    @else
-
-                                    <a href="{{route('unpublish.grades.to.students', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay])}}">
-                                    <button type="button" class="btn btn-outline-info" ><span class="mdi mdi-publish"></span>&nbsp;&nbsp;UnPublish to students &nbsp;&nbsp;</button>
-                                    </button></a>&nbsp;&nbsp;
-                                    @endif
+                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" 
+aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
+</button>&nbsp;&nbsp;
+<div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Exel</a>
+    <a class="dropdown-item" href="#">PDF</a>
+   
+</div>
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('list.assessments',['courseid'=>$id, 'ay'=>$ay])}}">
-                                        <li class="btn btn-outline-primary"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;
-                                        </a>
-                                        </ul>
-
-                                        <ul class="breadcrumb m-0">
-                                        <a href="{{route('submit.hod', ['id' => $id, 'assessment' => $assessment, 'ay'=>$ay])}}">
-                                        <li class="btn btn-outline-info"><i class="mdi mdi-publish"></i>&nbsp; Submit to HOD</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <li class="btn btn-outline-info"><i class="fas fa-arrow-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -153,21 +111,81 @@
                         </div>
                         <!-- end page title -->
                         
-                                                @php 
-                                                $assess = App\Models\Assessmentlist::find($assessment)
-                                                @endphp
+                        @php 
+                        $assess = App\Models\Assessmentlist::find($assessment)
+                        @endphp
+                              
+                        
+                            @if($assessment==1)
 
-                                                
-                                    <h5 style="color:#F57152;">
-                                    <span class="badge rounded-pill bg-info fs-6"> 
-                                    Assessment: {{$assess->assessment_name}}.
-                                    </span> 
-                                    <br></h5>
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level1);
+                            @endphp
+
+                            @elseif($assessment==2)
+
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level2);
+                            @endphp
+
+                            @elseif($assessment==3)
+
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level3);
+                            @endphp
+
+                            @elseif($assessment==4)
+
+                            @php
+                            $role = App\Models\User::find($lectSub->access_level4);
+                            @endphp
+
+                            @else
+                            @php
+                            $role = '';
+                            @endphp
+
+                            @endif
+                           
+
+                           
+
+
+                          @if($role)  
+                          <div class="row">
+                            <div class="col-12">
+                            
+                         <h5> Currently Grades are with:
+                          <span class="badge rounded-pill bg-info fs-6"> 
+                          <b>{{$role->role}}</b> </h5>
+                          </span>
+                          <p>
+                            </div>
+                          </div>
+  
+                          @else
+                          <div class="row">
+                            <div class="col-12">
+                            <span class="badge rounded-pill bg-info fs-6"> 
+                          Currently Grades are with: <b style="color:orange">none</b> 
+                            </span>
+                            <p>
+                            </div>
+                          </div>
+                          @endif  
+                            
+                          
+                    <h5 style="color:#F57152;">
+                    <span class="badge rounded-pill bg-info fs-5"> 
+                        Assessment: {{$assess->assessment_name}}.
+                    </span>
+                    </h5><p>
                               
      
 
                         <div class="row">
                             <div class="col-12">
+                          
 
                             @if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -184,14 +202,12 @@
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 @endif   
-
-
                                 <div class="card">
 
 
 
-                                <form action="{{route('students.graded1', ['id' => $id, 'assessment' => $assessment])}}" method="post"> 
-                                    @csrf
+                               
+                                    
                                     <div class="card-body">
                                     
                                                 
@@ -205,7 +221,6 @@
                                                 <th style="width: 100px;">Student Name</th>
                                                 <th style="width: 50px;">Registration #</th>
                                                 <th>Grade</th>
-                                                <th>Current Grades with</th>
                                                 <th></th>
 
                                                
@@ -233,115 +248,24 @@
                                                 <td>{{$student->registration_no}}
                                                     <input type="text" name="registration[]" value="{{$student->registration_no}}" hidden>
                                                     <input type="text" name="assessment_id" value="{{$assessment}}" hidden>
-                                                    <input type="text" name="coursecode" value="{{$courseID->code}}" hidden>
-                                                    <input type="text" name="ay" value="{{$ay}}" hidden>
                                                 
                                                 </td>
                                                 <td>
                                                     @if($assessment==1)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment1 ?? ''}}" style="width: 100px;">
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment1 ?? ''}}" style="width: 100px;" disabled>
                                                     @endif
 
                                                     @if($assessment==2)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment2 ?? ''}}" style="width: 100px;">
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->assessment2 ?? ''}}" style="width: 100px;" disabled>
                                                     @endif
 
                                                     @if($assessment==3)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->exam_grade ?? ''}}" style="width: 100px;">
-                                                    @endif
-
-                                                    @if($assessment==4)
-                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->final_grade ?? ''}}" style="width: 100px;">
+                                                    <input class="form-control" name="assessment[]" type="number" min="0" max="100" value="{{ $student->exam_grade ?? ''}}" style="width: 100px;" disabled>
                                                     @endif
                                                             
 
                                                 </td>
-
-                                                <td>
-                                                @if($assessment==1 && $student->access_assessment1==1)
-
-                                                STUDENT
-
-                                                    @else
-                                                     @if($assessment==1 && $student->access_assessment1==0)
-                                                        @php
-                                                            $course = App\Models\Course::where('code',$student->course_code)->first();
-                                                  
-                                                            $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
-                                                                        ->where('semester', $lectSub->semester)
-                                                                        ->where('classid', $student->programclass_id)
-                                                                        ->first();
-
-                                                            $gradesWith = App\Models\User::findOrfail($accessID->access_level1);
-                                                        @endphp
-                                                        {{$gradesWith->role}}
-                                                        
-                                                    @endif
-  
-                                                @endif
-
-                                                @if($assessment==2 && $student->access_assessment2==1)
-                                                STUDENT 
-                                                @else 
-                                                    @if($assessment==2 && $student->access_assessment2==0)
-                                                @php
-                                                    $course = App\Models\Course::where('code',$student->course_code)->first();
- 
-                                                    $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
-                                                                ->where('semester', $lectSub->semester)
-                                                                ->where('classid', $student->programclass_id)
-                                                                ->first();
-                                                    
-                                                    $gradesWith = App\Models\User::findOrfail($accessID->access_level2);
-
-                                                @endphp
-                                                    {{$gradesWith->role}}
-
-                                                    @endif
-                                                @endif
-
-                                                @if($assessment==3 && $student->access_exam_grade==1)
-                                                STUDENT
-                                                    @else
-                                                         @if($assessment==3 && $student->access_exam_grade==0)
-                                                         @php
-                                                    $course = App\Models\Course::where('code',$student->course_code)->first();
- 
-                                                    $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
-                                                                ->where('semester', $lectSub->semester)
-                                                                ->where('classid', $student->programclass_id)
-                                                                ->first();
-                                                    
-                                                    $gradesWith = App\Models\User::findOrfail($accessID->access_level3);
-
-                                                @endphp
-                                                    {{$gradesWith->role}}
-
-                                                    @endif
-                                                @endif
-
-
-                                                @if($assessment==4 && $student->access_final_grade==1)
-                                                STUDENT 
-
-                                                @else
-                                                    @if($assessment==4 && $student->access_final_grade==0)
-                                                    @php
-                                                    $course = App\Models\Course::where('code',$student->course_code)->first();
- 
-                                                    $accessID = App\Models\lecturerSubjects::where('courseid', $course->id)
-                                                                ->where('semester', $lectSub->semester)
-                                                                ->where('classid', $student->programclass_id)
-                                                                ->first();
-                                                    
-                                                    $gradesWith = App\Models\User::findOrfail($accessID->access_level4);
-
-                                                    @endphp
-                                                    {{$gradesWith->role}}
-
-                                                    @endif  
-                                                @endif
-                                                </td>
+                                                <td></td>
                                             </tr>
                                             @endif
                                             @endforeach
@@ -365,7 +289,7 @@
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                        <button type="submit" class="btn btn-outline-info btn-lg" style="float: right; width: 200px"><i class="fas fa-save"></i>&nbsp;&nbsp; Save grades</button>
+                                                    
 
                                             </td>
                                         </tr>

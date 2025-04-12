@@ -53,7 +53,8 @@ class LoginRequest extends FormRequest
         }*/
         $this->ensureIsNotRateLimited();
         $user = User::where('email', $this->login)
-        ->orWhere('reg_num', $this->login)->first();
+        ->orWhere('reg_num', $this->login)
+        ->orWhere('username', $this->login)->first();
 
     if (!$user || !Hash::check($this->password, $user->password)) {
         RateLimiter::hit($this->throttleKey());

@@ -29,7 +29,7 @@
     <body class="auth-body-bg">
 
         <div class="bg-overlay"></div>
-        <div class="wrapper-page">
+        <div class="wrapper-page" style="width: 90%; max-width: 500px; margin: 7.5% auto;">
             <div class="container-fluid p-0">
                 <div class="card" style="background-color:#d8e7f7;">
                     <div class="card-body">
@@ -37,13 +37,28 @@
                         <div class="text-center mt-0">
                             <div class="mb-1">
                                 <a href="" class="auth-logo">
-                                <img src="{{asset('assets/images/logo-light-login.jpg')}}" alt="logo-light" height="30">
+                                <img src="{{asset('assets/images/plogoLOGIN.jpg')}}" alt="logo-light" height="50" widith="50">
                                 </a>
                             </div>
                         </div>
                         <div class="p-3">
+@if(session()->has('status'))
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('status')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if(session()->has('invalid'))
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<i class="mdi mdi-check-all me-2"></i>
+{{session()->get('invalid')}}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
                         @if($errors->get('login'))
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <div class="alert alert-warning alert-dismissible fade show text-center mt-0" role="alert">
                                      <div style="color: #ed686f">
                                     <x-input-error :messages="$errors->get('login')" class="mt-2" />
                                     </div>
@@ -54,7 +69,7 @@
     
                                 <div class="form-group mb-1 row">
                                     <div class="col-12">
-                                    <x-input-label for="login" :value="__('Email or Registration #')" />
+                                    <x-input-label for="login" :value="__('UserName or Email or Registration #')" />
                                         <input id="login" class="form-control" type="text" name="login" required autofocus>
                                      
                                     </div>
@@ -95,13 +110,14 @@
                                     @endif
                                     </div>
                                     <div class="col-sm-5 mt-1">
-                                        <a href="{{route('register')}}" class="text-muted"><i class="mdi mdi-account-circle text-info"></i> Apply for a Course</a>
+                                        <a href="" class="text-muted"><i class="mdi mdi-account-circle text-info"></i> Apply for a Course</a>
+                                       <!-- <a href="{{route('register')}}" class="text-muted"><i class="mdi mdi-account-circle text-info"></i> Apply for a Course</a> -->
                                     </div>
                                 </div>
 
                                 <br>
-                            <div class="col-sm-8 text-center">
-                            <i class="mdi mdi-view-dashboard text-primary text-center"></i> Crafted with <i class="mdi mdi-heart text-danger text-center"></i> by MCHS ICT Team.
+                            <div class="col-sm-8 text-left">
+                            <i class="mdi mdi-heart text-info text-center"></i> 2025 MCHS - ICT 
                             </div>
 
                             </form>

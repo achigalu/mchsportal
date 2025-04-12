@@ -126,7 +126,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         @endif
 
                                         @if(session()->has('invalid'))
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <i class="mdi mdi-check-all me-2"></i>
                                         {{session()->get('invalid')}}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -140,7 +140,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         <input type="text" name="class_id" value="{{$class->id}}" hidden>
                                         <input type="text" name="semester" value="{{$semester}}" hidden>
                                        <h4>
-                                       Assign Subjects to: <span style="color: red;">
+                                       Assign Subjects to: <span style="color: red;"> 
 
 
                                         {{$class->classcode}} 
@@ -181,22 +181,23 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
-                                                <th>Semester</th>
-                                                <th>Subject Code</th>
-                                                <th>Subject Name</th>
-                                                <th>Exam Weight(%)</th>
-                                                <th>CA Weight(%)</th>
-                                                <th>Is Major</th>
-                                                <th>Lecturers</th>
-                                                <th>Actions</th>
+                                                <th>S/N</th>
+                                                <th>SEMESTER</th>
+                                                <th>SUBJECT CODE</th>
+                                                <th>SUBJECT NAME</th>
+                                                <th>EXAM WEIGHT(%)</th>
+                                                <th>CA WEIGHT(%)</th>
+                                                <th>IS MAJOR</th>
+                                                <th>ACTIONS</th>
                                                 
                                             </tr>
                                             </thead>
         
-        
+                                            @php $i = 1; @endphp
                                             <tbody>
                                             @forelse($class_subjects as $subjects)
                                            <tr>
+                                            <td>{{$i++}}</td>
                                             <td>{{$subjects->semester}}</td>
                                            
                                             <td>{{$subjects->course->code}}</td>
@@ -204,7 +205,6 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                                             <td>{{$subjects->exam_weight}}</td>
                                             <td>{{$subjects->ca_weight}}</td>
                                             <td>{{($subjects->is_major ==1)? 'Yes' : 'No'}}</td>
-                                            <td>-------</td>
                                             <td>
                                                 <a href="{{route('edit.assigned.subject', ['subj_id'=>$subjects->id, 'class_id'=>$class->id,'semester'=>$semester] )}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                   
@@ -233,7 +233,7 @@ $class_subjects = App\Models\Myclasssubject::where('programclass_id', $class->id
                 &nbsp;</span>
                 <br><br>
                 for class: 
-                    <span class="badge rounded-pill bg-warning" style="font-size: 0.9rem;">
+                    <span class="badge rounded-pill bg-secondary" style="font-size: 0.9rem;">
                 {{$class->classcode}} 
                 - @if($class->campus_id ==1) LL @endif
                     @if($class->campus_id ==2) BT @endif

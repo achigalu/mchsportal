@@ -105,10 +105,10 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
                                                 <td>ID</td>
-                                                <th>Permission Name</th>
-                                                <th>Permission Description</th>
-                                                <th>Created Date</th>
-                                                <th>Actions</th>
+                                                <th>PERMISSION NAME</th>
+                                                <th>PERMISSION DESCRIPTION</th>
+                                                <th>CREATED DATE</th>
+                                                <th>ACTIONS</th>
                                                 
                                             </tr>
                                             </thead>

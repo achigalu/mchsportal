@@ -8,7 +8,7 @@
                                     <img src="{{asset('assets/images/logo-sm.png')}}" alt="logo-sm-light" height="30">
                                 </span>
                                 <span class="logo-lg">
-                                    <img src="{{asset('assets/images/logo-light.jpg')}}" alt="logo-light" height="30">
+                                    <img src="{{asset('assets/images/plogo.jpg')}}" alt="logo-light" height="50">
                                 </span>
                             </a>
                         </div>
@@ -41,7 +41,9 @@
                             <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
                                   data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ri-notification-3-line"></i>
-                                <span class="noti-dot"></span>
+                                <span class="noti-dot"> &nbsp;&nbsp;7
+                                    
+                                </span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                                 aria-labelledby="page-header-notifications-dropdown">
@@ -60,31 +62,19 @@
                                         <div class="d-flex">
                                             <div class="avatar-xs me-3">
                                                 <span class="avatar-title bg-primary rounded-circle font-size-16">
-                                                    <i class="ri-shopping-cart-line"></i>
+                                                    <i class="ri-checkbox-circle-line"></i>
                                                 </span>
                                             </div>
                                             <div class="flex-1">
-                                                <h6 class="mb-1">Your order is placed</h6>
+                                                <h6 class="mb-1">School opening date</h6>
                                                 <div class="font-size-12 text-muted">
-                                                    <p class="mb-1">If several languages coalesce the grammar</p>
+                                                    <p class="mb-1">You will be notified when we are openning school</p>
                                                     <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a href="" class="text-reset notification-item">
-                                        <div class="d-flex">
-                                            <img src="{{asset('assets/images/users/avatar-3.jpg')}}"
-                                                class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                            <div class="flex-1">
-                                                <h6 class="mb-1">James Lemire</h6>
-                                                <div class="font-size-12 text-muted">
-                                                    <p class="mb-1">It will seem like simplified English.</p>
-                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                   
                                     <a href="" class="text-reset notification-item">
                                         <div class="d-flex">
                                             <div class="avatar-xs me-3">
@@ -93,28 +83,16 @@
                                                 </span>
                                             </div>
                                             <div class="flex-1">
-                                                <h6 class="mb-1">Your item is shipped</h6>
+                                                <h6 class="mb-1">End of Semester Examinations</h6>
                                                 <div class="font-size-12 text-muted">
-                                                    <p class="mb-1">If several languages coalesce the grammar</p>
+                                                    <p class="mb-1">You will be informed here if Exams are out.</p>
                                                     <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
 
-                                    <a href="" class="text-reset notification-item">
-                                        <div class="d-flex">
-                                            <img src="{{asset('assets/images/users/avatar-4.jpg')}}"
-                                                class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                            <div class="flex-1">
-                                                <h6 class="mb-1">Salena Layfield</h6>
-                                                <div class="font-size-12 text-muted">
-                                                    <p class="mb-1">As a skeptical Cambridge friend of mine occidental.</p>
-                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                   
                                 </div>
                                 <div class="p-2 border-top">
                                     <div class="d-grid">
@@ -129,13 +107,42 @@
                         <div class="dropdown d-inline-block user-dropdown">
                             <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/3.jpg')}}"
-                                    alt="Header Avatar">
+                                @php
+                                        $userProfile = App\Models\userProfile::where('user_id', Auth::user()->id)->first();
+                                        $studentProfile = App\Models\Studentprofile::where('user_id', Auth::user()->id)->first();
+                                    @endphp
+
+                                    @if(Auth::user()->role == 'student')
+                                    @if(!empty($studentProfile->photo))
+                                    <img src="{{ $studentProfile->photo ? url('uploads/students_photo/'.$studentProfile->photo) :  url('uploads/students_photo/3.jpg') }}" 
+                                    style="width: 50px; height: 50px;" class="avatar-md rounded-circle"> 
+                                    @else
+                                    <img src="{{ url('uploads/students_photo/3.jpg') }}" 
+                                    style="width: 50px; height: 50px;" class="avatar-md rounded-circle"> 
+                                    @endif
+                                   
+                                    
+
+                                    @elseif(Auth::user()->role != 'student')
+                                        @if(!empty($userProfile->image))
+                                        <img src="{{ $userProfile->image ? url('uploads/user_photo/'.$userProfile->image) :  url('uploads/students_photo/3.jpg') }}" 
+                                        style="width: 50px; height: 50px;" class="avatar-md rounded-circle">
+                                        @else
+                                        <img src="{{ url('uploads/students_photo/3.jpg') }}" 
+                                        style="width: 50px; height: 50px;" class="avatar-md rounded-circle">
+                                        @endif
+
+                                    @else
+                                        <img src="{{ url('uploads/students_photo/3.jpg') }}" 
+                                        style="width: 50px; height: 50px;" class="avatar-md rounded-circle">
+                                    @endif
+ 
+                                
                                 <span class="d-none d-xl-inline-block ms-1">
                                     
                                 {{Auth::user()->fname}} {{Auth::user()->lname}} | 
                                
-                                - {{Auth::user()->role}} -
+                                 {{Auth::user()->role}} 
                                 </span>
                                 <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                             </button>
@@ -147,11 +154,19 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{{route('user.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                             </div>
+                            @elseif(Auth::user()->role=='applicant')
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <!-- item-->
+                                 
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-danger" href="{{route('user.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
+                            </div>
                             @else
                             <div class="dropdown-menu dropdown-menu-end">
                                 <!-- item-->
                                 <a class="dropdown-item" href="{{route('user.reset.password')}}"><i class="ri-user-line align-middle me-1"></i>Change my password</a>
-                            
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{route('admin.user.profile')}}"><i class="ri-user-line align-middle me-1"></i>My Profile</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href="{{route('user.logout')}}"><i class="ri-shut-down-line align-middle me-1 text-danger"></i> Logout</a>
                             </div>
@@ -162,4 +177,6 @@
             
                     </div>
                 </div>
+
+                
             </header>

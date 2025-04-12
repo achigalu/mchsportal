@@ -89,7 +89,6 @@
 <div class="card-body">
 
 <h4 class="card-title">Add Faculty</h4>
-<p class="card-title-desc">Every program supposed to be attached to a faculty</p>
 @if(session()->has('message'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
 <i class="mdi mdi-check-all me-2"></i>
@@ -128,10 +127,24 @@
                     @foreach($record as $records)
                         <option value="{{$records->id}}">{{$records->fname}} {{$records->lname}}
                         </option>
-                    @endforeach
+                    @endforeach 
                 </select>
 
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Deputy Dean of Faculty</label><br>
+                @error('faculty_dean_id') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-control select2" name="dd_faculty_dean_id">
+                <option value="">-- Select --</option>
+                    @foreach($record as $records)
+                        <option value="{{$records->id}}">{{$records->fname}} {{$records->lname}}
+                        </option>
+                    @endforeach 
+                </select>
+
+            </div>
+            <br><br><br><br><br><br>
 
                 </div>
 

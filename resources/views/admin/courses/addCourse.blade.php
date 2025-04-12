@@ -145,7 +145,6 @@
 
                 </div>
 
-
             <div class="mb-3">
                 <label class="form-label">Department</label><br>
                 @error('department_id') <span class="text-danger">{{$message}}</span> @enderror

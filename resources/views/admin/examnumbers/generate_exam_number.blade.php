@@ -137,7 +137,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 </div>
 <br><br>
 @endif
-
+ @can('generate exam numbers')
 <form action="{{route('generate.exam.numbers', ['pcode'=>$pcode, 'pcampus'=>$pcampus, 'semester'=>$semester, 'count'=>$count, 'already'=>10])}}" method="post" enctype="" >
 @csrf
 
@@ -163,7 +163,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                     </div>
                     </div>
 
-                    
+                   
                     <div class="form-group col-md-4">
                     <label for="" ></label>
                         <div class="card bg-light text-dark">
@@ -173,11 +173,12 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                     </div>
                     </div>
                     </div>
+                  
                     </div>
 
 </form>
 
-
+  @endcan
 
 </div>
 </div>

@@ -69,7 +69,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Tuition Fee Category List</h4>
+                                    <h4 class="mb-sm-0">Fees category list</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -83,7 +83,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
 </div>
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('add.fee.categories')}}">
-                                        <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Tuition Fee Category</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Fee Category</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
                                     </div>
@@ -98,10 +98,13 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                 <div class="card">
                                     <div class="card-body">
         
-                                        
+                                        @php
+                                        $i=1;
+                                        @endphp
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
+                                                <th>#</th>
                                                 <th>Fee Name</th>
                                                 <th>Fee Code</th>
                                                 <th>Local Fee(MK)</th>
@@ -115,6 +118,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             <tbody>
                                                 @foreach($allfeescategory as $feescategory)
                                             <tr>
+                                                <td>{{$i++}}</td>
                                                 <td>{{$feescategory->feename}}</td>
                                                 <td>{{$feescategory->feecode}}</td>
                                                 <td>{{$feescategory->local_fee}}</td>

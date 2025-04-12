@@ -82,15 +82,14 @@
 <a class="dropdown-item" href="#">PDF</a>
 
 </div>
-
+@can('add subject')
 <ul class="breadcrumb m-0">
 <a href="{{route('add.course')}}">
-<li class="btn btn-secondary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Subject</li>&nbsp;&nbsp;
-<a href="{{route('configured.courses')}}">
-<li class="btn btn-secondary"><i class="fa fa-cog"></i>&nbsp;&nbsp;Configured Subjects</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<li class="btn btn-secondary"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Subject/Module</li>&nbsp;&nbsp;
+
 </a>
 </ul>
-
+@endcan
 </div>
 
 </div>
@@ -107,22 +106,26 @@
                                     <table id="datatable" class="table-responsive  table table-hover">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
-                                                <th>Subject Code</th>
-                                                <th>Name</th>
-                                                <th>Department</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                                                <th>#</th>
+                                                <th>MODULE CODE</th>
+                                                <th>MODULE NAME</th>
+                                                <th>DEPARTMENT</th>
+                                                <th>STATUS</th>
+                                                <th>ACTIONS</th>
                                                 
                                             </tr>
                                             </thead>
         
-        
+                                            @php 
+                                            $i = 1;
+                                            @endphp
                                             <tbody>
                                                 @foreach($allCourses as $course)
                                             <tr>
+                                                <td>{{$i++}}</td>
                                                 <td>{{$course->code}}</td>
                                                 <td>{{$course->name}}</td>
-                                                <td>{{$course->department->department_name}}</td>
+                                                <td>{{$course->department->department_name}}-{{$course->department->campus->campus}}</td>
                                                 <td>{{($course->status == 1)? "Current" : "Archived"}}</td>
                                                 <td>
                                                 <a href=""><button class="btn btn-outline-primary"><i class="fa fa-cog"></i></button></a>

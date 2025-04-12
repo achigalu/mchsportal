@@ -103,12 +103,12 @@ $acy = App\Models\Academicyear::find($singleStudent->academicyear_id)
 aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &nbsp;&nbsp;<i class="mdi mdi-chevron-down"></i></button>
 </button>&nbsp;&nbsp;
 <div class="dropdown-menu">
-<a class="dropdown-item" href="#">Exel</a>
-<a class="dropdown-item" href="#">PDF</a>
+<a class="dropdown-item" href="#"><span class="mdi mdi-file-excel" style="color: green;"></span>&nbsp;Exel</a>
+<a class="dropdown-item" href="{{route('classList.pdf', ['classID' =>$classID, 'semester'=> $singleStudent->semester ])}}"><span class="mdi mdi-file-pdf-box" style="color: red;"></span>&nbsp;PDF</a>  
 </div>
 
 <ul class="breadcrumb m-0">
-<a href="{{route('student.exam.numbers')}}">
+<a href="{{route('class.list')}}">
 <li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 </ul>
@@ -141,29 +141,56 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color:#e6e6e6;">
-                                                <th>Photo</th>
-                                                <th>Student#</th>
-                                                <th>Full Name</th>
-                                                <th>Gender</th>
-                                                <th>Status</th>
-                                                <th>Student Details</th>
+                                                <th>S/N</th>
+                                                <th>PHOTO</th>
+                                                <th>REGISTRATION#</th>
+                                                <th>FULL NAME</th>
+                                                <th>GENDER</th>
+                                                <th>REGISTRATION</th>
+                                                <th>ACTIONS</th>
                                             </tr>
                                             </thead>
         
-        
+                                            @php $i=1 @endphp
                                             <tbody>
                                         
                                           @foreach($students as $student)
                                             <tr>
+                                                <td>{{$i++}}</td>
                                                 <td>
-                                                <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/2.jpg')}}">
+                                                
+                                            @if($student->studentprofile && $student->studentprofile->photo)
+                                            <img class="rounded-circle header-profile-user" 
+                                            src="{{ $student->studentprofile && $student->studentprofile->photo 
+                                                    ? asset('uploads/students_photo/' . $student->studentprofile->photo) 
+                                                    : '' }}" 
+                                            alt="Header Avatar">
+                                            @else
+                                            <img class="rounded-circle header-profile-user" src="{{asset('assets/images/users/3.jpg')}}"
+                                                alt="Header Avatar">
+                                            @endif
                                                 </td>
                                                 <td>{{$student->reg_num}}</td>
                                                 <td>{{$student->fname}} {{$student->lname}}</td>
                                                 <td>{{$student->gender}}</td>
-                                                <td>Active</td>
 
-                                                <td><a href="#"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a> &nbsp;
+                                                <td>
+
+                                                @if($student->registered == 0)
+                                                <span class="text-danger">Not Registered</span>
+                                                @endif
+
+                                                @if($student->registered == 1)
+                                                    <span class="text-warning">Pending</span>
+                                                @endif
+
+                                                @if($student->registered == 2)
+                                                    <span class="text-success">Registered</span>
+                                                @endif
+                                                </td>
+                                       
+
+                                                <td><a href="{{route('student.info', ['id'=>$student->id])}}"><button class="btn btn-outline-info"><i class="fas fa-bars"></i></button> </a> &nbsp;
                                                 
                                             </td> 
                                             </tr>

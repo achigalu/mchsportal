@@ -55,7 +55,8 @@ class User extends Authenticatable
 
     public function program()
     {
-        return $this->hasMany(Program::class);
+        return $this->belongsTo(Program::class, 'program_id'); // Ensure 'program_id' is the correct foreign key
+        //return $this->hasMany(Program::class);
     }
 
     public function uploadlist(){
@@ -72,9 +73,14 @@ class User extends Authenticatable
         return $this->belongsTo(Programclass::class);
     }
 
+    // public function myclasssubject()
+    // {
+    //     return $this->belongsToMany(Myclasssubject::class);
+    // }
+
     public function myclasssubject()
     {
-        return $this->belongsToMany(Myclasssubject::class);
+        return $this->belongsToMany(Myclasssubject::class, 'myclasssubject_user', 'user_id', 'myclasssubject_id');
     }
 
     public function studentprofile()
@@ -86,7 +92,8 @@ class User extends Authenticatable
     // static public functions
 
     static public function allUsers(){
-        return self::all();
+        return self::whereNotIn('role', ['Admin', 'College Registrar','DCR-Academic', 'DCR-Administration', 'Administrator',
+        'College Accountant','student','applicant','Accounts','Campus Registrar','Executive Director'])->get();
     }
 
     static public function alreadyUser($id)

@@ -116,7 +116,7 @@
                     <div class="col-sm-12">
                     @error('snumber') <span class="text-danger">{{$message}}</span> @enderror
                     
-                        <input class="form-control" type="text" name="snumber" placeholder="enter 1, for semester 1. and 2, for semester 2" id="example-text-input">
+                        <input class="form-control" type="text" name="snumber" placeholder="enter 1, for semester 1. or 2, for semester 2" id="example-text-input">
                     </div>
             </div>
 

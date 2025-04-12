@@ -131,24 +131,23 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                                 </thead><!-- end thead -->
                                                 
                                                 <tbody>
-                                                    @foreach($classeslist as $list)
+                                                    @foreach($classeslist as $list) 
                                                     <tr>
                                                         <td><h6 class="mb-0">{{$list->classcode}}</h6></td>
                                                         <td>{{$list->classname}}</td>
                                                         <td>{{$list->classyear}}</td>
                                                         @php
-                                                        $coordinator = App\Models\User::find($list->coordinator)
+                                                        $coordinator = App\Models\User::find($list->coordinator);
+                                                        $feecategory = App\Models\Feecategory::find($list->feecategory_id);
                                                         @endphp
                                                         <td>{{$coordinator->fname}} {{$coordinator->lname}}</td>
-                                                        <td>{{$list->feecategory->feename}}</td>
-                                                        <td>{{$list->feecategory->local_fee}}</td>
-                                                        <td>{{$list->feecategory->foreign_fee}}</td>
+                                                        <td>{{$feecategory->feename}}</td>
+                                                        <td>{{$feecategory->local_fee}}</td>
+                                                        <td>{{$feecategory->foreign_fee}}</td>
                                                         <td>
                                                             <a href="{{route('edit.program.class', ['pclassid' => $list->id])}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                            <button class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
 
-
-                                                        
-                                                        <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                     @endforeach

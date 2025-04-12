@@ -104,8 +104,7 @@
 </div>
 @endif
 
-<h4 class="card-title">EDit Faculty</h4>
-<p class="card-title-desc">Every program supposed to be attached to a faculty</p>
+<h4 class="card-title">Edit Faculty</h4>
 
 <form action="{{route('update.faculty')}}" method="POST">
     @csrf
@@ -133,6 +132,22 @@
 
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Deputy Dean of Faculty</label>
+                <select class="form-control select2" name="dd_faculty_dean_id">
+                    
+                <option value="" {{ empty($editDean) ? 'selected' : '' }}>--select--</option>
+
+                        @foreach($allUsers as $user)
+                            <option {{ isset($editDean) && $editDean->id == $user->id ? 'selected' : '' }} 
+                                    value="{{ $user->id }}">
+                                {{ $user->fname ?? '' }} {{ $user->lname ?? '' }}
+                            </option>
+                        @endforeach
+                </select>
+
+            </div>
+            <br><br><br><br><br><br>
                 </div>
 
            
@@ -161,7 +176,7 @@
 </div>
 <!-- end row -->
 
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Submit</button> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary">Update</button> &nbsp;&nbsp;
 </form>     
 <a href="{{route('view.faculty')}}"><button class="btn btn-outline-secondary">Cancel</button></a><br><br>
 

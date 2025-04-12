@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\courseApplication;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Models\Feecategory;
 use App\Models\Programclass;
 use Illuminate\Http\Request;
@@ -9,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use App\Models\userProfile;
 
 class UsersController extends Controller
 {
@@ -31,6 +35,12 @@ class UsersController extends Controller
             
             elseif($role == 'applicant')
            {
+                //add logic to determine access
+                $alreadyApplied = courseApplication::where('user_id', Auth::user()->id)->get();
+                if($alreadyApplied->count() > 0)
+                {
+                    return redirect(route('applicant.submitted'));
+                }
                 return redirect(route('applicant.dashboard'));
            }
            
@@ -158,7 +168,6 @@ class UsersController extends Controller
         if(!empty($id))
         {
             $user = User::find($id);
-            //dd($user);
         }
         return view('admin.users.edit_user', compact('user'));
     }
@@ -264,6 +273,69 @@ class UsersController extends Controller
             return redirect()->back()->with('status', 'Password Updated successfully.');
         }
     } // end function
+
+    public function adminUserProfile()
+    {
+        $user = User::findOrFail(Auth::user()->id);
+        $userProfile = userProfile::where('user_id', Auth::user()->id)->first();
+        if($user)
+        {
+            return view('admin.users.user_profile', compact('user', 'userProfile'));
+        }
+    } // end function
+
+
+    public function adminUpdateUserProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+    
+        $dir = 'uploads/user_photo';
+        if (!file_exists(public_path($dir))) {
+            mkdir(public_path($dir), 0777, true);
+        }
+    
+        $userProfile = UserProfile::where('user_id', Auth::user()->id)->first();
+    
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($userProfile && !empty($userProfile->image)) {
+                $oldPhotoPath = public_path($dir . '/' . $userProfile->image);
+                if (file_exists($oldPhotoPath)) {
+                    unlink($oldPhotoPath);
+                }
+            }
+    
+            // Save new image
+            $image = $request->file('image');
+            $imageName = time() . uniqid('_', true) . '.' . $image->getClientOriginalExtension();
+    
+            // Resize or process the image if necessary using the built-in Image class (optional)
+            // For example, resizing the image to a max width of 800px, if needed:
+            $image->move(public_path($dir), $imageName);
+    
+            // Update the user profile with the new image name
+            if ($userProfile) {
+                $userProfile->update(['image' => $imageName]);
+            } else {
+                // Insert new record if it does not exist
+                UserProfile::create([
+                    'user_id' => Auth::user()->id,
+                    'image' => $imageName,
+                ]);
+            }
+        } elseif (!$userProfile) {
+            // If no file is uploaded but no profile exists, create a blank profile
+            UserProfile::create([
+                'user_id' => Auth::user()->id,
+                'image' => null, // No image uploaded
+            ]);
+        }
+    
+        return redirect(route('admin.user.profile'))->with('status', 'Profile updated successfully');
+    }
+
 
    
 

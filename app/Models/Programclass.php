@@ -20,7 +20,7 @@ class Programclass extends Model
     }
 
     public function feecategory(){
-        return $this->belongsTo(Feecategory::class);
+        return $this->hasOne(Feecategory::class);
     }
 
     public function campus(){

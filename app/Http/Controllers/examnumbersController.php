@@ -361,6 +361,11 @@ class examnumbersController extends Controller
                 }
             
                 return response()->json(['message' => 'Student not found.'], 404);
-            }            
+            }   
+            
+            public function examinationRelatedModules()
+            {
+                return view('admin.examinations.examination_related_modules');
+            }
        
 }

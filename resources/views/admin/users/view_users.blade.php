@@ -83,9 +83,11 @@
    
 </div>
                                         <ul class="breadcrumb m-0">
+                                      
                                         <a href="{{route('create.users')}}">
-                                        <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Create User</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add User</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
+                                       
                                         </ul>
                                     </div>
 
@@ -93,7 +95,7 @@
                             </div>
                         </div>
                         <!-- end page title -->
-                        @if(session()->has('status'))
+@if(session()->has('status'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
 <i class="mdi mdi-check-all me-2"></i>
 {{session()->get('status')}}
@@ -116,43 +118,63 @@
                                         
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
-                                            <tr>
-                                                <th>Full Name</th>
-                                                <th>Gender</th>
-                                                <th>Role</th>
-                                                <th>Campus</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
+                                            <tr style="background-color: #f1f5f7; font-weight: bold; text-align: center;">
+                                                <th style="text-align:left">S/N</th>
+                                                <th style="text-align:left">PHOTO</th>
+                                                <th style="text-align:left">FULL NAME</th>
+                                                <th style="text-align:left">GENDER</th>
+                                                <th style="text-align:left">ROLE</th>
+                                                <th style="text-align:left">WORK SATION</th>
+                                                <th style="text-align:left">STATUS</th>
+                                                <th style="text-align:left">ACTIONS</th>
                                             </tr>
                                             </thead>
                                             @php 
-                                            $users = App\Models\User::whereNotIn('role', ['student'])->get();
+                                            $users = App\Models\User::whereNotIn('role', ['student','applicant'])->get();
+                                            $i = 1;
+                                            $userProfile = App\Models\UserProfile::where('user_id', Auth::user()->id)->first();
                                             @endphp
                                     <tbody>
                                       @foreach($users as $user)
                                             <tr>
+                                            <td>{{$i++}}</td>
+                                            <td>
+                                        @if($user->id == Auth::user()->id)
+                                        <img src="{{ $userProfile->image ? url('uploads/user_photo/'.$userProfile->image) :  url('uploads/students_photo/3.jpg') }}" 
+                                        style="width: 50px; height: 50px;" class="avatar-md rounded-circle">
+                                        @else
+                                        <img src="{{ url('uploads/students_photo/3.jpg') }}" 
+                                        style="width: 50px; height: 50px;" class="avatar-md rounded-circle">
+                                        @endif
+                                                    
+                                            </td>
                                             <td>{{$user->fname}} {{$user->lname}}</td>
                                                 <td>{{$user->gender}}</td>
                                                 <td>{{$user->role}}</td>
                                                 <td>{{$user->campus}}</td>
                                                 <td>
-                                                        @if($user->status==1) <span style="color:green;">Active</span> @endif
-                                                        @if($user->status==0) <span style="color:orange;">Disabled</span> @endif
-
-                                               
+                                                {!! $user->status == 1 
+                                                ? '<span style="color:green;">Active</span>' 
+                                                : '<span style="color:orange;">Disabled</span>' !!}
                                                 </td>
                                                 <td>
+                                               
                                                 <a href="{{route('edit.user',$user->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                               
                                                 <a href="{{route('reset.user.password', $user->id)}}"><button class="btn btn-outline-secondary"><i class="fas fa-lock"></i></button> </a>
-                                                
-                                                <a href="{{route('user.permissions', $user->id)}}"><button class="btn btn-outline-info"><i class="fas fa-plus"></i></button> </a>
-                                                @if($user->status==0)  
+
+                                               <!-- <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#addRole{{$user->id}}"><i class="fas fa-plus"> R</i></button> -->
+                                               
+                                                <a href="{{route('user.permissions', $user->id)}}"><button class="btn btn-outline-info"><i class="fas fa-plus"> P</i></button> </a>
+                                               @if($user->status == 1)
+                                               <a href="{{route('disable.user', $user->id)}}" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#delete{{$user->id}}">
+                                                    <i class="fas fa-minus-circle"> &nbsp;</i></a>
+                                                    @else
                                                  <a href="{{route('enable.user', $user->id)}}" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#enable{{$user->id}}">
                                                     <i class="fas fa-check-circle">&nbsp;</i></a>
-                                                 @else
-                                                 <a href="{{route('disable.user', $user->id)}}" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#delete{{$user->id}}">
-                                                    <i class="fas fa-minus-circle"> &nbsp;</i></a>
+                                                
                                                  @endif
+                                              
                                                 </td>
                                             </tr>
 
@@ -177,6 +199,48 @@
                                                     </div><!-- /.modal-dialog -->
                                                 </div><!-- /.modal 
                                                 MODAL ENDED-->
+
+                                                    <!-- MODAL STARTING
+                                            sample modal content -->
+                                           
+                                            <div id="addRole{{$user->id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background-color:#f0f0f0;">
+                                                                <h5 class="modal-title" id="myModalLabel" style="color: #EC9684;">Add Role for: {{$user->fname}} {{$user->lname}}</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                               <form action="" method="POST">
+                                                                @csrf
+                                                                <div class="row">
+                                                                @error('role_id') <span class="text-danger">{{$message}}</span> @enderror <br> 
+                                                                <div class="col-lg-12">
+                                                                @php 
+                                                                $roles = Spatie\Permission\Models\Role::all();
+                                                                @endphp
+                                                                <select name="role_id" id="" class="form-control">
+                                                                <option value="">--Select Role--</option>
+                                                                @foreach($roles as $role)
+                                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                                                @endforeach
+                                                                </select><br>
+                                                                
+                                                                <div class="text-end">
+                                                                    <button type="button" class="btn btn-light waves-effect me-2" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="submit" class="btn btn-warning waves-effect waves-light">Add Role</button>
+                                                                </div>
+                                                                </form> 
+                                                                </div> 
+                                                                </div>
+                                                            </div>
+                                               
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal-dialog -->
+                                                </div>
+                                                <!-- /.modal 
+                                                MODAL ENDED-->
+                                               
 
                                                  <!-- MODAL STARTING
                                             sample modal content -->

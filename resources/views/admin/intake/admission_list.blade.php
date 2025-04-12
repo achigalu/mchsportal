@@ -113,8 +113,9 @@
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
                                                 <th>Selection name</th>
+                                                <th>Campus</th>
                                                 <th>Uploaded date</th>
-                                                <th>Uploade by</th>
+                                                <th>Uploaded by</th>
                                                 <th>Processed</th>
                                                 <th>Actions</th>
                                                 
@@ -128,10 +129,19 @@
 
                                             <tr>
                                                 <td>{{$admissions->upload_name}}</td>
+                                                <td>
+                                                    @if($admissions->campus == 1)
+                                                    Lilongwe
+                                                    @elseif($admissions->campus == 2)
+                                                    Blantyre
+                                                    @elseif($admissions->campus == 3)
+                                                    Zomba
+                                                    @endif
+                                                    </td>
                                                 <td>{{Carbon\Carbon::parse($admissions->created_at)->toFormattedDateString()}}</td>
                                                <td>
                                                 @if($admissions->user)
-                                                {{$admissions->user->fname}} {{$admissions->user->lname}}
+                                                {{$admissions->user->role}}
                                                 @else
                                                     Not defined
                                                 @endif

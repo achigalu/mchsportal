@@ -71,7 +71,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0">Roles</h4>
+                                    <h4 class="mb-sm-0">System Roles</h4>
 
                                     <div class="page-title-right">
                                     <div class="btn-group">
@@ -107,9 +107,9 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
                                                 <th>ID</th>
-                                                <th>Role</th>
-                                                <th>Description</th>
-                                                <th style="float:end">Actions</th>
+                                                <th>ROLE</th>
+                                                <th>DESCRIPTION</th>
+                                                <th style="float:end">ACTIONS</th>
                                                 
                                             </tr>
                                             </thead>

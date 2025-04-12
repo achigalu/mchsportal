@@ -150,7 +150,8 @@
                 <select class="form-control select2" name="department_id">
                     <option value="{{$courseedit->department_id}}">{{$courseedit->department->department_name}}</option>
                     @foreach($departments as $department)
-                        <option value="{{$department->id}}">{{$department->department_name}}</option>
+                        <option value="{{$department->id}}">{{$department->department_name}} - {{$department->campus->campus}}
+                        </option>
                        
                     @endforeach   
                    

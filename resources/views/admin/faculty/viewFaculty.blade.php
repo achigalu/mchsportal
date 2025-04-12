@@ -84,12 +84,14 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
     <a class="dropdown-item" href="#">Exel</a>
     <a class="dropdown-item" href="#">PDF</a>
    
-</div>
+</div>                                  @can('add program')
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('add.faculty')}}">
                                         <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Faculty</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
+                                        @endcan
+                                        
                                     </div>
 
                                 </div>
@@ -106,25 +108,41 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
-                                                <th>Faculty Name</th>
-                                                <th>Dean of Faculty</th>
-                                                <th>No. of Departments</th>
-                                                <th>Actions</th>
+                                                <th>S/N</th>
+                                                <th>FACULTY</th>
+                                                <th>DEAN</th>
+                                                <th>DEPUTY DEAN</th>
+                                                <th>No. OF DEPARTMENTS</th>
+                                                <th>ACTIONS</th>
                                                 
                                             </tr>
                                             </thead>
         
-        
+                                            @php $i = 1 @endphp
                                             <tbody>
                                             @foreach($faculties as $faculty)
-                                            <tr> 
-                                                <td>{{$faculty->faculty_name}}</td>
-                                                <td>{{$faculty->user->fname}} {{$faculty->user->lname}}</td>
+                                                <tr>
+                                                    <td>{{ $i++ }}</td>
+                                                    <td>{{ $faculty->faculty_name }}</td>
+                                                    <td>{{ $faculty->user->fname }} {{ $faculty->user->lname }}</td>
+                                                    <td>
+                                                        @if($faculty->deputyDean)
+                                                            {{ $faculty->deputyDean->fname }} {{ $faculty->deputyDean->lname }}
+                                                        @else
+                                                            N/A
+                                                        @endif
+                                                    </td>
                                                 <td><span class="badge rounded-pill bg-secondary">{{$faculty->departments->count()}}</span></td>
                                                 <td>
+                                                    @can('edit program')
                                                 <a href="{{route('edit.faculty',$faculty->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
-                                                <a href="{{route('view.departments', $faculty->id)}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>  
+                                                    @endcan
+                                                  
+                                                <a href="{{route('view.departments', $faculty->id)}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a> 
+                                                  
+                                                    @can('delete program')
                                                  <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
+                                                    @endcan
                                                 </td>
                                                 </tr>
                                            

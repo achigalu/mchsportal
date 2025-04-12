@@ -91,12 +91,13 @@
                                         </a>
                                         </ul>
 
-
+                                        @can('add academic session')
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('add.cohort.semester', $single->id)}}">
                                         <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Cohort Semester</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
+                                        @endcan
                                     </div>
 
                                 </div>
@@ -153,9 +154,11 @@
                                                         </td>
                                                         
                                                         <td>
+                                                        @can('edit academic session')
                                                         <a href="{{route('edit.cohort.semester', $semester->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                         
                                                         <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
+                                                        @endcan
                                                         </td>
                                                     </tr>
 
@@ -187,9 +190,10 @@
                                                         </td>
                                                         
                                                         <td>
+                                                        @can('edit academic session')
                                                         <a href="{{route('update.cohort.semester.registration', $semester->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
                                                         
-                                                       
+                                                        @endcan
                                                         </td>
                                                     </tr>
                                                 @endforeach

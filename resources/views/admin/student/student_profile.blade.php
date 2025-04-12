@@ -21,7 +21,8 @@
 
         <link href="{{asset('assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet">
 
-        <!-- Bootstrap Css -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <!-- Bootstrap Css -->
         <link href="{{asset('assets/css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
         <!-- Icons Css -->
         <link href="{{asset('assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
@@ -91,22 +92,8 @@
 <div class="card">
 <div class="card-body">
 
-@if(session()->has('status'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-<i class="mdi mdi-check-all me-2"></i>
-{{session()->get('status')}}
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
 
-@if(session()->has('invalid'))
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-<i class="mdi mdi-check-all me-2"></i>
-{{session()->get('invalid')}}
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-<form action="{{route('store.student.profile')}}" method="POST" class="custom-validation">
+<form action="{{route('store.student.profile')}}" method="POST" class="custom-validation" enctype="multipart/form-data">
     @csrf
     <h5>Bio Information</h5><p></p>
     <div class="row">
@@ -114,16 +101,17 @@
     <div class="col-lg-4">
         
             <div class="mb-3">
-                <label class="form-label">Title*</label>
-                <select class="form-select" name="title" aria-label="Default select example">
-                            <option selected=""  value="">-- select --</option>
-                            <option value="Mr">Mr</option>
-                            <option value="Mrs">Mrs</option>
-                            <option value="Miss">Miss</option>
-                            <option value="Sister">Sister</option>
-                            <option value="Pr">Mr</option>
-                            </select>
+                <label class="form-label">Title<span style="color: red;">*</span></label>
                 @error('title') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-select" name="title" aria-label="Default select example" required>
+                            <option selected=""  value="">-- select --</option>
+                            <option value="Mr" {{old('title') == 'Mr' ? 'selected' : ''}}>Mr</option>
+                            <option value="Mrs" {{old('title') == 'Mrs' ? 'selected' : ''}}>Mrs</option>
+                            <option value="Miss" {{old('title') == 'Miss' ? 'selected' : ''}}>Miss</option>
+                            <option value="Sister" {{old('title') == 'Sister' ? 'selected' : ''}}>Sister</option>
+                            <option value="Pr" {{old('title') == 'Pr' ? 'selected' : ''}}>Pr</option>
+                            </select>
+             
                 
 
             </div>
@@ -133,17 +121,18 @@
     <div class="col-lg-4">
             <div class="mb-3">
                 <label class="form-label">Initials</label>
-                <input class="form-control" name="initials" type="text" placeholder="" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                @error('initials') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="initials" value="{{old('initials')}}" type="text" placeholder="" required>
+               
             </div>   
     </div>
  
     <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Date of birth*</label>
-                
-                <input class="form-control" name="dbirth" type="date" placeholder="Surname" id="example-text-input">
-                @error('lname') <span class="text-danger">{{$message}}</span> @enderror
+                <label class="form-label">Date of birth<span style="color: red;">*</span></label>
+                @error('dbirth') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="dbirth" value="{{old('dbirth')}}" type="date" placeholder="" required>
+              
 
             </div>
             
@@ -152,12 +141,12 @@
     
         <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Gender*</label>
+                <label class="form-label">Gender<span style="color: red;">*</span></label>
                 @error('gender') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-select" name="gender" aria-label="Default select example">
+                <select class="form-select" name="gender" aria-label="Default select example" required>
                             <option selected=""  value="">-- select --</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
+                            <option value="M" {{old('gender') == 'M' ? 'selected' : ''}}>Male</option>
+                            <option value="F" {{old('gender') == 'F' ? 'selected' : ''}}>Female</option>
                             </select>
 
             </div>  
@@ -165,13 +154,13 @@
 
         <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Marital Status*</label>
-                @error('gender') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-select" name="marital" aria-label="Default select example">
+                <label class="form-label">Marital Status<span style="color: red;">*</span></label>
+                @error('marital') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-select" name="marital" aria-label="Default select example" required>
                             <option selected=""  value="">-- select --</option>
-                            <option value="Single">Single</option>
-                            <option value="Married">Married</option>
-                            <option value="Divorced">Divorced</option>
+                            <option value="Single" {{old('marital') == 'Single' ? 'selected' : ''}}>Single</option>
+                            <option value="Married" {{old('marital') == 'Married' ? 'selected' : ''}}>Married</option>
+                            <option value="Divorced" {{old('marital') == 'Divorced' ? 'selected' : ''}}>Divorced</option>
                             </select>
 
             </div>  
@@ -179,9 +168,9 @@
 
         <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Nationality*</label>
-                @error('gender') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-select" name="country" aria-label="Default select example">
+                <label class="form-label">Nationality<span style="color: red;">*</span></label>
+                @error('country') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-select" name="country" aria-label="Default select example" required>
                 <option selected=""  value="">-- select --</option>
                 <option value="Afghanistan">Afghanistan</option>
                 <option value="Åland Islands">Åland Islands</option>
@@ -314,7 +303,7 @@
                 <option value="Macao">Macao</option>
                 <option value="Macedonia, The Former Yugoslav Republic of">Macedonia, The Former Yugoslav Republic of</option>
                 <option value="Madagascar">Madagascar</option>
-                <option value="Malawi">Malawi</option>
+                <option value="Malawi" {{old('country') == 'Malawi' ? 'selected' : ''}}>Malawi</option>
                 <option value="Malaysia">Malaysia</option>
                 <option value="Maldives">Maldives</option>
                 <option value="Mali">Mali</option>
@@ -426,7 +415,7 @@
                 <option value="Western Sahara">Western Sahara</option>
                 <option value="Yemen">Yemen</option>
                 <option value="Zambia">Zambia</option>
-                <option value="Zimbabwe">Zimbabwe</option>
+                <option value="Zimbabwe" {{old('country') == 'Zimbabwe' ? 'selected' : ''}}>Zimbabwe</option>
                             </select>
 
             </div>  
@@ -434,13 +423,13 @@
 
         <div class="col-lg-6">
             <div class="mb-3">
-                <label class="form-label">Religion*</label>
-                @error('gender') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-select" name="religion" aria-label="Default select example">
+                <label class="form-label">Religion<span style="color: red;">*</span></label>
+                @error('religion') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-select" name="religion" aria-label="Default select example" required>
                             <option selected=""  value="">-- select --</option>
-                            <option value="Christianity">Chritianity</option>
-                            <option value="Islam">Islam</option>
-                            <option value="Buddism">Buddism</option>
+                            <option value="Christianity" {{old('religion') == 'Christianity' ? 'selected' : ''}}>Chritianity</option>
+                            <option value="Islam" {{old('religion') == 'Islam' ? 'selected' : ''}}>Islam</option>
+                            <option value="Buddism" {{old('religion') == 'Buddism' ? 'selected' : ''}}>Buddism</option>
                             </select>
 
             </div>  
@@ -448,36 +437,36 @@
 
         <div class="col-lg-6">
             <div class="mb-3">
-                <label class="form-label">District*</label>
-                @error('gender') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-select" name="district" aria-label="Default select example">
+                <label class="form-label">District<span style="color: red;">*</span></label>
+                @error('district') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-select" name="district" aria-label="Default select example" required>
                             <option value="">-- select --</option>
-                            <option value="BT">Blantyre</option>
-                            <option value="BLK">Balaka</option>
-                            <option value="CK">Chikwawa</option>
-                            <option value="CA">Chitipa</option>
-                            <option value="DA">Dowa</option>
-                            <option value="DZ">Dedza</option>
-                            <option value="KU">Kasungu</option>
-                            <option value="KA">Karonga</option>
-                            <option value="LL">Lilongwe</option>
-                            <option value="LA">Likoma</option>
-                            <option value="MGH">Mangochi</option>
-                            <option value="ME">Mulanje</option>
-                            <option value="MHG">Machinga</option>
-                            <option value="MN">Mwanza</option>
-                            <option value="MJ">Mchinji</option>
-                            <option value="MZ">Mzimba</option>
-                            <option value="KK">Nkhotakota</option>
-                            <option value="NB">Nkhatabay</option>
-                            <option value="NS">Ntchisi</option>
-                            <option value="NN">Neno</option>
-                            <option value="NU">Ntcheu</option>
-                            <option value="NE">Nsanje</option>
-                            <option value="RU">Rumphi</option>
-                            <option value="SA">Salima</option>
-                            <option value="TO">Thyolo</option>
-                            <option value="ZA">Zomba</option>
+                            <option value="Blantyre" {{old('district') == 'Blantyre' ? 'selected' : ''}}>Blantyre</option>
+                            <option value="Balaka" {{old('district') == 'Balaka' ? 'selected' : ''}}>Balaka</option>
+                            <option value="Chikwawa" {{old('district') == 'Chikwawa' ? 'selected' : ''}}>Chikwawa</option>
+                            <option value="Chitipa" {{old('district') == 'Chitipa' ? 'selected' : ''}}>Chitipa</option>
+                            <option value="Dowa" {{old('district') == 'Dowa' ? 'selected' : ''}}>Dowa</option>
+                            <option value="Dedza" {{old('district') == 'Dedza' ? 'selected' : ''}}>Dedza</option>
+                            <option value="Kasungu" {{old('district') == 'Kasungu' ? 'selected' : ''}}>Kasungu</option>
+                            <option value="Karonga" {{old('district') == 'Karonga' ? 'selected' : ''}}>Karonga</option>
+                            <option value="Lilongwe" {{old('district') == 'Lilongwe' ? 'selected' : ''}}>Lilongwe</option>
+                            <option value="Likoma" {{old('district') == 'Likoma' ? 'selected' : ''}}>Likoma</option>
+                            <option value="Mangochi" {{old('district') == 'Mangochi' ? 'selected' : ''}}>Mangochi</option>
+                            <option value="Mulanje" {{old('district') == 'Mulanje' ? 'selected' : ''}}>Mulanje</option>
+                            <option value="Machinga" {{old('district') == 'Machinga' ? 'selected' : ''}}>Machinga</option>
+                            <option value="Mwanza" {{old('district') == 'Mwanza' ? 'selected' : ''}}>Mwanza</option>
+                            <option value="Mchinji" {{old('district') == 'Mchinji' ? 'selected' : ''}}>Mchinji</option>
+                            <option value="Mzimba" {{old('district') == 'Mzimba' ? 'selected' : ''}}>Mzimba</option>
+                            <option value="Nkhotakota" {{old('district') == 'Nkhotakota' ? 'selected' : ''}}>Nkhotakota</option>
+                            <option value="Nkhatabay" {{old('district') == 'Nkhatabay' ? 'selected' : ''}}>Nkhatabay</option>
+                            <option value="Nntchisi" {{old('district') == 'Nntchisi' ? 'selected' : ''}}>Ntchisi</option>
+                            <option value="Neno" {{old('district') == 'Neno' ? 'selected' : ''}}>Neno</option>
+                            <option value="Ntcheu" {{old('district') == 'Ntcheu' ? 'selected' : ''}}>Ntcheu</option>
+                            <option value="Nsanje" {{old('district') == 'Nsanje' ? 'selected' : ''}}>Nsanje</option>
+                            <option value="Rumphi" {{old('district') == 'Rumphi' ? 'selected' : ''}}>Rumphi</option>
+                            <option value="Salima" {{old('district') == 'Salima' ? 'selected' : ''}}>Salima</option>
+                            <option value="Thyolo" {{old('district') == 'Thyolo' ? 'selected' : ''}}>Thyolo</option>
+                            <option value="Zomba" {{old('district') == 'Zomba' ? 'selected' : ''}}>Zomba</option>
                             </select>
 
             </div>  
@@ -485,18 +474,20 @@
 
         <div class="col-lg-6">
             <div class="mb-4">
-                <label class="form-label">T/A*</label>
-                <input class="form-control" name="traditional" type="text" placeholder="T/A" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                <label class="form-label">T/A<span style="color: red;">*</span></label>
+                @error('traditional') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="traditional" value="{{old('traditional')}}" type="text" required>
+               
 
             </div>  
         </div>
 
         <div class="col-lg-6">
             <div class="mb-4">
-                <label class="form-label">Village*</label>
-                <input class="form-control" name="village" type="text" placeholder="Village" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                <label class="form-label">Village<span style="color: red;">*</span></label>
+                @error('village') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="village" value="{{old('village')}}" type="text" placeholder="Village" required>
+             
 
             </div>  
         </div>
@@ -506,34 +497,38 @@
             <hr>
             <div class="col-lg-4">
             <div class="mb-3">
-                <label class="form-label">Phone*</label>
-                <input class="form-control" name="student_phone1" type="text" placeholder="" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                <label class="form-label">Phone<span style="color: red;">*</span></label>
+                @error('student_phone1') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="student_phone1" value="{{old('student_phone1')}}" type="text" placeholder="" required>
+               
             </div>   
     </div>
 
     <div class="col-lg-4">
             <div class="mb-3">
                 <label class="form-label">Phone (Optional)</label>
-                <input class="form-control" name="student_phone2" type="text" placeholder="" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                @error('student_phone2') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="student_phone2" value="{{old('student_phone2')}}" type="text">
+               
             </div>   
     </div>
 
     <div class="col-lg-4">
             <div class="mb-3">
                 <label class="form-label">Email (Optional)</label>
-                <input class="form-control" name="student_email" type="email" placeholder="" id="validationCustom01">
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                @error('student_email') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" name="student_email" value="{{old('student_email')}}" type="email">
+                
             </div>   
     </div>
 
     <div class="col-lg-6">
             <div class="mb-4">
-                <label class="form-label">Home Address*</label><br>
-                <textarea id="comments" class="form-control" name="student_address" rows="4" cols="41" 
-                placeholder="" maxlength="200"></textarea>
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                <label class="form-label">Home Address<span style="color: red;">*</span></label><br>
+                @error('student_address') <span class="text-danger">{{$message}}</span> @enderror
+                <textarea id="comments" class="form-control"  name="student_address" rows="4" cols="41" 
+                placeholder="" maxlength="200">{{old('student_address')}}</textarea>
+               
             </div>   
     </div>
 
@@ -542,24 +537,24 @@
             <hr>
     
         <div class="col-lg-6">
-                <label class="form-label">Full Name</label> 
-                @error('fullname') <span class="text-danger">{{$message}}</span> @enderror 
-                <input class="form-control" name="kin_fullname" type="text" placeholder="" id="validationCustom01">
+                <label class="form-label">Full Name<span style="color: red;">*</span></label> 
+                @error('kin_fullname') <span class="text-danger">{{$message}}</span> @enderror 
+                <input class="form-control" name="kin_fullname" value="{{old('kin_fullname')}}" type="text" placeholder="">
              </div>
 
         <div class="col-lg-6">
             <div class="mb-3">
-                <label class="form-label">Relationship</label>
+                <label class="form-label">Relationship<span style="color: red;">*</span></label>
                 @error('relationship') <span class="text-danger">{{$message}}</span> @enderror 
                 <select class="form-select" name="relationship" aria-label="Default select example">
                             <option selected=""  value="">-- select --</option>
-                            <option value="Mother">Mother</option>
-                            <option value="Father">Father</option>
-                            <option value="Uncle">Uncle</option>
-                            <option value="Brother">Brother</option>
-                            <option value="Sister">Sister</option>
-                            <option value="Brother">Brother</option>
-                            <option value="Aunt">Aunt</option>
+                            <option value="Mother" {{old('relationship') == 'Mother' ? 'selected' : ''}}>Mother</option>
+                            <option value="Father" {{old('relationship') == 'Father' ? 'selected' : ''}}>Father</option>
+                            <option value="Uncle" {{old('relationship') == 'Uncle' ? 'selected' : ''}}>Uncle</option>
+                            <option value="Brother" {{old('relationship') == 'Brother' ? 'selected' : ''}}>Brother</option>
+                            <option value="Sister" {{old('relationship') == 'Sister' ? 'selected' : ''}}>Sister</option>
+                            <option value="Brother" {{old('relationship') == 'Brother' ? 'selected' : ''}}>Brother</option>
+                            <option value="Aunt" {{old('relationship') == 'Aunt' ? 'selected' : ''}}>Aunt</option>
                             </select>
             </div>
  
@@ -575,8 +570,8 @@
     <div class="col-lg-6">
             <div class="mb-3">
                 <label class="form-label">Phone</label>
-                @error('phone') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" type="text" name="kin_phone" placeholder="" id="example-text-input">
+                @error('kin_phone') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" type="text" value="{{old('kin_phone')}}" name="kin_phone" placeholder="">
 
             </div>
             
@@ -585,25 +580,38 @@
         <div class="col-lg-6">
             <div class="mb-2">
                 <label class="form-label">Email</label>
-                @error('email') <span class="text-danger">{{$message}}</span> @enderror
-                <input class="form-control" type="email" name="kin_email" placeholder="" id="example-text-input">
+                @error('kin_email') <span class="text-danger">{{$message}}</span> @enderror
+                <input class="form-control" type="email" value="{{old('kin_email')}}" name="kin_email" placeholder="" >
 
             </div>
             
         </div>
         <div class="col-lg-6">
             <div class="mb-4">
-                <label class="form-label">Home Address*</label><br>
-                <textarea id="comments" class="form-control" name="kin_address" rows="4" cols="40" 
+                <label class="form-label">Home Address<span style="color: red;">*</span>*</label><br>
+                @error('kin_address') <span class="text-danger">{{$message}}</span> @enderror
+                <textarea id="comments" class="form-control" value="{{old('kin_address')}}" name="kin_address" rows="4" cols="40" 
                 placeholder="" maxlength="200"></textarea>
-                @error('fname') <span class="text-danger">{{$message}}</span> @enderror
+                
             </div>   
     </div>
+
+    <div class="col-lg-6">
+            <div class="mb-2">
+                <label class="form-label">Photo (Passport size only, less than 2MB)</label>
+                @error('student_photo') <span class="text-danger">{{$message}}</span> @enderror
+
+                <input class="form-control" type="file" name="student_photo"  id="imageID">
+                <img id="show_imageID" src="{{ asset('uploads/students_photo/3.jpg') }}"  style="width: 70px; height: 60px;" class="avatar-md rounded-circle">
+
+            </div>
+            
+        </div>
 
 
     </div>
   <div class="form-group">
-&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update</button> &nbsp;&nbsp;
+&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Create</button> &nbsp;&nbsp;
 </form>
 <a href="{{route('student.dashboard')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
 </div>  
@@ -664,6 +672,19 @@
         <script src="{{asset('assets/libs/parsleyjs/parsley.min.js')}}"></script>
 
         <script src="{{asset('assets/js/pages/form-validation.init.js')}}"></script>
+        <script type="text/javascript"></script>
+      
+      <script>
+        $(document).ready(function(){
+            $('#imageID').change(function(e) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#show_imageID').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(e.target.files['0']);
+            });
+        });
+        </script>
 
     </body>
 

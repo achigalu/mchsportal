@@ -108,15 +108,87 @@
                         
                     <div class="card-body" >
                     <select class="form-control select2" aria-label="Default select example" name="classID" required>
-                    <option value="">-- selects --</option>
-                    @if($classes->isNotEmpty())
-                    @foreach($classes as $class)
+                    <option value="">-- select class --</option>
+
+                    @if(Auth::user()->role=='HOD')
+                    @if(!empty($hodClasses))
+                    @foreach($hodClasses as $class)
                     <option value="{{$class->id}}">{{$class->classcode}} - 
-                    @if($class->campus_id==1) LL @endif
-                    @if($class->campus_id==2) BT @endif
-                    @if($class->campus_id==3) ZA @endif
-                    </option>
-                    @endforeach
+                            @if($class->campus_id==1) LL @endif
+                            @if($class->campus_id==2) BT @endif
+                            @if($class->campus_id==3) ZA @endif
+                            </option>
+                            @endforeach
+                    @endif
+                    @elseif(Auth::user()->role=='Lecturer')
+                    @if(!empty($classDetails))
+                    @foreach($classDetails as $class)
+                            <option value="{{$class->id}}">{{$class->classcode}} - 
+                            @if($class->campus_id==1) LL @endif
+                            @if($class->campus_id==2) BT @endif
+                            @if($class->campus_id==3) ZA @endif
+                            </option>
+                            @endforeach
+                    @endif
+                    @elseif(Auth::user()->role=='Dean' || Auth::user()->role=='Deputy Dean')
+                    @if(!empty($deanClasses))
+                    @foreach($deanClasses as $class)
+                    <option value="{{$class->id}}">{{$class->classcode}} - 
+                            @if($class->campus_id==1) LL @endif
+                            @if($class->campus_id==2) BT @endif
+                            @if($class->campus_id==3) ZA @endif
+                            </option>
+                            @endforeach
+                    @endif
+                    @elseif(Auth::user()->role=='Campus Registrar' || Auth::user()->role=='Principal')
+                    @if(!empty($cr))
+                    @foreach($cr as $class)
+                    <option value="{{$class->id}}">{{$class->classcode}} - 
+                            @if($class->campus_id==1) LL @endif
+                            @if($class->campus_id==2) BT @endif
+                            @if($class->campus_id==3) ZA @endif
+                            </option>
+                            @endforeach
+                    @endif
+                    @elseif(Auth::user()->role=='DCR-Academic' ||
+                     Auth::user()->role=='DCR-Administration' ||
+                      Auth::user()->role=='College Registrar' ||
+                       Auth::user()->role=='Executive Director' ||
+                        Auth::user()->role=='Admin' ||
+                        Auth::user()->role=='Accountant' ||
+                        Auth::user()->role=='Finance Manager' ||
+                        Auth::user()->role=='Assistant Accountant' || 
+                        Auth::user()->role=='Accounts Clerk' ||
+                       Auth::user()->role=='Administrator')
+                    @if(!empty($co))
+                    @foreach($co as $class)
+                    <option value="{{$class->id}}">{{$class->classcode}} - 
+                            @if($class->campus_id==1) LL @endif
+                            @if($class->campus_id==2) BT @endif
+                            @if($class->campus_id==3) ZA @endif
+                            </option>
+                            @endforeach
+                            @endif
+
+                            @elseif(Auth::user()->role=='HOD-BASIC' && Auth::user()->campus=='Lilongwe')
+
+                                @if($underBasicLL->isNotEmpty())
+                                @foreach($underBasicLL as $basicll)
+                                    <option value="{{$basicll->id}}">{{$basicll->classcode}} - LL
+                                    </option>
+                                @endforeach
+                                @endif
+
+                            @elseif(Auth::user()->role=='HOD-BASIC' && Auth::user()->campus=='Blantyre')
+
+                            @if($underBasicBT->isNotEmpty())
+                                @foreach($underBasicBT as $basicbt)
+                                    <option value="{{$basicbt->id}}">{{$basicbt->classcode}} - BT
+                                    </option>
+                                @endforeach
+                                @endif
+                    @else 
+                  <option value="">--none--</option>
                     @endif
                     </select>
                     </div>
@@ -153,33 +225,13 @@
 </form>
 
 
-
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </div>
 </div>
 </div>
 <!-- end select2 -->
 
 </div>
-
-
-
-
-
-
-<!-- end row -->
-
-<!-- end row -->
-
-
-
-
-
-
-
-
-
-
-   <!-- start page title -->
 
 
 <!-- end row -->

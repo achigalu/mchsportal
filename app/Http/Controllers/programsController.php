@@ -7,6 +7,7 @@ use App\Models\Program;
 Use App\Models\Campus;
 use App\Models\User;
 Use App\Models\Department;
+use Illuminate\Support\Facades\Auth;
 
 class programsController extends Controller
 {
@@ -67,7 +68,43 @@ class programsController extends Controller
     public function viewProgram(){
         $data['title']=' Programs List';
         $data['programs'] = Program::allPrograms();
-        return view('admin.programs.viewProgram', $data);
+        
+        //////
+        $total = $data['programs']->count();
+        ////////
+        $userCampus = Auth::user()->campus;
+        $campusMapping = [
+            'Lilongwe' => 1,
+            'Blantyre' => 2,
+            'Zomba' => 3,
+        ];
+        
+        $campus_id = $campusMapping[$userCampus] ?? null; 
+        //////
+
+        if(($userCampus == 'Lilongwe' || $userCampus == 'Blantyre' || $userCampus == 'Zomba') && (Auth::user()->role!='College Registrar' &&
+         Auth::user()->role!='DCR-Academic' &&
+          Auth::user()->role!='DCR-Administration' &&
+           Auth::user()->role!='Executive Director' &&
+            Auth::user()->role!='Admin' &&
+           Auth::user()->role!='Administrator'))
+        {
+            $filteredPrograms = $data['programs']->where('campus_id', $campus_id);
+            $total = $filteredPrograms->count();
+            $data = [
+                'programs' => $filteredPrograms,
+                'total' => $total
+            ];
+            return view('admin.programs.viewProgram', $data); 
+        }
+
+        else{
+            $data = [
+                'programs' => $data['programs'],
+                'total' => $total
+            ];
+            return view('admin.programs.viewProgram', $data); 
+        }
     }
 
     public function editProgram($id)
@@ -79,14 +116,13 @@ class programsController extends Controller
         $data['campuses'] = Campus::campusAll();
         $data['users'] = User::allUsers();
         $data['departments'] = Department::allDepartments();
-        
-        return view('admin.programs.editProgram', $data);
+        return view('admin.programs.editProgram', $data); 
     }
 
     public function updateProgram(Request $request, $id)
     {
+       
             $validated = $request->validate([
-                'short_name' => 'required',
                 'program_code' => 'required',
                 'program_name' => 'required',
                 'duration' => 'required|numeric',
@@ -97,18 +133,17 @@ class programsController extends Controller
                 'award' => 'required',
 
             ]);
-        
-    
+
+ 
            $myProgram = Program::getProgram($id);
           
            $myProgram->update([
-                    'short_name' => $request->short_name,
                     'program_code' => $request->program_code,
                     'program_name' => $request->program_name,
                     'duration' => $request->duration,
                     'entry_level' => $request->entry_level,
                     'user_id' => $request->coordinator,
-                    'department_id' => $request->department,
+                    'department_id' => $request->department_id,
                     'campus_id' => $request->campus_offered,
                     'award' => $request->award,
            ]);

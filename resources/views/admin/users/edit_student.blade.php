@@ -72,12 +72,12 @@
 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
    
 <h4 class="mb-sm-0">
-    <span class="badge rounded-pill bg-info fs-6">
+
     Profle for: 
-        <span class="badge rounded-pill bg-secondary fs-6">
-        {{$student->fname}} {{$student->lname}}
-        </span>
-</span>
+       
+        {{$student->fname}} {{$student->lname}} ( {{$student->programclass}} | Semester:{{$student->semester}} - {{$student->campus}}
+      
+
 </h4>
 
 <div class="page-title-right">
@@ -179,6 +179,17 @@
                 <input class="form-control" name="email" type="text" value="{{$student->email}}" id="example-text-input">
                 @error('email') <span class="text-danger">{{$message}}</span> @enderror
 
+            </div>  
+        </div>
+
+        <div class="col-lg-4">
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                @error('gender') <span class="text-danger">{{$message}}</span> @enderror
+                <select class="form-select" name="gender" aria-label="Default select example">
+                <option value="M" {{ $student->gender == 'M' ? 'selected' : '' }}>Male</option>
+                <option value="F" {{ $student->gender == 'F' ? 'selected' : '' }}>Female</option>               
+        </select>
             </div>  
         </div>
 

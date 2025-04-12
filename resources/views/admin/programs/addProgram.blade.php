@@ -204,10 +204,10 @@
                     @error('award') <span class="text-danger">{{$message}}</span> @enderror
                         <select class="form-select" aria-label="Default select example" name="award">
                             <option value="" selected="">-- select --</option>
-                            <option value="certificate">Certificate</option>
-                            <option value="diploma">Diploma</option>
-                            <option value="degree">Degree</option>
-                            <option value="masters">Masters</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Degree">Degree</option>
+                            <option value="Masters">Masters</option>
                             </select>
                     </div>
 

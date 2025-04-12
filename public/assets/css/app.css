@@ -3920,6 +3920,11 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before {
   right: 0px;
   top: 0px;
 }
+.wrapper-page .card {
+  max-width: 500px; /* Increased from default */
+  width: 100%; 
+  margin: 0 auto; /* Center the card */
+}
 
 .wrapper-page {
   margin: 7.5% auto;

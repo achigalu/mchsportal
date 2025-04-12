@@ -5,7 +5,7 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | View Programs</title>
+        <title>MCHS Portal | View Departments</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
@@ -103,15 +103,16 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-        
+        @php $i = 1; @endphp
                                         
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
-                                                <th>Department Name</th>
-                                                <th>Campus</th>
-                                                <th>Head of Department</th>
-                                                <th>Actions</th>
+                                                <th>S/N</th>
+                                                <th>DEPARTMENT NAME</th>
+                                                <th>CAMPUS</th>
+                                                <th>HOD</th>
+                                                <th>ACTIONS</th>
                                             </tr>
                                             </thead>
         
@@ -119,6 +120,7 @@
                                             <tbody>
                                                 @foreach($departments as $department)
                                             <tr>
+                                                <td>{{$i++}}</td>
                                                 <td>{{$department->department_name}}</td>
                                                 <td>{{$department->campus->campus}}</td>
                                                 <td>{{$department->user->fname}} {{$department->user->lname}}</td>

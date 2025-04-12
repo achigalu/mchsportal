@@ -14,7 +14,7 @@
             <img src="{{ public_path('assets/images/users/3.jpg') }}" alt="Examination Number PDF" height="90" width="90" />
             </td>
             <td class="w-half">
-                <h2>MCHS Invoice ID: 834847473</h2>
+                <h2>Examination Numbers in PDF</h2>
             </td>
         </tr>
     </table>
@@ -25,7 +25,7 @@
                 <td class="w-half">
                     <div><h4>To:</h4></div>
                     <div>Mike Banda</div>
-                    <div>C/O Masintha CCAP. BOX 87, LILONGWE</div>
+                    <div>PO BOX 30369</div>
                 </td>
                 <td class="w-half">
                     <div><h4>From:</h4></div>

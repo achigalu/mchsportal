@@ -5,12 +5,13 @@
     <head>
         
         <meta charset="utf-8" />
-        <title>MCHS Portal | {{$title}}</title>
+        <title>MCHS Portal | Allocate Subjects to Class</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
         <meta content="Themesdesign" name="author" />
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{asset('assets/images/favicon.ico')}}">
+        <link href="{{asset('assets/libs/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css">
         
 <!-- DataTables -->
         <link href="{{asset('assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet" type="text/css" />
@@ -28,7 +29,7 @@
         <link href="{{asset('assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
     </head>
 
-    <body data-topbar="dark">
+    <body data-topbar="dark"> 
     
     <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 
@@ -99,10 +100,8 @@
                         
 
                         <div class="row">
-                            <div class="col-xl-8">
-                                <div class="card">
-                                    <div class="card-body">
-                                    @if(session()->has('message'))
+                            <div class="col-12">
+                            @if(session()->has('message'))
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                         <i class="mdi mdi-check-all me-2"></i>
                                         {{session()->get('message')}}
@@ -111,31 +110,70 @@
                                         @endif
 
                                         @if(session()->has('invalid'))
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         <i class="mdi mdi-check-all me-2"></i>
                                         {{session()->get('invalid')}}
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                         @endif
+                            </div>
+                      
+                            <div class="col-xl-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                 
     
                                         <h4 class="card-title mb-4">Select Class</h4>@error('class_id') <span class="text-danger">{{$message}}</span> @enderror
                                         <form action="{{route('class.subjects')}}" method="post">
                                             @csrf
                                         <div class="table-responsive input-group">
                                         
-                                        <select class="form-select shadow-none form-select-sm" name="class_id" required>
+                                        <select class="form-control select2" name="class_id" required>
                                         <option selected value="">--class--</option>
-                                        @foreach($classes as $class)
-                                        
-                                        <option value="{{$class->id}}">{{$class->classcode}} - 
-                                            @if($class->campus_id==1) LL @endif
-                                            @if($class->campus_id==2) BT @endif
-                                            @if($class->campus_id==3) ZA @endif
-                                            </option>
-                                         @endforeach
+                                        @if(Auth::user()->role=='HOD')
+                                                @if(!empty($hodClasses))
+                                                @foreach($hodClasses as $class)
+                                                <option value="{{$class->id}}">{{$class->classcode}} - 
+                                                        @if($class->campus_id==1) LL @endif
+                                                        @if($class->campus_id==2) BT @endif
+                                                        @if($class->campus_id==3) ZA @endif
+                                                        </option>
+                                                        @endforeach
+                                                @endif
+                                                @elseif(Auth::user()->role=='Admin' || Auth::user()->role=='Administrator')
+                                                        @if(!empty($admin))
+                                                        @foreach($admin as $class)
+                                                        <option value="{{$class->id}}">{{$class->classcode}} - 
+                                                                @if($class->campus_id==1) LL @endif
+                                                                @if($class->campus_id==2) BT @endif
+                                                                @if($class->campus_id==3) ZA @endif
+                                                                </option>
+                                                                @endforeach
+                                                        @endif
+                                                
+                                                @elseif(Auth::user()->role=='HOD-BASIC' && Auth::user()->campus=='Lilongwe')
+                                                <option value="8">DCM 1 - LL</option>
+                                                <option value="19">DPH 1 - LL</option>
+                                                <option value="3">DBMS 1 - LL</option>
+                                                <option value="25">DOT 1 - LL</option>
+                                                <option value="13">DDT 1 - LL</option>
+                                                <option value="16">DEH 1 - LL</option>
+                                                <option value="22">DR 1 - LL</option>
+
+                                                @elseif(Auth::user()->role=='HOD-BASIC' && Auth::user()->campus=='Blantyre')
+                                                <option value="42">DCM 1 - BT</option>
+                                                <option value="54">UDCM 1 - BT</option>
+                                                <option value="36">DRN 1 - BT</option>
+                                                <option value="58">UDRN 1 - BT</option>
+                                                <option value="60">DCA 1 - BT</option>
+                                                <option value="62">ENT 1 - BT</option>
+                                                <option value="66">ORTHOP 1 - BT</option>
+                                                @else
+                                                <option value="">-- none --</option>
+                                                @endif
                                             </select>&nbsp;&nbsp;
 
-                                            <select class="form-select shadow-none form-select-sm" name="semester" required>
+                                            <select class="form-select shadow-none form-select-sm" name="semester" required> 
                                         <option selected value="">--semester--</option>
                       
                                              <option value="1">1</option>
@@ -148,6 +186,8 @@
                                         
                                         </form>
                                     </div><!-- end card -->
+                                    <br><br><br><br><br><br><br><br><br><br>
+                                        <br><br><br><br><br><br><br>
                                 </div><!-- end card -->
                             </div>
                             <!-- end col -->
@@ -157,7 +197,8 @@
                                         <div class="float-end">
                                         
                                         </div>
-                                        <h4 class="card-title mb-4">Class subjects will be populated below</h4>
+                                        <h4 class="card-title mb-4">Class subjects will be populated below</h4><br><br><br><br><br><br><br><br><br>
+                                        <br><br><br><br><br><br><br><br><br><br>
                                         
                                         <div class="row">
                                            
@@ -210,6 +251,7 @@
         <script src="{{asset('assets/libs/node-waves/waves.min.js')}}"></script>
 
         <!-- Required datatable js -->
+        <script src="{{asset('assets/libs/select2/js/select2.min.js')}}"></script>
         <script src="{{asset('assets/libs/datatables.net/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
         <!-- Buttons examples -->

@@ -33,29 +33,34 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'phone' => 'required',
+        $validated = $request->validate([
+            'username' => 'required',
             'fname' => ['required', 'string', 'max:255'],
             'lname' => ['required', 'string', 'max:255'],
-            'country' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // check if user exist in users table and add logic
+        $alreadyUser = User::where('email', $validated['email'])->orWhere('username', $request->username)->first();
+            if($alreadyUser)
+            {
+                return redirect()->back()->with('invalid' , 'Email or username already exist');
+            }
         $user = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
             'email' => $request->email,
-            'country' => $request->country,
-            'phone' => $request->phone,
+            'username' => $request->username,
             'role'  => 'applicant',
             'remember_token' => Str::random(40),
             'password' => Hash::make($request->password),
         ]);
 
         if($user){
-           Mail::to($user->email)->send(new RegisterMail($user));
-            return redirect()->route('login')->with('status', 'Go to your email and verify your account');
+           //Mail::to($user->email)->send(new RegisterMail($user));
+            return redirect()->route('login')->with('status', 'Success!!,
+             use '.': '.$request->username .' or ' .': '.$request->email .'  to login..');
         }
     }
 

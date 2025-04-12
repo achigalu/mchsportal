@@ -102,6 +102,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 <li class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;Back</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 </ul>
+@can('generate-exam-numbers')
 @if($saved == 9)
 
 @else
@@ -117,7 +118,7 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download List &
 </a>
 </ul>
 @endif
-
+@endcan
 
 
 </div>

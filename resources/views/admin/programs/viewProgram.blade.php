@@ -80,12 +80,14 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
     <a class="dropdown-item" href="#">Exel</a>
     <a class="dropdown-item" href="#">PDF</a>
    
-</div>
+</div>                                  @can('add program')
                                         <ul class="breadcrumb m-0">
                                         <a href="{{route('add.program')}}">
                                         <li class="btn btn-secondary"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add Program</li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </a>
                                         </ul>
+                                        @endcan
+                                        
                                     </div>
 
                                 </div>
@@ -98,11 +100,11 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                 <div class="card">
                                     <div class="card-body">
         
-                                        
+                                        @php $i = 1; @endphp
                                         <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                             <thead>
                                             <tr style="background-color: #f0f0f0;">
-                                                
+                                                <th>#</th>
                                                 <th>Code</th>
                                                 <th>Name</th>
                                                 <th>Department</th>
@@ -118,20 +120,27 @@ aria-expanded="false"><i class="fas fa-download"></i>&nbsp;&nbsp;Download &nbsp;
                                             <tbody>
                                                 @foreach($programs as $program)
                                                 <tr>
-
+                                                    <td>{{$i++}}</td>
                                                     <td>{{$program->program_code}}</td>
                                                     <td>{{$program->program_name}}</td>
                                                     <td>{{$program->department->department_name}}</td>
                                                     <td>{{$program->duration}}</td>
-                                                    <td>{{$program->user->fname}} {{$program->user->lname}}</td>
+                                                    @php 
+                                                        $user = App\Models\User::findOrFail($program->user_id);
+                                                    @endphp
+                                                    <td>{{$user->fname}} {{$user->lname}}</td>
                                                     <td>{{$program->department->campus->campus}}</td>
                                                     <td>{{($program->entry_level=="Basic")? "Basic" : "Post Basic"}}</td>
                                                     <td>
-                                                   
+                                                       @can('edit program')
                                                         <a href="{{route('edit.program', $program->id)}}"><button class="btn btn-outline-info"><i class="fas fa-pencil-alt"></i></button></a>
+                                                       @endcan
+                                                       
                                                         <a href="{{route('view.program.class', ['programid' => $program->id, 'campusid' => $program->department->campus->id])}}"><button class="btn btn-outline-secondary"><i class="fas fa-bars"></i></button> </a>
+                                                      
+                                                       @can('delete program')
                                                         <button class="btn btn-outline-warning"><i class="fas fa-trash"></i></button>
-                                                        
+                                                       @endcan
                                                     </td>
                                                 </tr>
                                                 @endforeach

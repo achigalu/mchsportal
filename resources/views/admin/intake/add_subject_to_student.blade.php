@@ -115,14 +115,49 @@
                     <div class="card bg-light text-dark">
                      
                     <div class="card-body" >
-                    <select class="form-control select2" name="class" aria-label="Default select example">
-                    <option value="" selected="">-- select --</option>
-                    @foreach($class as $myclass)
-                  
-                    <option value="{{$myclass->id}}">{{$myclass->classcode}} -
-                         @if($myclass->campus_id==1) LL @endif @if($myclass->campus_id==2) BT @endif
-                          @if($myclass->campus_id==3) ZA @endif</option>
-                    @endforeach
+                    <select class="form-control select2" name="class" aria-label="Default select example" Required>
+                    <option selected value="">--class--</option>
+                    @if(Auth::user()->role=='HOD')
+                    @if(!empty($hodClasses))
+                    @foreach($hodClasses as $class)
+                    <option value="{{$class->id}}">{{$class->classcode}} - 
+                            @if($class->campus_id==1) LL @endif
+                            @if($class->campus_id==2) BT @endif
+                            @if($class->campus_id==3) ZA @endif
+                            </option>
+                            @endforeach
+                    @endif
+                    @elseif(Auth::user()->role=='Admin' || Auth::user()->role=='Administrator')
+                            @if(!empty($admin))
+                            @foreach($admin as $class)
+                            <option value="{{$class->id}}">{{$class->classcode}} - 
+                                    @if($class->campus_id==1) LL @endif
+                                    @if($class->campus_id==2) BT @endif
+                                    @if($class->campus_id==3) ZA @endif
+                                    </option>
+                                    @endforeach
+                            @endif
+                    
+                            @elseif(Auth::user()->role=='HOD-BASIC' && Auth::user()->campus=='Lilongwe')
+                            <option value="8">DCM 1 - LL</option>
+                            <option value="19">DPH 1 - LL</option>
+                            <option value="3">DBMS 1 - LL</option>
+                            <option value="25">DOT 1 - LL</option>
+                            <option value="13">DDT 1 - LL</option>
+                            <option value="16">DEH 1 - LL</option>
+                            <option value="22">DR 1 - LL</option>
+
+                            @elseif(Auth::user()->role=='HOD-BASIC' && Auth::user()->campus=='Blantyre')
+                            <option value="42">DCM 1 - BT</option>
+                            <option value="54">UDCM 1 - BT</option>
+                            <option value="36">DRN 1 - BT</option>
+                            <option value="58">UDRN 1 - BT</option>
+                            <option value="60">DCA 1 - BT</option>
+                            <option value="62">ENT 1 - BT</option>
+                            <option value="66">ORTHOP 1 - BT</option>
+                    @else
+                    <option value="">-- none --</option>
+                    @endif
                     </select>
                     </div>
                     </div>
@@ -137,7 +172,7 @@
                         
                     <div class="card-body">
 
-                    <select class="form-select" name="semester" aria-label="Default select example">
+                    <select class="form-select" name="semester" aria-label="Default select example" Required>
                     <option value="" selected="">-- select --</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -145,6 +180,7 @@
 
                     </div>
                     </div>
+                    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                     </div>
 
                     <div class="form-group col-md-2">

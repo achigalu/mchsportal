@@ -154,7 +154,7 @@
                 <select class="form-control select2" name="coordinator">
                     
                     @foreach($lecturers as $user)
-                        <option {{($program->user->id==$user->id)? 'selected' : ""}} value="{{$user->id}}">{{$user->fname}} {{$user->lname}}</option>
+                        <option {{($program->user_id==$user->id)? 'selected' : ""}} value="{{$user->id}}">{{$user->fname}} {{$user->lname}}</option>
                     @endforeach
                     </select>
 
@@ -162,12 +162,16 @@
 
             <div class="mb-2">
                 <label class="form-label">Department</label><br>
-                @error('department') <span class="text-danger">{{$message}}</span> @enderror
-                <select class="form-control select2" name="department">
+                @error('department') <span class="text-danger">{{$message}}</span> @enderror 
+                <select class="form-control select2" name="department_id">
                     
                 @foreach($departments as $department)
 
-                <option {{($program->department->id==$department->id)? 'selected' : ""}} value="{{$department->id}}">{{$department->department_name}}</option>
+                <option {{($program->department->id==$department->id)? 'selected' : ""}} value="{{$department->id}}">{{$department->department_name}}
+                    @if($department->campus_id==1) - LL @endif
+                    @if($department->campus_id==2) - BT @endif
+                    @if($department->campus_id==3) - ZA @endif
+                </option>
                 @endforeach
                 </select>
 
@@ -194,10 +198,11 @@
                 <label class="form-label">Campuses Offered</label><br>
                 @error('campus_offered') <span class="text-danger">{{$message}}</span> @enderror
                 <select class="form-select" aria-label="Default select example" name="campus_offered">
-                        @foreach($campuses as $campus)
-                        <option {{($campus->id == $program->campus->id)? "selected" : ""}} value="{{$program->campus->id}}">{{$campus->campus}}</option>
-                        
-                        @endforeach
+                @foreach($campuses as $campus)
+                    <option {{ $campus->id == $program->campus_id ? 'selected' : '' }} value="{{ $campus->id }}">
+                        {{ $campus->campus }}
+                    </option>
+                @endforeach
                 </select>
             </div>      
         </div>

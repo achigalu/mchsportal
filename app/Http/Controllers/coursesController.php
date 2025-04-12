@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\Campus;
 use Illuminate\Support\Facades\Session;
 use App\Models\lecturerSubjects;
+use Illuminate\Support\Facades\Auth;
 
 class coursesController extends Controller
 {
@@ -45,10 +46,10 @@ class coursesController extends Controller
         {
             return redirect()->back()->with('invalid', 'Course code:'. $request->code." ".' exist in the system'); 
         }
-        elseif(!empty($alreadyCourseName))
-        {
-            return redirect()->back()->with('invalid', 'Course name: ' .$request->name." ". 'exist in the system');
-        }
+        // elseif(!empty($alreadyCourseName))
+        // {
+        //     return redirect()->back()->with('invalid', 'Course name: ' .$request->name." ". 'exist in the system');
+        // }
         else
         {
             Course::create([
@@ -122,6 +123,38 @@ class coursesController extends Controller
 
         $data['title'] = 'Allocate Subjects to Class';
         $data['classes'] = Programclass::all();
+    
+    $AuthUser = Auth::user()->role;
+    if($AuthUser == 'HOD'){
+      $hod = Department::where('user_id', auth()->id())->first(); 
+
+      if ($hod) // hod
+      {
+          // Get all programs under the department
+          $programs = Program::where('department_id', $hod->id)->get();
+      
+          // Get all classes related to those programs
+          $hodClasses = Programclass::whereIn('program_id', $programs->pluck('id'))->get();
+          $data = [
+                    'hodClasses' => $hodClasses
+                 ];
+      }
+      return view('admin.courses.add_subject_to_class', $data); 
+
+    }
+    elseif(Auth::user()->role=='Admin' || Auth::user()->role=='Administrator') // admins
+        {
+          $admin = Programclass::all();
+          $data = [
+                    'admin' => $admin
+                 ];
+          return view('admin.courses.add_subject_to_class', $data);
+        }
+
+        else{
+            return view('admin.courses.add_subject_to_class'); 
+        }
+        
         // Fetch distinct combinations of class and semester which has students only.
         // $data['classCampuses'] = User::select('programclass', 'campus')
         // ->whereNotNull('programclass')
@@ -141,11 +174,12 @@ class coursesController extends Controller
         // $currentYear = Carbon::now()->year;
         // $data['ay'] = Academicyear::where('ayear',$currentYear)->get();
         
-        return view('admin.courses.add_subject_to_class', $data);
+       
     }
 
     public function classSubjects(Request $request)
     {
+
         $validated = $request->validate([
             'class_id' => 'required',
             'semester' => 'required',
@@ -167,8 +201,9 @@ class coursesController extends Controller
             ->where('campus',$campus)
             ->where('semester',$classSemester)->first();
 
+    if(!empty($ay))
+    {
        $data['classAY'] = $ay->academicyear_id;
-
 
         if(!empty($validated))
         {
@@ -187,6 +222,11 @@ class coursesController extends Controller
        $data['title'] = 'Allocate Subjects to Class';
        $data['classes'] = Programclass::all();
        return view('admin.courses.add_subject_to_class', $data);
+    }
+    else
+    {
+        return redirect()->back()->with('invalid', 'Firstly, add students to class: '.$data['myClass']->classname.', semester: '.$request->semester.' before assigning subjects');
+    }
     }
 
     public function classSubjectsWithId(Request $request)
@@ -217,10 +257,9 @@ class coursesController extends Controller
         $data['classes'] = Programclass::all();
         $data['subjects'] = Course::all();
 
-        //dd($data['class'],$data['ay']);
-        return view('admin.courses.classSubjects', $data);
+        return view('admin.courses.classSubjects', $data); 
         }
-       // dd($request->class_id);
+        
         
        $data['title'] = 'Allocate Subjects to Class';
        $data['classes'] = Programclass::all();
@@ -238,52 +277,61 @@ class coursesController extends Controller
     }
 
     public function configuredSubject(Request $request)
-    {
-        $validated = $request->validate([
-             'exam_weight' => 'required',
-             'ca_weight' => 'required',
-             'pass_mark' => 'required',
-             'is_major' => 'required',
-             'is_project' => 'required',
-             'category' => 'required',
-             
-        
-         ]);
+{
+    // Validate request
+    $request->validate([
+        'exam_weight' => 'required',
+        'ca_weight' => 'required',
+        'pass_mark' => 'required',
+        'is_major' => 'required',
+        'is_project' => 'required',
+        'category' => 'required',
+    ]);
 
-        //dd($request->all());
-        $already = Myclasssubject::where('programclass_id',$request->class_id)
-        ->where('course_id',$request->subject_id)
+    // Check if subject is already assigned
+    $alreadyExists = Myclasssubject::where('programclass_id', $request->class_id)
+        ->where('course_id', $request->subject_id)
         ->where('semester', $request->semester)
         ->whereNull('academicyear_id')
-        ->first();
+        ->exists();
 
+    if ($alreadyExists) {
         $subject = Course::find($request->subject_id);
-        if($already)
-        {
-        return redirect(route('class.subjects.withID', ['class_id'=>$request->class_id, 'semester'=>$request->semester]))
-        ->with('invalid', 'This Subject'.' '.$subject->name .' '.'already assigned to this class');
-        }
-        else{
-        $myClass = Programclass::find($request->class_id);
-       Myclasssubject::create([
+        return redirect(route('class.subjects.withID', [
+            'class_id' => $request->class_id, 
+            'semester' => $request->semester
+        ]))->with('invalid', 'This Subject ' . $subject->name . ' already assigned to this class');
+    }
+
+    // Retrieve class information
+    $myClass = Programclass::find($request->class_id);
+    if (!$myClass) {
+        return redirect()->back()->with('invalid', 'Class not found.');
+    }
+
+    // Assign subject to class
+    Myclasssubject::create([
         'programclass_id' => $request->class_id,
         'classcode' => $myClass->classcode,
         'course_id' => $request->subject_id,
         'semester' => $request->semester,
-        'exam_weight' =>$request->exam_weight,
-        'ca_weight' =>$request->ca_weight,
-        'pass_mark' =>$request->pass_mark,
-        'is_major' =>$request->is_major,
-        'is_project' =>$request->is_project,
+        'exam_weight' => $request->exam_weight,
+        'ca_weight' => $request->ca_weight,
+        'pass_mark' => $request->pass_mark,
+        'is_major' => $request->is_major,
+        'is_project' => $request->is_project,
         'category' => $request->category,
-       
-       ]);
-    }
-       
-       return redirect(route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester]))
-       ->with('message', 'Subject'.' '.$subject->name .' '.'configured successfully');
-    }
+    ]);
 
+    $subject = Course::find($request->subject_id);
+    return redirect(route('class.subjects.withID', [
+        'class_id' => $request->class_id, 
+        'semester' => $request->semester
+    ]))->with('message', 'Subject ' . $subject->name . ' configured successfully');
+}
+
+
+    
     public function addSubjectToStudent()
     {
         if(!empty(Session::get('class_id'))){
@@ -307,38 +355,188 @@ class coursesController extends Controller
             $data['classSubjects'] = Myclasssubject::where('programclass_id', $data['class_id'])
             ->where('semester', $data['semester'])
             ->whereNull('academicyear_id')
-            ->get(); 
+            ->get(); //// programclass_id has already campus in it.
            
             return view('admin.intake.add_subject_to_student', $data);
             
         }
-        return view('admin.intake.add_subject_to_student');
+        else{
+
+        // get classes that are valid 
+
+        $data['title'] = 'Allocate Subjects to Class';
+        $data['classes'] = Programclass::all();
+        
+        $AuthUser = Auth::user()->role;
+        if($AuthUser == 'HOD'){
+        $hod = Department::where('user_id', auth()->id())->first(); 
+
+        if ($hod) // hod
+        {
+          // Get all programs under the department
+          $programs = Program::where('department_id', $hod->id)->get();
+      
+          // Get all classes related to those programs
+          $hodClasses = Programclass::whereIn('program_id', $programs->pluck('id'))->get();
+          $data = [
+                    'hodClasses' => $hodClasses
+                 ];
+            }
+            return view('admin.intake.add_subject_to_student', $data);  
+
+            }
+            elseif(Auth::user()->role=='Admin' || Auth::user()->role=='Administrator') // admins
+                {
+                $admin = Programclass::all();
+                $data = [
+                            'admin' => $admin
+                        ];
+          return view('admin.intake.add_subject_to_student', $data); 
+        } else{
+            return view('admin.intake.add_subject_to_student'); 
+        }
+
+       
+        
+        // Fetch distinct combinations of class and semester which has students only.
+        // $data['classCampuses'] = User::select('programclass', 'campus')
+        // ->whereNotNull('programclass')
+        // ->distinct()
+        // ->get()
+        // ->groupBy(['programclass', 'campus'])
+        // ->map(function($group) {
+        //     return $group->first();
+        // })
+        // ->values();
+
+        // $data['classCampus'] = json_decode($data['classCampuses'], true); // Decode JSON to PHP associative array
+
+        //dd($data['classCampus']);
+
+
+        // $currentYear = Carbon::now()->year;
+        // $data['ay'] = Academicyear::where('ayear',$currentYear)->get();
+  
+        }
     }
+
+    //// IMPROVED VERSION TO TRY....
+
+    public function configuredSubjectNEW(Request $request)
+{
+    // Validate request data
+    $validated = $request->validate([
+        'exam_weight' => 'required|numeric|min:0|max:100',
+        'ca_weight' => 'required|numeric|min:0|max:100',
+        'pass_mark' => 'required|numeric|min:0|max:100',
+        'is_major' => 'required|boolean',
+        'is_project' => 'required|boolean',
+        'category' => 'required|string|max:255',
+        'class_id' => 'required|exists:programclasses,id',
+        'subject_id' => 'required|exists:courses,id',
+        'semester' => 'required|integer|min:1|max:2',
+    ]);
+
+    // Check if subject is already assigned to the class
+    $already = Myclasssubject::where('programclass_id', $request->class_id)
+        ->where('course_id', $request->subject_id)
+        ->where('semester', $request->semester)
+        ->whereNull('academicyear_id')
+        ->first();
+
+    if ($already) {
+        $subject = Course::find($request->subject_id);
+        return redirect()->route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester])
+            ->with('error', 'The subject "' . $subject->name . '" is already assigned to this class.');
+    }
+
+    // Ensure class exists before assigning
+    $myClass = Programclass::find($request->class_id);
+    if (!$myClass) {
+        return redirect()->back()->with('error', 'Invalid class selected.');
+    }
+
+    // Create new subject assignment
+    Myclasssubject::create([
+        'programclass_id' => $request->class_id,
+        'classcode' => $myClass->classcode,
+        'course_id' => $request->subject_id,
+        'semester' => $request->semester,
+        'exam_weight' => $request->exam_weight,
+        'ca_weight' => $request->ca_weight,
+        'pass_mark' => $request->pass_mark,
+        'is_major' => $request->is_major,
+        'is_project' => $request->is_project,
+        'category' => $request->category,
+    ]);
+
+    $subject = Course::find($request->subject_id);
+
+    return redirect()->route('class.subjects.withID', ['class_id' => $request->class_id, 'semester' => $request->semester])
+        ->with('success', 'Subject "' . $subject->name . '" configured successfully.');
+}
+
 
     public function addSubjectsToLecturers()
     {
         
         $class = Programclass::all();
-        $subjectClass = Myclasssubject::all();
-        $data = []; // Initialize the array to store matched classes
-
-        // Group subjectClass by type
-        $groupedByType = [];
-        foreach ($subjectClass as $sClass) {
-        $groupedByType[$sClass->type][] = $sClass;
+        $AuthUser = Auth::user()->role;
+        if($AuthUser == 'HOD'){
+          $hod = Department::where('user_id', auth()->id())->first();
+    
+          if ($hod) // hod
+          {
+              // Get all programs under the department
+              $programs = Program::where('department_id', $hod->id)->get();
+          
+              // Get all classes related to those programs
+              $hodClasses = Programclass::whereIn('program_id', $programs->pluck('id'))->get();
+              $data = [
+                    'hodClasses' => $hodClasses,
+                    'class' => $class 
+              ];
+          }
+               return view('admin.courses.assign_subjects_to_lecturers', $data); 
+    
         }
-
-       foreach ($class as $pClass) {
-       foreach ($groupedByType as $type => $sClasses) {
-       foreach ($sClasses as $sClass) {
-            // Assuming you're comparing the id properties or some relevant attribute
-            if ($pClass->id == $sClass->programclass_id) {
-                $data[] = $sClass;
-                break; // Take only the first match for this type and $pClass
+    
+        elseif(Auth::user()->role=='Admin' || Auth::user()->role=='Administrator') // Lecturer
+            {
+              $lecturerModules = Programclass::all();
+              $data = [
+                'lecturerModules' => $lecturerModules
+              ];
+              return view('admin.courses.assign_subjects_to_lecturers', $data); 
             }
+
+        else {
+            return view('admin.courses.assign_subjects_to_lecturers'); 
         }
-    }
-}
+              
+       
+            
+       
+            //         $subjectClass = Myclasssubject::all();
+            //         $data = []; // Initialize the array to store matched classes
+
+            //         // Group subjectClass by type
+            //         $groupedByType = [];
+            //         foreach ($subjectClass as $sClass) {
+            //         $groupedByType[$sClass->type][] = $sClass;
+            //         }
+
+            //        foreach ($class as $pClass) {
+            //        foreach ($groupedByType as $type => $sClasses) {
+            //        foreach ($sClasses as $sClass) {
+            //             // Assuming you're comparing the id properties or some relevant attribute
+            //             if ($pClass->id == $sClass->programclass_id) {
+            //                 $data[] = $sClass;
+            //                 break; // Take only the first match for this type and $pClass
+            //             }
+            //         }
+            //     }
+            // }
 
 // Display the matched data
         return view('admin.courses.assign_subjects_to_lecturers', ['data' => $data]);
@@ -644,15 +842,6 @@ public function deleteClassAssignedSubjects($subjectID, $classID, $semester, $ay
    if($sclasscampus==2){ $campus = 'Blantyre'; }
    if($sclasscampus==3){ $campus = 'Zomba'; }
 
-
-                $myClassSubject = Myclasssubject::find($subjectID); // delete
-                $studentSubj = $myClassSubject->course_id;
-
-               // dd($subjectID,$studentSubj); same
-                $stuCourse = Course::find($studentSubj);
-
-
-
      if(!empty($stuCourse))
         {
             $studentSubjects = Studentsubject::where('academicyr_id',$ay)
@@ -696,6 +885,41 @@ public function deleteClassAssignedSubjects($subjectID, $classID, $semester, $ay
         ->with('invalid', 'Nothing deleted, something strange..'); 
   
 }
+
+public function deleteAssignedSubjectToSingleStudent(Request $request)
+{
+            $subj_code = $request->subj_code;
+            $reg_num =$request->reg_num;
+            $semester = $request->semester;
+            $student_id = $request->student_id;
+
+            $studentSubject = Studentsubject::where('course_code',$subj_code)
+            ->where('registration_no',$reg_num)
+            ->where('semester', $semester)->first();
+
+            if (!empty($studentSubject->assessment1) ||
+            !empty($studentSubject->assessment2) ||
+            !empty($studentSubject->exam_grade) ||
+            !empty($studentSubject->final_grade)) {
+                        
+                  
+                return redirect(route('add.class.modules.to.single.student',['student_id'=>$student_id]))->with([
+                    'invalid' => 'There are grades in this subject: ' . $subj_code . ' . ' 
+                        ]);       
+                            
+                
+                    }
+
+                    $studentSubject->delete();
+                       
+                            return redirect(route('add.class.modules.to.single.student',['student_id'=>$student_id]))->with([
+                                'status' => 'Subject deleted for students: ' . $reg_num . '.'
+                                    ]);
+
+                  
+                    
+        }
+
 
 public function deleteClassAndStudentsAssignedSubjects($ay, $subjectID, $classID, $semester)
 {
@@ -765,10 +989,21 @@ public function deleteClassAndStudentsAssignedSubjects($ay, $subjectID, $classID
             'class_id' => $classID,
             'campus' => $studentsClass->campus_id,
             'semester' => $semester
-                ]);   
-   
-   
+                ]);    
 }
 
+public function hodReviewAssessments($lecturerID)
+        {
+            $data['hodModulesAssessment1'] = lecturerSubjects::where('access_level1', $lecturerID)
+            ->where('reviewed1', 1)->get();
+            $data['hodModulesMid'] = lecturerSubjects::where('access_level2', $lecturerID)
+            ->where('reviewed2', 1)->get();
+            $data['hodModulesEndSem'] = lecturerSubjects::where('access_level3', $lecturerID)
+            ->where('reviewed3', 1)->get();
+
+            $data['title'] = 'HOD Review Modules';
+          
+            return view('admin.reviewAssessments.hod_review_assessments', $data); 
+        }
 
 }

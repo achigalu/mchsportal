@@ -142,7 +142,7 @@
 
     </div>
   <div class="form-group">
-&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update my password</button> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-secondary" type="submit">Update password</button> &nbsp;&nbsp;
 </form>
 <a href="{{route('list.users')}}"><button type="button" class="btn btn-outline-secondary">Cancel</button></a><br><br>
 </div>  
